@@ -1,0 +1,11 @@
+[Moo    , Mo    ] = deal(Mo    , M    );
+[Xoo    , Xo    ] = deal(Xo    , X    );
+[rhooo  , rhoo  ] = deal(rhoo  , rho  );
+[rhoWoo , rhoWo ] = deal(rhoWo , rhoW );
+[rhoUoo , rhoUo ] = deal(rhoUo , rhoU );
+
+[dMdtoo    , dMdto    ] = deal(dMdto    , dMdt    );
+[dXdtoo    , dXdto    ] = deal(dXdto    , dXdt    );
+[drhodtoo  , drhodto  ] = deal(drhodto  , drhodt  );
+
+dto = dt;
