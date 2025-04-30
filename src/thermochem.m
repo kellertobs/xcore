@@ -10,8 +10,8 @@ advn_M   = - advect(M,Um(2:end-1,:),Wm(:,2:end-1),h,{ADVN,''},[1,2],BCA);
 advn_rho = advn_X+advn_M;
 
 % phase change rates
-if iter==1; ishft = randi(Nx); end
-Gx  =  Da.*(xeq-x).*rho./dt.*topshape.*(1+circshift(rp,ishft,2)/3);
+%if iter==1; ishft = randi(Nx); end
+Gx  =  Da.*(xeq-x).*rho./dt.*topshape;%.*(1+circshift(rp,ishft,2)/3);
 Gm  =  -Gx;
 
 % total rates of change

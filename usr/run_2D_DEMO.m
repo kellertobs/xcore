@@ -13,7 +13,7 @@ save_op   =  0;                   % switch on to save output to file
 colourmap = 'lapaz';             % choose colourmap ('ocean','lipari','lajolla','lapaz','navia','batlow(W/K)','glasgow')
 
 % set model domain parameters
-D         =  10;                   % chamber depth [m]
+D         =  1e3;                   % chamber depth [m]
 N         =  100;                  % number of grid points in z-direction
 h         =  D/N;                 % grid spacing (equal in both dimensions, do not set) [m]
 L         =  D;                   % chamber width (equal to h for 1-D mode) [m]
