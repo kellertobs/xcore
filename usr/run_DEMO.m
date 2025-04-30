@@ -5,16 +5,16 @@ clear; close all;
 run('./par_default')
 
 % set run parameters
-runID     =  'DEMO_2D';           % run identifier
+runID     =  'DEMO';           % run identifier
 restart   =  0;                   % restart from file (0: new run; <1: restart from last; >1: restart from specified frame)
-nop       =  10;                   % output frame plotted/saved every 'nop' time steps
+nop       =  50;                   % output frame plotted/saved every 'nop' time steps
 plot_op   =  1;                   % switch on to live plot results
-save_op   =  0;                   % switch on to save output to file
+save_op   =  1;                   % switch on to save output to file
 colourmap = 'lapaz';             % choose colourmap ('ocean','lipari','lajolla','lapaz','navia','batlow(W/K)','glasgow')
 
 % set model domain parameters
 D         =  1e3;                   % chamber depth [m]
-N         =  100;                  % number of grid points in z-direction
+N         =  200;                  % number of grid points in z-direction
 h         =  D/N;                 % grid spacing (equal in both dimensions, do not set) [m]
 L         =  D;                   % chamber width (equal to h for 1-D mode) [m]
 
@@ -47,7 +47,7 @@ CC      =[[0.9826, 0.0174]*9.1697; ... % permission step widths
 % set thermo-chemical boundary parameters
 bnd_w     =  D/100;
 xeq       =  0.1;
-Da        =  0.01;                   % wall cooling/assimilation time [s]
+Da        =  0.1;                   % wall cooling/assimilation time [s]
 Ptop      =  1e5;                 % top pressure [Pa]
 
 % set numerical model parameters

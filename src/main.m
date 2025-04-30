@@ -19,8 +19,8 @@ while time <= tend && step <= Nt
     %***  non-linear iteration loop
     while resnorm/resnorm0 >= rtol/(1 + frst*10) && resnorm >= atol/(1 + frst*10) && iter <= maxit*(1 + frst)
         
-        %***  solve thermo-chemical equations
-        thermochem;
+        %***  solve phase evolution equations
+        phsevo;
 
         %***  solve fluid-mechanics equations
         fluidmech;
