@@ -368,55 +368,40 @@ P = P - mean(mean(P(2:end-1,2:end-1)));             % reduce pressure by mean
 
 if ~bnchm
 
-    % phase segregation speeds
-    wm(2:end-1,2:end-1) = Drhom(2:end-1,:).*g0.*(Ksgr_m(1:end-1,:).*Ksgr_m(2:end,:)).^0.5; % melt segregation speed
-    wm([1,end],:) = min(1,1-[top;bot]).*wm([2,end-1],:);
-    wm(:,[1 end]) = wm(:,[end-1 2]);
+    % advection of xtal segregation speed
+    advn_wx(2:end-1,2:end-1) = - advect(wx(2:end-1,2:end-1),(Ux(2:end-2,:)+Ux(3:end-1,:))/2,(Wx(1:end-1,2:end-1)+Wx(2:end,2:end-1))/2,h,{ADVN,''},[1,2],BCA);
+    advn_wx([1,end],:) = min(1,1-[top;bot]).*advn_wx([2,end-1],:);
+    advn_wx(:,[1 end]) = advn_wx(:,[end-1 2]);
 
-    wx(2:end-1,2:end-1) = Drhox(2:end-1,:).*g0.*(Ksgr_x(1:end-1,:).*Ksgr_x(2:end,:)).^0.5; % solid segregation speed
-    wx([1,end],:) = min(1,1-[top;bot]).*wx([2,end-1],:);
-    wx(:,[1 end]) = wx(:,[end-1 2]);
+    % terminal xtal segregation speed
+    wx0(2:end-1,2:end-1) = Drhox(2:end-1,:).*g0.*(Ksgr_x(1:end-1,:).*Ksgr_x(2:end,:)).^0.5; % solid segregation speed
+    wx0([1,end],:) = min(1,1-[top;bot]).*wx0([2,end-1],:);
+    wx0(:,[1 end]) = wx0(:,[end-1 2]);
 
-    % phase diffusion fluxes and speeds
-    dmudz = ddz( mu(icz,icx),h); dmudx = ddx( mu(icz,icx),h);
-    dchdz = ddz(chi(icz,icx),h); dchdx = ddx(chi(icz,icx),h);
+    tw = max(dt,d0.^2.*rho./eta0);
+    Gw = (wx0-wx)./(tw(icz(1:end-1),icx)+tw(icz(2:end),icx));
 
-    kmz = (km(icz(1:end-1),icx)+km(icz(2:end),icx))./2;
-    kmx = (km(icz,icx(1:end-1))+km(icz,icx(2:end)))./2;
+    % total rate of change
+    dwxdt  = advn_wx + Gw;
 
-    kxz = (kx(icz(1:end-1),icx)+kx(icz(2:end),icx))./2;
-    kxx = (kx(icz,icx(1:end-1))+kx(icz,icx(2:end)))./2;
+    % residual of xtal settling speed evolution
+    res_wx = (a1*wx-a2*wxo-a3*wxoo)/dt - (b1*dwxdt + b2*dwxdto + b3*dwxdtoo);
 
-    sumkz = kmz + kxz;
-    sumkx = kmx + kxx;
+    % semi-implicit update of xtal settling speed
+    upd_wx = - alpha*res_wx*dt/a1 + beta*upd_wx;
 
-    dstdz = kmz./sumkz .* dmudz + kxz./sumkz .* dchdz;
-    dstdx = kmx./sumkx .* dmudx + kxx./sumkx .* dchdx;
-
-    qmz = - kmz .* (dmudz-dstdz);  qmx = - kmx .* (dmudx-dstdx);
-    qxz = - kxz .* (dchdz-dstdz);  qxx = - kxx .* (dchdx-dstdx);
-
-    chiz = (chi(icz(1:end-1),icx)+chi(icz(2:end),icx))./2;
-    chix = (chi(icz,icx(1:end-1))+chi(icz,icx(2:end)))./2;
-
-    muz  = (mu (icz(1:end-1),icx)+mu (icz(2:end),icx))./2;
-    mux  = (mu (icz,icx(1:end-1))+mu (icz,icx(2:end)))./2;
-
-    wqx = qxz./max(eps^0.5,chiz);
-    uqx = qxx./max(eps^0.5,chix);
-
-    wqm = qmz./max(eps^0.5,muz);
-    uqm = qmx./max(eps^0.5,mux);
+    % update xtal settling speed
+    wx     = wx + upd_wx;
 
     % update phase velocities
-    Wx  = W + wx + wqx;  % xtl z-velocity
-    Ux  = U + 0. + uqx;  % xtl x-velocity
-    Wm  = W + wm + wqm;  % mlt z-velocity
-    Um  = U + 0. + uqm;  % mlt x-velocity
+    Wx  = W + wx;  % xtl z-velocity
+    Ux  = U;       % xtl x-velocity
+    Wm  = W;       % mlt z-velocity
+    Um  = U;       % mlt x-velocity
 
     
     %% update time step
-    dtk = (h/2)^2/max(km(:)+kx(:)); % diffusive time step size  
+    dtk = (h/2)^2/max(kx(:)); % diffusive time step size  
     dta =  h/2   /max(abs([Um(:);Wm(:);Ux(:);Wx(:)]+eps));  % advective time step size
     dt  = (dt + min([1.1*dto,min(CFL*[dtk,dta]),dtmax]))/2; % time step size
 end

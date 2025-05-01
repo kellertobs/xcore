@@ -49,13 +49,13 @@ Kv   = ff.*kv.*thtv;
 Cv   = Kv.*(1-ff)./dd.^2;
 
 % get effective viscosity
-eta0 = squeeze(sum(Kv,1)); if Nx==1; eta0 = eta0.'; end
+eta0 = squeeze(sum(Kv,1));
 
 % get segregation cofficients
 Ksgr   = ff./Cv;
 
-Ksgr_x = squeeze(Ksgr(1,:,:)) + eps^2; if Nx==1; Ksgr_x = Ksgr_x.'; end
-Ksgr_m = squeeze(Ksgr(2,:,:)) + eps^2; if Nx==1; Ksgr_m = Ksgr_m.'; end
+Ksgr_x = squeeze(Ksgr(1,:,:)) + eps^2;
+Ksgr_m = squeeze(Ksgr(2,:,:)) + eps^2;
 
 
 % update velocity divergence
@@ -103,9 +103,7 @@ else
     fRe    = (1-exp(-Re./Rer)+eps);
 end
 ke = 1./(1./kmax + 1./ke) + kmin;
-kwm = abs(rhom0-rho).*g0.*Ksgr_m.*Delta_sgr.*hasm;                         % segregation diffusivity
 kwx = abs(rhox0-rho).*g0.*Ksgr_x.*Delta_sgr.*hasx;                         % segregation diffusivity
-km  = (kwm + ke.*fRe/Scx).*mu ;                                                  % regularised melt  fraction diffusion 
 kx  = (kwx + ke.*fRe/Scx).*chi;                                                  % regularised solid fraction diffusion 
 eta = ke.*rho.*fRe + eta0;                                                 % regularised momentum diffusion
 
@@ -116,13 +114,13 @@ etaco  = (eta(icz(1:end-1),icx(1:end-1)).*eta(icz(2:end),icx(1:end-1)) ...
        .* eta(icz(1:end-1),icx(2:end  )).*eta(icz(2:end),icx(2:end  ))).^0.25;
 
 % update dimensionless numbers
-RaD    = Vel.*D./(kx+km);
+Rex    = abs(rhox0-rho).*g0.*Ksgr_x.*d0./(eta./rho);
+RaD    = Vel.*D./kx;
 ReD    = Vel.*D./(eta./rho);
-Rah    = Vel.*h./(kx+km);
+Rah    = Vel.*h./kx;
 Reh    = Vel.*h./(eta./rho);
-Ra     = Vel.*Delta_cnv./(kx+km);
+Ra     = Vel.*Delta_cnv./kx;
 Re     = Vel.*Delta_cnv./(eta./rho);
-Rum    = abs(wm(1:end-1,2:end-1)+wm(2:end,2:end-1))/2./Vel;
 Rux    = abs(wx(1:end-1,2:end-1)+wx(2:end,2:end-1))/2./Vel;
 
 % update stresses

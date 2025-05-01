@@ -131,7 +131,7 @@ m   =  1-x;
 xin =  x;
 
 U   =  zeros(Nz+2,Nx+1);  UBG = U; upd_U = 0*U;
-W   =  zeros(Nz+1,Nx+2);  WBG = W; wx = 0.*W; wm = 0.*W; upd_W = 0*W;
+W   =  zeros(Nz+1,Nx+2);  WBG = W; wx = 0.*W; wx0 = 0.*W; wxo = wx; upd_W = 0*W;
 P   =  zeros(Nz+2,Nx+2);  Vel = 0.*x; upd_P = 0*P;
 SOL = [W(:);U(:);P(:)];
 
@@ -182,10 +182,12 @@ dto  = dt;
 corrl;
 
 % initialise auxiliary variables 
+dwxdt   = 0.*wx; dwxdto = dwxdt;  advn_wx = 0.*wx;
 dXdt    = 0.*x;  dXdto  = dXdt;
 dMdt    = 0.*m;  dMdto  = dMdt;
 upd_X   = 0.*X;
 upd_M   = 0.*M;
+upd_wx  = 0.*wx;
 upd_rho = 0.*rho;
 
 % initialise timing and iterative parameters

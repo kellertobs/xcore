@@ -9,14 +9,18 @@ advn_X   = - advect(X,Ux(2:end-1,:),Wx(:,2:end-1),h,{ADVN,''},[1,2],BCA);
 advn_M   = - advect(M,Um(2:end-1,:),Wm(:,2:end-1),h,{ADVN,''},[1,2],BCA);
 advn_rho = advn_X+advn_M;
 
+% phase advection rates
+dffn_X   = diffus(chi,rho.*kx,h,[1,2],BCD);
+dffn_M   = diffus(mu ,rho.*kx,h,[1,2],BCD);
+
 % phase change rates
 %if iter==1; ishft = randi(Nx); end
 Gx  =  Da.*(xeq-x).*rho./dt.*topshape;%.*(1+circshift(rp,ishft,2)/3);
 Gm  =  -Gx;
 
 % total rates of change
-dXdt   = advn_X + Gx;
-dMdt   = advn_M + Gm;
+dXdt   = advn_X + dffn_X + Gx;
+dMdt   = advn_M + dffn_M + Gm;
 
 % residual of phase density evolution
 res_X = (a1*X-a2*Xo-a3*Xoo)/dt - (b1*dXdt + b2*dXdto + b3*dXdtoo);
