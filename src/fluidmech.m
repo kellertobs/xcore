@@ -379,7 +379,7 @@ if ~bnchm
     wx0(:,[1 end]) = wx0(:,[end-1 2]);
 
     tw = max(dt,d0.^2.*rho./eta0);
-    Gw = (wx0-wx)./(tw(icz(1:end-1),icx)+tw(icz(2:end),icx));
+    Gw = (wx0-wx)./((tw(icz(1:end-1),icx)+tw(icz(2:end),icx))./2);
 
     % total rate of change
     dwxdt  = advn_wx + Gw;
