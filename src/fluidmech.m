@@ -15,7 +15,7 @@ dV      = Gx.*(1/rhox0-1/rhom0);%dV + upd_rho;  % correct volume source term by 
 dVmean  = mean(dV,'all');
 
 UBG     = - 0*dVmean./2 .* (L/2-XXu);
-WBG     = - 2*dVmean./2 .* (D/2-ZZw);
+WBG     = - 2*dVmean./2 .* (0/2-ZZw);
 
 end
 

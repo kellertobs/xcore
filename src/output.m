@@ -105,14 +105,16 @@ else; set(0, 'CurrentFigure', fh4); clf;
 end
 colormap(colmap);
 fh = axb + 2*axh + 1*avs + axt;
-fw = axl + 2*axw + 1*ahs + axr;
+fw = axl + 3*axw + 2*ahs + axr;
 set(fh4,UN{:},'Position',[7 7 fw fh]);
 set(fh4,'PaperUnits','Centimeters','PaperPosition',[0 0 fw fh],'PaperSize',[fw fh]);
 set(fh4,'Color','w','InvertHardcopy','off','Resize','off');
 ax(41) = axes(UN{:},'position',[axl+0*axw+0*ahs axb+1*axh+1*avs axw axh]);
 ax(42) = axes(UN{:},'position',[axl+1*axw+1*ahs axb+1*axh+1*avs axw axh]);
-ax(43) = axes(UN{:},'position',[axl+0*axw+0*ahs axb+0*axh+0*avs axw axh]);
-ax(44) = axes(UN{:},'position',[axl+1*axw+1*ahs axb+0*axh+0*avs axw axh]);
+ax(43) = axes(UN{:},'position',[axl+2*axw+2*ahs axb+1*axh+1*avs axw axh]);
+ax(44) = axes(UN{:},'position',[axl+0*axw+0*ahs axb+0*axh+0*avs axw axh]);
+ax(45) = axes(UN{:},'position',[axl+1*axw+1*ahs axb+0*axh+0*avs axw axh]);
+ax(46) = axes(UN{:},'position',[axl+2*axw+2*ahs axb+0*axh+0*avs axw axh]);
 
 % plot velocity-pressure solution in Fig. 1
 set(0,'CurrentFigure',fh1)
@@ -152,15 +154,15 @@ set(fh3,'CurrentAxes',ax(31));
 imagesc(Xsc,Zsc,rho-mean(rho,2)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta \bar{\rho}_h$ [kg/m$^3$]'],TX{:},FS{:}); set(gca,'XTickLabel',[]); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:});
 set(fh3,'CurrentAxes',ax(32));
-imagesc(Xsc,Zsc,log10(eta)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\bar{\eta}$ [log$_{10}$ Pas]'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
+imagesc(Xsc,Zsc,log10(eta0)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\eta$ [Pas]'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 text(-0.1,1.15,['time = ',num2str(time/TimeScale,3),' [',TimeUnits,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
 set(fh3,'CurrentAxes',ax(33));
 imagesc(Xsc,Zsc,-wx(2:end-1,2:end-1)/SpeedScale); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta w^x$ [',SpeedUnits,']'],TX{:},FS{:}); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:}); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:});
 set(fh3,'CurrentAxes',ax(34));
-imagesc(Xsc,Zsc,log10(Rux)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['Ru$_x$ [1]'],TX{:},FS{:}); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]);
+imagesc(Xsc,Zsc,log10(eta)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\eta_e$ [Pas]'],TX{:},FS{:}); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]);
 
 % plot phase and eddy diffusivities, Ra and Re numbers in Fig. 3
 set(0,'CurrentFigure',fh4)
@@ -168,15 +170,21 @@ set(fh4,'CurrentAxes',ax(41));
 imagesc(Xsc,Zsc,log10(kwx)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $k_{w_x}$ [m$^2$/s]'],TX{:},FS{:}); set(gca,'XTickLabel',[]); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:});
 set(fh4,'CurrentAxes',ax(42));
-imagesc(Xsc,Zsc,log10(fRe.*ke)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $k_e$ [m$^2$/s]'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
-text(-0.1,1.15,['time = ',num2str(time/TimeScale,3),' [',TimeUnits,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
-set(fh4,'CurrentAxes',ax(43));
 imagesc(Xsc,Zsc,log10(Ra)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Ra [1]'],TX{:},FS{:}); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:}); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:});
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Ra [1]'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
+set(fh4,'CurrentAxes',ax(43));
+imagesc(Xsc,Zsc,log10(Rux)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Ru$_x$ [1]'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
+text(-0.1,1.15,['time = ',num2str(time/TimeScale,3),' [',TimeUnits,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
 set(fh4,'CurrentAxes',ax(44));
+imagesc(Xsc,Zsc,log10(fRe.*ke)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $k_e$ [m$^2$/s]'],TX{:},FS{:}); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:}); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:});
+set(fh4,'CurrentAxes',ax(45));
 imagesc(Xsc,Zsc,log10(Re)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Re [1]'],TX{:},FS{:}); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]);
+set(fh4,'CurrentAxes',ax(46));
+imagesc(Xsc,Zsc,log10(Rex)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Re$_x$ [1]'],TX{:},FS{:}); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]);
 
 
 % plot model history
