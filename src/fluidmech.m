@@ -10,7 +10,7 @@ res_rho = (a1*rho-a2*rhoo-a3*rhooo)/dt - (b1*drhodt + b2*drhodto + b3*drhodtoo);
 
 % volume source and background velocity passed to fluid-mechanics solver
 upd_rho = - alpha*res_rho./b1./rho;
-dV      = Gx.*(1/rhox0-1/rhom0);%dV + upd_rho;  % correct volume source term by scaled residual
+dV      = dV + upd_rho;  %Gx.*(1/rhox0-1/rhom0); correct volume source term by scaled residual
 
 dVmean  = mean(dV,'all');
 
