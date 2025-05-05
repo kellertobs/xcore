@@ -21,7 +21,7 @@ L         =  D;                   % chamber width (equal to h for 1-D mode) [m]
 % set model timing parameters
 Nt        =  1e6;                 % number of time steps to take
 tend      =  1*yr;                % end time for simulation [s]
-dt        =  10;                   % initial time step [s]
+dt        =  1;                   % initial time step [s]
 
 % set initial thermo-chemical state
 smth      =  25;
@@ -55,7 +55,7 @@ TINT      =  'bd2im';             % time integration scheme ('be1im','bd2im','cn
 ADVN      =  'weno5';             % advection scheme ('centr','upw1','quick','fromm','weno3','weno5','tvdim')
 CFL       =  0.50;                % (physical) time stepping courant number (multiplies stable step) [0,1]
 alpha     =  0.75;                % iterative step size parameter
-rtol      =  1e-3;                % outer its relative tolerance
+rtol      =  1e-5;                % outer its relative tolerance
 atol      =  1e-9;                % outer its absolute tolerance
 maxit     =  20;                  % maximum outer its
 Delta_cnv =  h;                % correlation length for eddy, convection diffusivity (multiple of h, 0.5-1)

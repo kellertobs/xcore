@@ -14,11 +14,10 @@ dffn_X   = diffus(chi,rho.*kx,h,[1,2],BCD);
 dffn_M   = diffus(mu ,rho.*kx,h,[1,2],BCD);
 
 % phase change rates
-% if iter==1
-    tau_x = (h/2)./(mean(Vel(1,:))+mean(abs(wx(2,:))));
-    Gx    = (Gx + max(0,Da.*(xeq-x).*rho./tau_x.*topshape))/2;
-    Gm    = -Gx;
-% end
+tau_x = (h/2)./(norm(Wx,'fro')./sqrt(length(Wx(:))));
+Gx    = (Gx + max(0,Da.*(xeq-x).*rho./tau_x.*topshape))/2;
+Gm    = -Gx;
+
 
 % total rates of change
 dXdt   = advn_X + dffn_X + Gx;
