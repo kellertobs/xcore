@@ -393,10 +393,9 @@ if ~bnchm
     % update xtal settling speed
     wx     = wx + upd_wx;
 
-    chiw   = (chi(icz(1:end-1),icx)+chi(icz(2:end),icx))./2;
-     muw   = ( mu(icz(1:end-1),icx)+ mu(icz(2:end),icx))./2;
-
-    wm     = -chiw./muw.*wx;
+    xw   = (x(icz(1:end-1),icx)+x(icz(2:end),icx))./2;
+    mw   = (m(icz(1:end-1),icx)+m(icz(2:end),icx))./2;
+    wm   = -xw./mw.*wx;
 
     % update phase velocities
     Wx  = W + wx;  % xtl z-velocity
