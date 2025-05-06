@@ -33,13 +33,13 @@ elseif D >= 1e3
     SpaceScale = 1e3;
     SpaceUnits = 'km';
 end
-if max([Vel(:);abs(wx(:))]) < 1000/yr
+if max([V(:);vx(:)]) < 1000/yr
     SpeedScale = 1/yr;
     SpeedUnits = 'm/yr';
-elseif max([Vel(:);abs(wx(:))]) >= 1000/yr && max([Vel(:);abs(wx(:))]) < 1000/hr
+elseif max([V(:);vx(:)]) >= 1000/yr && max([V(:);vx(:)]) < 1000/hr
     SpeedScale = 1/hr;
     SpeedUnits = 'm/hr';
-elseif max([Vel(:);abs(wx(:))]) >= 1000/hr
+elseif max([V(:);vx(:)]) >= 1000/hr
     SpeedScale = 1;
     SpeedUnits = 'm/s';
 end

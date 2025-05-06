@@ -87,32 +87,7 @@ MapW = reshape(1:NW,Nz+1,Nx+2);
 MapU = reshape(1:NU,Nz+2,Nx+1) + NW;
 
 % set up shape functions for transient boundary layers
-topshape = zeros(size(ZZ));
-botshape = zeros(size(ZZ));
-sdsshape = zeros(size(XX));
-if ~any(bnd_h)
-    switch bndmode
-        case 0  % none
-        case 1  % top only
-            topshape = exp( ( -ZZ)/max(h,bnd_w));
-        case 2  % bot only
-            botshape = exp(-(D-ZZ)/max(h,bnd_w));
-        case 3  % top/bot only
-            topshape = exp( ( -ZZ)/max(h,bnd_w));
-            botshape = exp(-(D-ZZ)/max(h,bnd_w));
-        case 4 % all walls
-            topshape = exp( ( -ZZ)/max(h,bnd_w));
-            botshape = exp(-(D-ZZ)/max(h,bnd_w));
-            sdsshape = exp( ( -XX)/max(h,bnd_w)) ...
-                     + exp(-(L-XX)/max(h,bnd_w));
-        case 5 % only walls
-            sdsshape = exp( ( -XX)/max(h,bnd_w)) ...
-                     + exp(-(L-XX)/max(h,bnd_w));
-    end
-    sdsshape = max(0,sdsshape - topshape - botshape);
-end
-
-bnd_X = zeros(Nz,Nx);
+topshape = exp( ( -ZZ)/max(h,bnd_w));
 
 % set specified boundaries to no slip, else to free slip
 sds = -1;
@@ -132,7 +107,7 @@ xin =  x;
 
 U   =  zeros(Nz+2,Nx+1);  UBG = U; upd_U = 0*U;
 W   =  zeros(Nz+1,Nx+2);  WBG = W; wx = 0.*W; wx0 = 0.*W; wxo = wx; upd_W = 0*W;
-P   =  zeros(Nz+2,Nx+2);  Vel = 0.*x; upd_P = 0*P;
+P   =  zeros(Nz+2,Nx+2);  V   = 0.*x; upd_P = 0*P;
 SOL = [W(:);U(:);P(:)];
 
 % initialise auxiliary fields
@@ -243,7 +218,7 @@ else
     store;
     fluidmech;
     update;
-    % history;
+    history;
     output;
     step = step+1;
 end

@@ -70,41 +70,20 @@ eII = (0.5.*(exx.^2 + ezz.^2 ...
        + 2.*(exz(1:end-1,1:end-1).^2+exz(2:end,1:end-1).^2 ...
        +     exz(1:end-1,2:end  ).^2+exz(2:end,2:end  ).^2)/4)).^0.5 + eps;
 
-% update velocity magnitude
-if Nx==1
-    idz = (1:Nz)';  % grid indices
-    half_steps = max(1,floor(Delta_cnv ./ (2 * h)));  % half mixing length in grid steps
-    
-    ip = idz + half_steps;  % upper indices
-    im = idz - half_steps;  % lower indices
-    
-    ip = min(ip, Nz);  % clamp indices to valid range [1, Nz]
-    im = max(im, 1 );  % clamp indices to valid range [1, Nz]
-    
-    drhoz   = max(0, -(rho(ip,:)-rho(im,:)) ) + 1e-6.*rho; % central density contrast across mixing length
-    for i=1:10
-        drhoz = drhoz + diffus(drhoz,1/8*ones(size(drhoz)),1,[1,2],BCD);
-    end
-    Vel = 2/9*drhoz.*g0.*(Delta_cnv/2).^2./eta;
-else
-    Vel = sqrt(((W(1:end-1,2:end-1)+W(2:end,2:end-1))/2).^2 ...
-             + ((U(2:end-1,1:end-1)+U(2:end-1,2:end))/2).^2);
-end
+% update velocity magnitudes
+V  = sqrt(((W(1:end-1,2:end-1)+W(2:end,2:end-1))/2).^2 ...
+       + ((U(2:end-1,1:end-1)+U(2:end-1,2:end))/2).^2);                    % convection speed magnitude
+vx  = abs(wx(1:end-1,2:end-1)+wx(2:end,2:end-1))/2;                        % segregation speed magnitude
 
 % update diffusion parameters
-if Nx==1
-    ke     = (ke + Vel.*Delta_cnv)/2;                                      % convective mixing diffusivity
-    fRe   = 1;
-    fRe100 = 1;
-else
-    eII0   = eta0./rho./Delta_cnv0^2;
-    eIIe   = eII .* (1-exp(-eII./eII0)+eps);
-    ke     = (ke + eIIe.*Delta_cnv.^2)/2;                                               % turbulent eddy diffusivity
-    fRe    = (1-exp(-Re./Rer)+eps);
-end
-ke = 1./(1./kmax + 1./ke) + kmin;
-kwx = abs(rhox0-rho).*g0.*Ksgr_x.*Delta_sgr.*hasx;                         % segregation diffusivity
-kx  = (kwx + ke.*fRe/Scx).*chi;                                                  % regularised solid fraction diffusion 
+eII0   = eta0./rho./Delta_cnv0^2;
+eIIe   = eII .* (1-exp(-eII./eII0)+eps);
+ke     = (ke + eIIe.*Delta_cnv.^2)/2;                                      % turbulent eddy diffusivity
+fRe    = (1-exp(-Re./Rec)+eps);
+ke  = 1./(1./kmax + 1./ke) + kmin;
+
+kwx = vx.*Delta_sgr.*hasx;                                                 % segregation diffusivity
+kx  = (kwx + ke.*fRe/Scx).*chi;                                            % regularised solid fraction diffusion 
 eta = ke.*rho.*fRe + eta0;                                                 % regularised momentum diffusion
 
 etamax = etacntr.*max(min(eta(:)),etamin);
@@ -114,14 +93,12 @@ etaco  = (eta(icz(1:end-1),icx(1:end-1)).*eta(icz(2:end),icx(1:end-1)) ...
        .* eta(icz(1:end-1),icx(2:end  )).*eta(icz(2:end),icx(2:end  ))).^0.25;
 
 % update dimensionless numbers
-Rex    = abs(rhox0-rho).*g0.*Ksgr_x.*d0./(eta./rho);
-RaD    = Vel.*D./kx;
-ReD    = Vel.*D./(eta./rho);
-Rah    = Vel.*h./kx;
-Reh    = Vel.*h./(eta./rho);
-Ra     = Vel.*Delta_cnv./kx;
-Re     = Vel.*Delta_cnv./(eta./rho);
-Rux    = abs(wx(1:end-1,2:end-1)+wx(2:end,2:end-1))/2./Vel;
+Re     = V .*Delta_cnv./(eta./rho);                                        % Reynolds number on correlation length scale
+ReD    = V .*D        ./(eta./rho);                                        % Reynolds number on domain length scale
+Rex    = vx.*d0       ./(eta./rho);                                        % particle Reynolds number
+Ra     = V.*Delta_cnv./kx;                                                 % Rayleigh number on correlation length scale
+RaD    = V.*D        ./kx;                                                 % Rayleigh number on domain length scale
+Rux    = vx./V;                                                            % particle settling number
 
 % update stresses
 txx = eta   .* exx;                                                        % x-normal stress

@@ -1,5 +1,5 @@
 % create manufactured solution
-load ./colmap/ocean.mat
+load ./colmap/lapaz.mat
 clear x z
 TINY = 1e-16;
 syms U_mms(x,z) W_mms(x,z) P_mms(x,z) eta_mms(x,z) rho_mms(x,z) src_mms(x,z)
@@ -45,7 +45,7 @@ fprintf(1,' . ');
 
 % plot manufactured solution
 figure(15);
-colormap(ocean);
+colormap(lapaz);
 subplot(2,3,1); fcontour( -W_mms*hr  ,[0,L],'LineWidth',1.5); axis ij equal tight; colorbar('TicklabelInterpreter','latex'); box on; title('manufcat. $W$ [m/hr]','Interpreter','latex'); set(gca,'TicklabelInterpreter','latex')
 subplot(2,3,2); fcontour(  U_mms*hr  ,[0,L],'LineWidth',1.5); axis ij equal tight; colorbar('TicklabelInterpreter','latex'); box on; title('manufact. $U$ [m/hr]','Interpreter','latex'); set(gca,'TicklabelInterpreter','latex')
 subplot(2,3,3); fcontour(  P_mms/1e3 ,[0,L],'LineWidth',1.5); axis ij equal tight; colorbar('TicklabelInterpreter','latex'); box on; title('manufact. $P$ [kPa]','Interpreter','latex'); set(gca,'TicklabelInterpreter','latex')
@@ -75,7 +75,7 @@ src_P_mms = double(subs(res_P_mms)); fprintf(1,' . ');
 
 % plot manufactured residuals and evaluated source terms
 figure(16);
-colormap(ocean);
+colormap(lapaz);
 subplot(2,3,1); fcontour(-res_W_mms,[0,L],'LineWidth',1.5); axis ij equal tight; colorbar; box on; title('manufactured $W$-res','Interpreter','latex');
 subplot(2,3,2); fcontour(-res_U_mms,[0,L],'LineWidth',1.5); axis ij equal tight; colorbar; box on; title('manufactured $U$-res','Interpreter','latex');
 subplot(2,3,3); fcontour(-res_P_mms,[0,L],'LineWidth',1.5); axis ij equal tight; colorbar; box on; title('manufactured $P$-res','Interpreter','latex');
@@ -110,6 +110,7 @@ rhoUoo = zeros(size(rhou));
 WBG    = 0.*W_mms;  W = WBG;
 UBG    = 0.*U_mms;  U = UBG;
 SOL    = [W_mms(:);U_mms(:);P_mms(:)];
+U      = 0*U_mms;  W = 0*W_mms;  P = 0*P_mms;
 dt     = 1e32;
 
 % get mapping arrays
@@ -134,17 +135,10 @@ bot = -1;
 BCA = {'',''};
 
 % set ghosted index arrays
-if periodic
-    icx = [Nx,1:Nx,1];
-    icz = [Nz,1:Nz,1];
-    ifx = [Nx,1:Nx+1,2];
-    ifz = [Nz,1:Nz+1,2];
-else
-    icx = [1,1:Nx,Nx];
-    icz = [1,1:Nz,Nz];
-    ifx = [1,1:Nx+1,Nx+1];
-    ifz = [1,1:Nz+1,Nz+1];
-end
+icx = [Nx,1:Nx,1];
+icz = [Nz,1:Nz,1];
+ifx = [Nx,1:Nx+1,2];
+ifz = [Nz,1:Nz+1,2];
 
 fprintf(1,' . \n');
    

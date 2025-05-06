@@ -39,7 +39,7 @@ while time <= tend && step <= Nt
     corrl;
 
     %***  record model history
-    % if ~mod(step,nrh); history; end
+    if ~mod(step,nrh); history; end
 
     %***  print model diagnostics
     diagnose;
