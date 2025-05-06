@@ -22,14 +22,14 @@ dsumMdt =  sum(sum(Gm*h*h*1)) ...
 dsumXdt =  sum(sum(Gx*h*h*1)) ...
         +  sum(X(1,:).*Wx(1,2:end-1)*h*1) - sum(X(end,:).*Wx(end,2:end-1)*h*1);  % [kg/s]
 
-if step>=2; hist.DB(stp) = (a2*hist.DB(max(1,stp-1)) + a3*hist.DB(max(1,stp-2)) + (b1*dsumBdt + b2*dsumBdto + b3*dsumBdtoo)*dt)/a1; else; hist.DB(stp  ) = 0; end  % [kg]
-if step>=2; hist.DM(stp) = (a2*hist.DM(max(1,stp-1)) + a3*hist.DM(max(1,stp-2)) + (b1*dsumMdt + b2*dsumMdto + b3*dsumMdtoo)*dt)/a1; else; hist.DM(stp  ) = 0; end  % [kg]
-if step>=2; hist.DX(stp) = (a2*hist.DX(max(1,stp-1)) + a3*hist.DX(max(1,stp-2)) + (b1*dsumXdt + b2*dsumXdto + b3*dsumXdtoo)*dt)/a1; else; hist.DX(stp  ) = 0; end  % [kg]
+if step>=2; hist.DB(stp) = (a2*hist.DB(max(1,stp-1)) + a3*hist.DB(max(1,stp-2)) + (b1*dsumBdt + b2*dsumBdto + b3*dsumBdtoo)*dt)/a1; else; hist.DB(stp) = 0; end  % [kg]
+if step>=2; hist.DM(stp) = (a2*hist.DM(max(1,stp-1)) + a3*hist.DM(max(1,stp-2)) + (b1*dsumMdt + b2*dsumMdto + b3*dsumMdtoo)*dt)/a1; else; hist.DM(stp) = 0; end  % [kg]
+if step>=2; hist.DX(stp) = (a2*hist.DX(max(1,stp-1)) + a3*hist.DX(max(1,stp-2)) + (b1*dsumXdt + b2*dsumXdto + b3*dsumXdtoo)*dt)/a1; else; hist.DX(stp) = 0; end  % [kg]
 
 % record conservation error of mass M, heat S, components C
-hist.EB(stp  ) = (hist.sumB(stp) - hist.DB(stp))./hist.sumB(1) - hist.sumB(1)./hist.sumB(1);  % [kg/kg]
-hist.EM(stp  ) = (hist.sumM(stp) - hist.DM(stp))./hist.sumB(1) - hist.sumM(1)./hist.sumB(1);  % [kg/kg]
-hist.EX(stp  ) = (hist.sumX(stp) - hist.DX(stp))./hist.sumB(1) - hist.sumX(1)./hist.sumB(1);  % [kg/kg]
+hist.EB(stp  ) = (hist.sumB(stp) - hist.DB(stp) - hist.sumB(1))./hist.sumB(1);  % [kg/kg]
+hist.EM(stp  ) = (hist.sumM(stp) - hist.DM(stp) - hist.sumM(1))./hist.sumB(1);  % [kg/kg]
+hist.EX(stp  ) = (hist.sumX(stp) - hist.DX(stp) - hist.sumX(1))./hist.sumB(1);  % [kg/kg]
 
 % record variable and coefficient diagnostics
 hist.W(stp,1) = min(min(-W(:,2:end-1)));

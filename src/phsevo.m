@@ -31,7 +31,8 @@ upd_X = - alpha*res_X*dt/a1 + beta*upd_X;
 upd_M = - alpha*res_M*dt/a1 + beta*upd_M;
 
 X     = X + upd_X;
-M     = M + upd_M;
+M     = rho-X;
+% M     = M + upd_M;
 
 % get dynamically evolving mixture density 
 RHO   = X+M;
