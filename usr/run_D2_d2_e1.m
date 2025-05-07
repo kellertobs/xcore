@@ -13,7 +13,7 @@ save_op   =  1;                   % switch on to save output to file
 
 % set model domain parameters
 D         =  100;                 % chamber depth [m]
-N         =  200;                 % number of grid points in z-direction
+N         =  100;                 % number of grid points in z-direction
 h         =  D/N;                 % grid spacing (equal in both dimensions, do not set) [m]
 L         =  D;                   % chamber width (equal to h for 1-D mode) [m]
 
@@ -23,9 +23,8 @@ dt        =  0.1;                 % initial time step [s]
 % set physical parameters
 x0        =  0.01;                % initial background crystallinity [wt]
 dx0       =  x0/3;                % background crystallinity perturbation [wt]
-xb        =  0.00;                % initial boundary layer crystallinity [wt]
-dxb       =  xb/3;                % boundary layer crystallinity perturbation [wt]
 d0        =  0.01;                % xtal size constant [m]
+etam0     =  1e1;                 % melt viscosity constant [kg/m3]
 
 % set boundary layer parameters
 bnd_w     =  2*h;                 % width of boundary layer [m]
