@@ -25,7 +25,6 @@ x0        =  0.01;                % initial background crystallinity [wt]
 dx0       =  x0/3;                % background crystallinity perturbation [wt]
 xb        =  0.00;                % initial boundary layer crystallinity [wt]
 dxb       =  xb/3;                % boundary layer crystallinity perturbation [wt]
-
 d0        =  0.01;                % xtal size constant [kg/m3]
 
 % set boundary layer parameters

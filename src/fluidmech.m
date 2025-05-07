@@ -1,3 +1,5 @@
+%*****  FLUID MECHANICS SOLVER  *******************************************
+
 tic;
 
 if ~bnchm && step>0 && ~restart
@@ -18,6 +20,7 @@ UBG     = - 0*dVmean./2 .* (L/2-XXu);
 WBG     = - 2*dVmean./2 .* (0/2-ZZw);
 
 end
+
 
 %% assemble coefficients for matrix velocity diagonal and right-hand side
 
@@ -57,7 +60,6 @@ IIL = [IIL; ii(:)]; JJL = [JJL; jj(:)];   AAL = [AAL; aa(:)+1];
 aa  = zeros(size(ii)) + WBG(end,2:end-1);
 IIR = [IIR; ii(:)]; AAR = [AAR; aa(:)];
 
-
 % internal points
 ii    = MapW(2:end-1,2:end-1);
 EtaC1 =  etaco(2:end-1,1:end-1);   EtaC2 =  etaco(2:end-1,2:end);
@@ -92,7 +94,6 @@ IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL;+(1/2*EtaC1(:)-1/3*EtaP2(:
 IIL = [IIL; ii(:)]; JJL = [JJL; jj3(:)];   AAL = [AAL;+(1/2*EtaC2(:)-1/3*EtaP1(:))/h^2];  % U one to the top and right
 IIL = [IIL; ii(:)]; JJL = [JJL; jj4(:)];   AAL = [AAL;-(1/2*EtaC2(:)-1/3*EtaP2(:))/h^2];  % U one to the bottom and right
 
-
 % z-RHS vector
 advn_mz = advect(rhow(2:end-1,:).*W(2:end-1,2:end-1),(U(2:end-2,:)+U(3:end-1,:))/2,(W(1:end-1,2:end-1)+W(2:end,2:end-1))/2,h,{ADVN,''},[1,2],BCA);
 rr  = + Drho(2:end-1,:) .* g0 ...
@@ -102,8 +103,7 @@ if bnchm; rr = rr + src_W_mms(2:end-1,2:end-1); end
 
 IIR = [IIR; ii(:)];  AAR = [AAR; rr(:)];
 
-
-%  assemble coefficients of x-stress divergence
+% assemble coefficients of x-stress divergence
 
 % top boundary
 ii  = MapU(1,:); jj1 = ii; jj2 = MapU(2,:);
@@ -152,7 +152,6 @@ IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL;+(1/2*EtaC1(:)-1/3*EtaP2(:
 IIL = [IIL; ii(:)]; JJL = [JJL; jj3(:)];   AAL = [AAL;+(1/2*EtaC2(:)-1/3*EtaP1(:))/h^2];  % W one to the bottom and left
 IIL = [IIL; ii(:)]; JJL = [JJL; jj4(:)];   AAL = [AAL;-(1/2*EtaC2(:)-1/3*EtaP2(:))/h^2];  % W one to the bottom and right
 
-
 % x-RHS vector
 advn_mx = advect(rhou.*U(2:end-1,:),(U(2:end-1,ifx(1:end-1))+U(2:end-1,ifx(2:end)))/2,(W(:,1:end-1)+W(:,2:end))/2,h,{ADVN,''},[1,2],BCA);
 advn_mx(:,[1 end]) = repmat((advn_mx(:,1)+advn_mx(:,end))/2,1,2);
@@ -163,7 +162,6 @@ if bnchm
 end
 
 IIR = [IIR; ii(:)];  AAR = [AAR; rr(:)];
-
 
 % assemble coefficient matrix & right-hand side vector
 KV  = sparse(IIL,JJL,AAL,NW+NU,NW+NU);
@@ -322,6 +320,7 @@ else
     RP(np0    ) = 0;
 end
 
+
 %% assemble and scale global coefficient matrix and right-hand side vector
 
 LL  = [ KV   GG  ; ...
@@ -350,19 +349,8 @@ U = full(reshape(SOL(MapU(:))        ,Nz+2,Nx+1));  % matrix x-velocity
 P = full(reshape(SOL(MapP(:)+(NW+NU)),Nz+2,Nx+2));  % matrix dynamic pressure
 P = P - mean(mean(P(2:end-1,2:end-1)));             % reduce pressure by mean
 
-% % get VP-solution updates
-% upd_W = - full(reshape(SOL(MapW(:))        ,Nz+1,Nx+2));  % matrix z-velocity
-% upd_U = - full(reshape(SOL(MapU(:))        ,Nz+2,Nx+1));  % matrix x-velocity
-% upd_P = - full(reshape(SOL(MapP(:)+(NW+NU)),Nz+2,Nx+2));  % matrix dynamic pressure
-% upd_P = upd_P - mean(upd_P(:));                           % reduce pressure update by mean
-% 
-% % apply VP-solution updates
-% W = W + upd_W;
-% U = U + upd_U;
-% P = P + upd_P;
 
-
-
+%% Update phase segregation speeds
 if ~bnchm
 
     % advection of xtal segregation speed

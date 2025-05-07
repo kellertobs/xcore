@@ -1,4 +1,4 @@
-%% *****  MODEL INITIALISATION  *******************************************
+%*****  MODEL INITIALISATION  *********************************************
 
 if ~postprc
 % create output directory

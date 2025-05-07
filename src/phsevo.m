@@ -1,4 +1,4 @@
-%% *****  THERMO-CHEMICAL EVOLUTION  **************************************
+%*****  PHASE FRACTION EVOLUTION  *****************************************
 
 tic;
 
@@ -14,34 +14,34 @@ dffn_X   = diffus(chi,rho.*kx,h,[1,2],BCD);
 dffn_M   = diffus(mu ,rho.*kx,h,[1,2],BCD);
 
 % phase change rates
-tau_x = (h/2)./(norm(Wx,'fro')./sqrt(length(Wx(:))));
-Gx    = (Gx + max(0,Da.*(xeq-x).*rho./tau_x.*topshape))/2;
-Gm    = -Gx;
+tau_x    = (h/2)./(norm(Wx,'fro')./sqrt(length(Wx(:))));
+Gx       = (Gx + max(0,Da.*(xeq-x).*rho./tau_x.*topshape))/2;
+Gm       = -Gx;
 
 % total rates of change
-dXdt   = advn_X + dffn_X + Gx;
-dMdt   = advn_M + dffn_M + Gm;
+dXdt     = advn_X + dffn_X + Gx;
+dMdt     = advn_M + dffn_M + Gm;
 
 % residual of phase density evolution
-res_X = (a1*X-a2*Xo-a3*Xoo)/dt - (b1*dXdt + b2*dXdto + b3*dXdtoo);
-res_M = (a1*M-a2*Mo-a3*Moo)/dt - (b1*dMdt + b2*dMdto + b3*dMdtoo);
+res_X    = (a1*X-a2*Xo-a3*Xoo)/dt - (b1*dXdt + b2*dXdto + b3*dXdtoo);
+res_M    = (a1*M-a2*Mo-a3*Moo)/dt - (b1*dMdt + b2*dMdto + b3*dMdtoo);
 
 % semi-implicit update of phase fraction densities
-upd_X = - alpha*res_X*dt/a1 + beta*upd_X;
-upd_M = - alpha*res_M*dt/a1 + beta*upd_M;
+upd_X    = - alpha*res_X*dt/a1 + beta*upd_X;
+upd_M    = - alpha*res_M*dt/a1 + beta*upd_M;
 
-X     = X + upd_X;
-M     = rho-X;
-% M     = M + upd_M;
+X        = X + upd_X;
+M        = rho - X;
+% M        = M + upd_M;
 
 % get dynamically evolving mixture density 
-RHO   = X+M;
+RHO      = X+M;
 
 %***  update phase fractions and component concentrations
 
 % update phase fractions
-x = X./RHO; 
-m = M./RHO;
+x        = X./RHO; 
+m        = M./RHO;
 
 % record timing
-TCtime = TCtime + toc;% - eqtime;
+TCtime   = TCtime + toc;% - eqtime;

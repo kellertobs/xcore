@@ -1,4 +1,4 @@
-% record run history
+%*****  RECORD HISTORY OF DIAGNOSTICS  ************************************
 
 [dsumBdtoo, dsumBdto] = deal(dsumBdto, dsumBdt);
 [dsumMdtoo, dsumMdto] = deal(dsumMdto, dsumMdt);

@@ -1,3 +1,4 @@
+%*****  CREATE AND SAVE OUTPUT FIGURE AND DATA FRAMES  ********************
 
 % prepare for plotting
 TX = {'Interpreter','Latex'}; FS = {'FontSize',12};
@@ -186,48 +187,19 @@ set(fh4,'CurrentAxes',ax(46));
 imagesc(Xsc,Zsc,log10(Rex)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Re$_x$ [1]'],TX{:},FS{:}); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]);
 
-
 % plot model history
 if plot_cv
-    if ~exist('fh14','var'); fh13 = figure(VIS{:});
-    else; set(0, 'CurrentFigure', fh13); clf;
-    end
-    subplot(4,1,1);
-    plot(hist.time/TimeScale,hist.DS./hist.sumS,'k-',LW{:}); hold on; axis tight; box on;
-    ylabel('consv. $S$',TX{:},FS{:}); set(gca,TL{:},TS{:},'XTickLabel',[]);
-    subplot(4,1,2);
-    plot(hist.time/TimeScale,hist.DB./hist.sumB,'k-',LW{:}); hold on; axis tight; box on; hold on
-    plot(hist.time/TimeScale,hist.DM./hist.sumB,'k--',LW{:}); hold on; axis tight; box on;
-    plot(hist.time/TimeScale,hist.DX./hist.sumB,'k-.',LW{:}); hold on; axis tight; box on;
-    plot(hist.time/TimeScale,hist.DF./hist.sumB,'k:',LW{:}); hold on; axis tight; box on;
-    ylabel('consv. $\bar{\rho},F^i$',TX{:},FS{:}); set(gca,TL{:},TS{:},'XTickLabel',[]);
-    subplot(4,1,3);
-    plot(hist.time/TimeScale,hist.DC./hist.sumC,'k-',LW{:}); hold on; axis tight; box on;
-    ylabel('consv. $C_j$',TX{:},FS{:}); set(gca,TL{:},TS{:},'XTickLabel',[]);
-    subplot(4,1,4);
-    plot(hist.time/TimeScale,hist.DT./hist.sumT,'k-',LW{:}); hold on; axis tight; box on;
-    ylabel('consv. $\Theta_k$',TX{:},FS{:}); set(gca,TL{:},TS{:},'XTickLabel',[]);
-    xlabel(['Time [',TimeUnits,']'],TX{:},FS{:});
-
     if ~exist('fh15','var'); fh14 = figure(VIS{:});
     else; set(0, 'CurrentFigure', fh14); clf;
     end
-    subplot(4,1,1);
-    plot(hist.time/TimeScale,hist.ES,'k-',LW{:}); hold on; axis tight; box on;
-    ylabel('error $S$',TX{:},FS{:}); set(gca,TL{:},TS{:},'XTickLabel',[]);
-    subplot(4,1,2);
-    plot(hist.time/TimeScale,hist.EB,'k-',LW{:}); hold on; axis tight; box on; hold on
-    plot(hist.time/TimeScale,hist.EM,'k--',LW{:}); hold on; axis tight; box on;
-    plot(hist.time/TimeScale,hist.EX,'k-.',LW{:}); hold on; axis tight; box on;
-    plot(hist.time/TimeScale,hist.EF,'k:',LW{:}); hold on; axis tight; box on;
-    ylabel('error $\bar{\rho},F^i$',TX{:},FS{:}); set(gca,TL{:},TS{:},'XTickLabel',[]);
-    subplot(4,1,3);
-    plot(hist.time/TimeScale,hist.EC,'k-',LW{:}); hold on; axis tight; box on;
-    ylabel('error $C_j$',TX{:},FS{:}); set(gca,TL{:},TS{:},'XTickLabel',[]);
-    subplot(4,1,4);
-    plot(hist.time/TimeScale,hist.ET,'k-',LW{:}); hold on; axis tight; box on;
-    ylabel('error $\Theta_k$',TX{:},FS{:}); set(gca,TL{:},TS{:},'XTickLabel',[]);
-    xlabel(['Time [',TimeUnits,']'],TX{:},FS{:});
+    plot(hist.time/TimeScale,hist.EB,'k-' ,LW{:}); hold on; axis tight; box on;
+    plot(hist.time/TimeScale,hist.EM,'k--',LW{:});
+    plot(hist.time/TimeScale,hist.EX,'k-.',LW{:});
+    set(gca,TL{:},FS{:})
+    legend('xtal','melt','mixt',TX{:},FS{1},15,'Location','northwest')
+    ylabel('Rel. error [1]',TX{:},FS{1},15);
+    xlabel(['Time [',TimeUnits,']'],TX{:},FS{1},15);
+    title('Global Conservation Error',TX{:},FS{1},18)
 end
 
 drawnow

@@ -27,7 +27,7 @@ Nt        =  1e6;                 % number of time steps to take
 tend      =  1*yr;                % end time for simulation [s]
 dt        =  0.1;                 % initial time step [s]
 
-% set physical parameters
+% set initial phase fraction parameters
 x0        =  0.01;                % initial background crystallinity [wt]
 dx0       =  x0/3;                % background crystallinity perturbation [wt]
 xb        =  0.00;                % initial boundary layer crystallinity [wt]
@@ -35,21 +35,23 @@ dxb       =  xb/3;                % boundary layer crystallinity perturbation [w
 seed      =  24;                  % random perturbation seed
 smth      =  25;                  % random perturbation smoothness
 
+% set buoyancy parameters
 rhom0     =  2500;                % melt density constant [kg/m3]
 rhox0     =  3000;                % xtal density constant [kg/m3]
-etam0     =  1e2;                 % melt viscosity constant [kg/m3]
-etax0     =  1e18;                % xtal viscosity constant [kg/m3]
 d0        =  0.01;                % xtal size constant [kg/m3]
 g0        =  10.;                 % gravity constant [m/s2]
 
-AA      =[ 0.5989, 0.1772; ...    % permission slopes
-           0.0397, 0.1182 ];      % increases permission slopes away from step function 
+% set rheological parameters
+etam0     =  1e2;                 % melt viscosity constant [kg/m3]
+etax0     =  1e18;                % xtal viscosity constant [kg/m3]
+AA        = [ 0.5989, 0.1772; ...    % permission slopes
+              0.0397, 0.1182 ];      % increases permission slopes away from step function 
 
-BB      =[ 0.6870, 0.3130; ...    % permission step locations
-           0.9998, 0.0002;];      % sets midpoint of step functions
+BB        = [ 0.6870, 0.3130; ...    % permission step locations
+              0.9998, 0.0002;];      % sets midpoint of step functions
 
-CC      =[[0.9826, 0.0174]*9.1697; ... % permission step widths
-          [0.1695, 0.8305]*4.2773;];   % factor increases width of step functions
+CC        = [[0.9826, 0.0174]*9.1697; ... % permission step widths
+             [0.1695, 0.8305]*4.2773;];   % factor increases width of step functions
 
 % set boundary layer parameters
 bnd_w     =  2*h;                 % width of boundary layer [m]

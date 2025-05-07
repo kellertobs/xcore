@@ -1,4 +1,5 @@
-%%*****  UPDATE PARAMETERS & AUXILIARY FIELDS  ****************************
+%*****  UPDATE PARAMETERS & AUXILIARY FIELDS  *****************************
+
 tic;
 
 % update phase indicators
