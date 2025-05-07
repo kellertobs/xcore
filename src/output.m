@@ -132,7 +132,7 @@ set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Gamma_x/\bar{\rho}$ [wt\%/'
 text(0.5,1.15,['time = ',num2str(time/TimeScale,3),' [',TimeUnits,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
 set(fh2,'CurrentAxes',ax(23));
 imagesc(Xsc,Zsc,-wx(2:end-1,2:end-1)/SpeedScale); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta w^x$ [',SpeedUnits,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:}); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:});
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta w^x$ [',SpeedUnits,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:});
 set(fh2,'CurrentAxes',ax(24));
 imagesc(Xsc,Zsc,rho-mean(rho,2)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta \bar{\rho}_h$ [kg/m$^3$]'],TX{:},FS{:}); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:});  xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:});
