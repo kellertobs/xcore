@@ -189,8 +189,8 @@ set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Re$_x$ [1]'],TX{:}
 
 % plot model history
 if plot_cv
-    if ~exist('fh15','var'); fh14 = figure(VIS{:});
-    else; set(0, 'CurrentFigure', fh14); clf;
+    if ~exist('fh15','var'); fh15 = figure(VIS{:});
+    else; set(0, 'CurrentFigure', fh15); clf;
     end
     plot(hist.time/TimeScale,hist.EB,'k-' ,LW{:}); hold on; axis tight; box on;
     plot(hist.time/TimeScale,hist.EM,'k--',LW{:});

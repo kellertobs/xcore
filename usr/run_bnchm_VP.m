@@ -51,10 +51,10 @@ for nn = NN
     p1 = loglog(h,EW,'s','Color',clist(1,:),'MarkerSize',10,'LineWidth',2); axis xy tight; hold on; box on;
     p2 = loglog(h,EU,'o','Color',clist(2,:),'MarkerSize',10,'LineWidth',2); axis xy tight; hold on; box on;
     p3 = loglog(h,EP,'v','Color',clist(3,:),'MarkerSize',10,'LineWidth',2); axis xy tight; hold on; box on;
-    set(gca,'TicklabelInterpreter','latex','FontSize',12)
-    xlabel('grid step [m]','Interpreter','latex','FontSize',16)
-    ylabel('rel. numerical error [1]','Interpreter','latex','FontSize',16)
-    title('Numerical convergence in space','Interpreter','latex','FontSize',20)
+    set(gca,'LineWidth',1.5,'TickLabelInterpreter','latex','FontSize',12)
+    xlabel('grid step [m]','Interpreter','latex','FontSize',15)
+    ylabel('rel. numerical error [1]','Interpreter','latex','FontSize',15)
+    title('Numerical convergence in space','Interpreter','latex','FontSize',18)
 
     if nn == NN(1)
         p4 = loglog(D./NN,mean([EW,EU,EP]).*(NN(1)./NN).^2,'k-','LineWidth',2);  % plot linear trend for comparison
@@ -69,9 +69,9 @@ for nn = NN
     dofs = (nn+2).*(nn+2) + 2.*(nn+1).*(nn+2);
     p5 = loglog(dofs,FMtime,'+','Color',clist(2,:),'MarkerSize',10,'LineWidth',2); axis xy tight; hold on; box on;
     set(gca,'TicklabelInterpreter','latex','FontSize',12)
-    xlabel('\# dofs [1]','Interpreter','latex','FontSize',16)
-    ylabel('time to solution [s]','Interpreter','latex','FontSize',16)
-    title('Scaling of direct solver','Interpreter','latex','FontSize',20)
+    xlabel('\# dofs [1]','Interpreter','latex','FontSize',15)
+    ylabel('time to solution [s]','Interpreter','latex','FontSize',15)
+    title('Scaling of direct solver','Interpreter','latex','FontSize',18)
 
     if nn == NN(1)
         p6 = loglog(DOFS,FMtime*(DOFS./DOFS(1)).^1,'k-','LineWidth',2);  % plot linear trend for comparison

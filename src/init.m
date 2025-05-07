@@ -78,6 +78,10 @@ for i = 1:round(smth)
 end
 rp = rp./max(abs(rp(:)));
 
+gp = exp(-(XX-L/2  ).^2/(max(L,D)/8)^2 - (ZZ-D/2).^2/(max(L,D)/8)^2) ...
+   + exp(-(XX-L/2+L).^2/(max(L,D)/8)^2 - (ZZ-D/2).^2/(max(L,D)/8)^2) ...
+   + exp(-(XX-L/2-L).^2/(max(L,D)/8)^2 - (ZZ-D/2).^2/(max(L,D)/8)^2);
+
 % get mapping arrays
 NP = (Nz+2) * (Nx+2);
 NW = (Nz+1) * (Nx+2);
@@ -101,7 +105,7 @@ ifx = [Nx,1:Nx+1,2];
 ifz = [2,1:Nz+1,Nz];
 
 % initialise crystallinity field
-x   =  x0 + dx0.*rp + topshape.*(xb + dxb.*rp);  % potential temperature [C]
+x   =  x0 + dx0.*rp + dxg.*gp + topshape.*(xb + dxb.*rp);  % potential temperature [C]
 m   =  1-x;
 xin =  x;
 

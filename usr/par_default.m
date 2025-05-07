@@ -6,7 +6,7 @@ restart   =  0;                   % restart from file (0: new run; <1: restart f
 nrh       =  1;                   % record diagnostic history every 'nrh' time steps
 nop       =  100;                 % output frame plotted/saved every 'nop' time steps
 plot_op   =  1;                   % switch on to live plot results
-save_op   =  1;                   % switch on to save output to file
+save_op   =  0;                   % switch on to save output to file
 plot_cv   =  0;                   % switch on to live plot iterative convergence
 colourmap = 'lapaz';              % choose colourmap ('ocean','lipari','lajolla','lapaz','navia','batlow(W/K)','glasgow')
 
@@ -29,7 +29,8 @@ dt        =  0.1;                 % initial time step [s]
 
 % set initial phase fraction parameters
 x0        =  0.01;                % initial background crystallinity [wt]
-dx0       =  x0/3;                % background crystallinity perturbation [wt]
+dx0       =  x0/3;                % background crystallinity random perturbation [wt]
+dxg       =  0;                   % background crystallinity gaussian perturbation [wt]
 xb        =  0.00;                % initial boundary layer crystallinity [wt]
 dxb       =  xb/3;                % boundary layer crystallinity perturbation [wt]
 seed      =  24;                  % random perturbation seed
