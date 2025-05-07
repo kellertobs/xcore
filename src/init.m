@@ -14,7 +14,7 @@ end
 
 fprintf('\n\n')
 fprintf('*************************************************************\n');
-fprintf('*****  RUN REGC MODEL | %s  ********************\n',datetime('now'));
+fprintf('*****  RUN REGC MODEL | %s  ***************\n',datetime('now'));
 fprintf('*************************************************************\n');
 fprintf('\n   run ID: %s \n\n',runID);
 end

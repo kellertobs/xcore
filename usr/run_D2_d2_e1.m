@@ -5,15 +5,15 @@ clear; close all;
 run('./par_default')
 
 % set run parameters
-runID     =  'D100_d1_e2';        % run identifier
+runID     =  'D2_d2_e1';          % run identifier  (D = 1e2; d0 = 1e-2; etam0 = 1e1)
 restart   =  0;                   % restart from file (0: new run; <1: restart from last; >1: restart from specified frame)
-nop       =  10;                  % output frame plotted/saved every 'nop' time steps
+nop       =  100;                 % output frame plotted/saved every 'nop' time steps
 plot_op   =  1;                   % switch on to live plot results
-save_op   =  0;                   % switch on to save output to file
+save_op   =  1;                   % switch on to save output to file
 
 % set model domain parameters
 D         =  100;                 % chamber depth [m]
-N         =  100;                 % number of grid points in z-direction
+N         =  200;                 % number of grid points in z-direction
 h         =  D/N;                 % grid spacing (equal in both dimensions, do not set) [m]
 L         =  D;                   % chamber width (equal to h for 1-D mode) [m]
 
