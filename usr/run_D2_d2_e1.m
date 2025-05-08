@@ -12,10 +12,10 @@ plot_op   =  1;                   % switch on to live plot results
 save_op   =  1;                   % switch on to save output to file
 
 % set model domain parameters
-D         =  100;                 % chamber depth [m]
-N         =  100;                 % number of grid points in z-direction
+D         =  1e2;                 % chamber depth [m]
+N         =  200;                 % number of grid points in z-direction
 h         =  D/N;                 % grid spacing (equal in both dimensions, do not set) [m]
-L         =  D;                   % chamber width (equal to h for 1-D mode) [m]
+L         =  1.5*D;               % chamber width (equal to h for 1-D mode) [m]
 
 % set model timing parameters
 dt        =  0.1;                 % initial time step [s]
@@ -23,13 +23,13 @@ dt        =  0.1;                 % initial time step [s]
 % set physical parameters
 x0        =  0.01;                % initial background crystallinity [wt]
 dx0       =  x0/3;                % background crystallinity perturbation [wt]
-d0        =  0.01;                % xtal size constant [m]
-etam0     =  1e1;                 % melt viscosity constant [kg/m3]
+d0        =  1e-2;                % xtal size constant [m]
+etam0     =  1e+1;                % melt viscosity constant [kg/m3]
 
 % set boundary layer parameters
 bnd_w     =  2*h;                 % width of boundary layer [m]
 xeq       =  0.1;                 % equilibrium crystallinity of boundary layer [wt]
-Da        =  0.1;                 % Dahmköhler number of boundary layer rate [s]
+Da        =  1.0;                 % Dahmköhler number of boundary layer rate [s]
 
 % set numerical model parameters
 CFL       =  0.50;                % (physical) time stepping courant number (multiplies stable step) [0,1]

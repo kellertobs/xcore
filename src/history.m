@@ -32,6 +32,10 @@ hist.EM(stp  ) = (hist.sumM(stp) - hist.DM(stp) - hist.sumM(1))./hist.sumB(1);  
 hist.EX(stp  ) = (hist.sumX(stp) - hist.DX(stp) - hist.sumX(1))./hist.sumB(1);  % [kg/kg]
 
 % record variable and coefficient diagnostics
+hist.V(stp,1) = min(min(V));
+hist.V(stp,2) = mean(mean(V));
+hist.V(stp,3) = max(max(V));
+
 hist.W(stp,1) = min(min(-W(:,2:end-1)));
 hist.W(stp,2) = mean(mean(abs(W(:,2:end-1))));
 hist.W(stp,3) = max(max(-W(:,2:end-1)));
