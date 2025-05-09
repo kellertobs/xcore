@@ -68,7 +68,6 @@ rtol      =  1e-4;                % outer its relative tolerance
 atol      =  1e-8;                % outer its absolute tolerance
 maxit     =  50;                  % maximum outer its
 alpha     =  0.75;                % iterative step size parameter
-beta      =  0.00;                % iterative damping parameter
 gamma     =  0e-3;                % artificial horizontal inertia parameter (only applies if periodic)
 lambda1   =  0e-7;                % pressure regularisation parameter
 lambda2   =  0e-7;                % pressure regularisation parameter

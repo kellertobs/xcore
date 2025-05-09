@@ -341,13 +341,19 @@ RR  = SCL*RR;
 
 %% Solve linear system of equations for vx, vz, P
 
-SOL = SCL*(LL\RR);  % update solution
+UPD = SCL*(LL\FF);  % update solution
 
 % map solution vector to 2D arrays
-W = full(reshape(SOL(MapW(:))        ,Nz+1,Nx+2));  % matrix z-velocity
-U = full(reshape(SOL(MapU(:))        ,Nz+2,Nx+1));  % matrix x-velocity
-P = full(reshape(SOL(MapP(:)+(NW+NU)),Nz+2,Nx+2));  % matrix dynamic pressure
-P = P - mean(mean(P(2:end-1,2:end-1)));             % reduce pressure by mean
+upd_W = -full(reshape(UPD(MapW(:))        ,Nz+1,Nx+2));  % matrix z-velocity
+upd_U = -full(reshape(UPD(MapU(:))        ,Nz+2,Nx+1));  % matrix x-velocity
+upd_P = -full(reshape(UPD(MapP(:)+(NW+NU)),Nz+2,Nx+2));  % matrix dynamic pressure
+upd_P = upd_P - mean(mean(upd_P(2:end-1,2:end-1)));           % reduce pressure by mean
+
+% update solution
+W = W + upd_W;
+U = U + upd_U;
+P = P + upd_P;
+SOL = [W(:);U(:);P(:)];
 
 
 %% Update phase segregation speeds
@@ -387,12 +393,12 @@ if ~bnchm && step>=1
     res_Mx = (a1*Mx-a2*Mxo-a3*Mxoo)/dt - (b1*dMxdt + b2*dMxdto + b3*dMxdtoo);
 
     % semi-implicit update of xtal momentum
-    upd_Mx = - alpha*res_Mx*dt/a1 + beta*upd_Mx;
+    upd_Mx = - alpha*res_Mx*dt/a1;
 
     % update crystal momentum with dynamic under-relaxation
     tau_p = d0^2*rhox0/etam0;
-    relax = dt ./ (dt + 2*tau_p);
-    Mx = (1-relax) .* (Mx + upd_Mx) + relax .* Mx;
+    relax = dt ./ (dt + tau_p);
+    Mx =  Mx + (1-relax)*upd_Mx;
 
     % update crystal settling speed
     wx(:,2:end-1) = Mx./Xw;

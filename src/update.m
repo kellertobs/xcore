@@ -91,7 +91,7 @@ vx  = abs(wx(1:end-1,2:end-1)+wx(2:end,2:end-1))/2;                        % seg
 % update diffusion parameters
 eII0   = eta0./rho./Delta_cnv0^2;
 eIIe   = eII .* (1-exp(-eII./eII0)+eps);
-ke     = (ke + eIIe.*Delta_cnv.^2)/2;                                      % turbulent eddy diffusivity
+ke     = eIIe.*Delta_cnv.^2;                                      % turbulent eddy diffusivity
 fRe    = (1-exp(-Re./Rec)+eps);
 ke  = 1./(1./kmax + 1./ke) + kmin;
 
@@ -106,9 +106,9 @@ etaco  = (eta(icz(1:end-1),icx(1:end-1)).*eta(icz(2:end),icx(1:end-1)) ...
        .* eta(icz(1:end-1),icx(2:end  )).*eta(icz(2:end),icx(2:end  ))).^0.25;
 
 % update dimensionless numbers
-Re     = V .*Delta_cnv./(eta./rho);                                        % Reynolds number on correlation length scale
-ReD    = V .*D        ./(eta./rho);                                        % Reynolds number on domain length scale
-Rex    = vx.*d0       ./(eta./rho);                                        % particle Reynolds number
+Re     = V .*Delta_cnv./(eta ./rho);                                       % Reynolds number on correlation length scale
+ReD    = V .*D        ./(eta ./rho);                                       % Reynolds number on domain length scale
+Rex    = vx.*d0       ./(eta0./rho);                                       % particle Reynolds number
 Ra     = V.*Delta_cnv./kx;                                                 % Rayleigh number on correlation length scale
 RaD    = V.*D        ./kx;                                                 % Rayleigh number on domain length scale
 Rux    = vx./V;                                                            % particle settling number

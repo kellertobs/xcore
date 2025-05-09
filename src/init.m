@@ -147,7 +147,7 @@ M    = rho.*m;  Mo = M;  res_M = 0.*M;
 
 update;
 
-Gx   =  Da.*(xeq-x).*rho./dt.*topshape;
+Gx   =  0.*x;
 Gm   =  -Gx;
 
 xo   = x;

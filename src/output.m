@@ -180,8 +180,8 @@ title('Crystallinity [wt\%]',TX{:},FS{1},15);
 subplot(3,1,2)
 semilogy(hist.time/TimeScale,hist.V(:,2)/SpeedScale,'k-' ,LW{:}); hold on; axis tight; box on;
 semilogy(hist.time/TimeScale,hist.wx(:,2)/SpeedScale,'k--',LW{:});
-yticks = 10.^(-6:2:6);
-yticklabels = {'$10^{-6}$','$10^{-4}$','$10^{-2}$','$10^{0}$','$10^{2}$','$10^{4}$','$10^{6}$'};
+yticks = 10.^(-4:1:4);
+yticklabels = {'$10^{-4}$','$10^{-3}$','$10^{-2}$','$10^{-1}$','$10^{0}$','$10^{1}$','$10^{2}$','$10^{3}$','$10^{4}$'};
 set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
 set(gca,TL{:},FS{:},'Xticklabel',[]);
 legend('convection','xtal settling',TX{:},FS{:},'Location','northwest')
@@ -190,11 +190,12 @@ title(['Flow speeds [',SpeedUnits,']'],TX{:},FS{1},15);
 subplot(3,1,3)
 semilogy(hist.time/TimeScale,hist.RaD(:,2),'k-' ,LW{:}); hold on; axis tight; box on;
 semilogy(hist.time/TimeScale,hist.ReD(:,2),'k-.',LW{:});
+semilogy(hist.time/TimeScale,hist.Rex(:,2),'k:' ,LW{:});
 semilogy(hist.time/TimeScale,hist.Rux(:,2),'k--',LW{:});
-yticks = 10.^(-6:2:6);
-yticklabels = {'$10^{-6}$','$10^{-4}$','$10^{-2}$','$10^{0}$','$10^{2}$','$10^{4}$','$10^{6}$'};
+yticks = 10.^(-8:2:8);
+yticklabels = {'$10^{-8}$','$10^{-6}$','$10^{-4}$','$10^{-2}$','$10^{0}$','$10^{2}$','$10^{4}$','$10^{6}$','$10^{8}$'};
 set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
-legend('Ra','Re','Ru',TX{:},FS{:},'Location','northwest')
+legend('Ra','Re','Re$_x$','Ru$_x$',TX{:},FS{:},'Location','northwest')
 title(['Dimensionless numbers'],TX{:},FS{1},15);
 xlabel(['Time [',TimeUnits,']'],TX{:},FS{1},15);
 

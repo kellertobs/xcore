@@ -15,7 +15,7 @@ dffn_X   = diffus(chi,rho.*kx,h,[1,2],BCD);
 % boundary phase change rate
 if ~bnchm
 tau_x    = (h/2)./(norm(Wx,'fro')./sqrt(length(Wx(:))));
-Gx       = (Gx + max(0,Da.*(xeq-x).*rho./tau_x.*topshape))/2;
+Gx       = max(0,Da.*(xeq-x).*rho./tau_x.*topshape);
 Gm       = -Gx;
 end
 
@@ -26,7 +26,7 @@ dXdt     = advn_X + dffn_X + Gx;
 res_X    = (a1*X-a2*Xo-a3*Xoo)/dt - (b1*dXdt + b2*dXdto + b3*dXdtoo);
 
 % semi-implicit update of phase fraction densities
-upd_X    = - alpha*res_X*dt/a1 + beta*upd_X;
+upd_X    = - alpha*res_X*dt/a1;
 
 X        = X + upd_X;
 M        = rho - X;
