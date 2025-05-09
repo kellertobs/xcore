@@ -67,11 +67,8 @@ Ksgr = ff./Cv;
 Cvx  = squeeze(Cv(1,:,:));
 Cvm  = squeeze(Cv(2,:,:));
 
-Cvxw = (Cvx(icz(1:end-1),:).*Cvx(icz(2:end),:)).^0.5;
-Cvmw = (Cvm(icz(1:end-1),:).*Cvm(icz(2:end),:)).^0.5;
-
-Ksgr_x = squeeze(Ksgr(1,:,:)) + eps^2;
-Ksgr_m = squeeze(Ksgr(2,:,:)) + eps^2;
+Cvxw = (Cvx(icz(1:end-1),:)+Cvx(icz(2:end),:))/2;
+Cvmw = (Cvm(icz(1:end-1),:)+Cvm(icz(2:end),:))/2;
 
 
 % update velocity divergence
