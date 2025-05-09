@@ -110,7 +110,7 @@ m   =  1-x;
 xin =  x;
 
 U   =  zeros(Nz+2,Nx+1);  UBG = U; upd_U = 0*U;
-W   =  zeros(Nz+1,Nx+2);  WBG = W; wx = 0.*W; wx0 = 0.*W; wxo = wx; upd_W = 0*W;
+W   =  zeros(Nz+1,Nx+2);  WBG = W; wx = 0.*W; wm = 0.*W; wx0 = 0.*W; wxo = wx; upd_W = 0*W; Mx = 0*wx(:,2:end-1);
 P   =  zeros(Nz+2,Nx+2);  V   = 0.*x; upd_P = 0*P;
 SOL = [W(:);U(:);P(:)];
 
@@ -142,10 +142,10 @@ XEtime  = 0;
 UDtime  = 0;
 a1      = 1; a2 = 0; a3 = 0; b1 = 1; b2 = 0; b3 = 0;
 
-update;
-
 X    = rho.*x;  Xo = X;  res_X = 0.*X;
 M    = rho.*m;  Mo = M;  res_M = 0.*M;
+
+update;
 
 Gx   =  Da.*(xeq-x).*rho./dt.*topshape;
 Gm   =  -Gx;
@@ -154,6 +154,7 @@ xo   = x;
 mo   = m;
 Xo   = X;
 Mo   = M;
+Mxo  = Mx;
 rhoo = rho;
 dto  = dt; 
 
@@ -161,12 +162,13 @@ dto  = dt;
 corrl;
 
 % initialise auxiliary variables 
-dwxdt   = 0.*wx; dwxdto = dwxdt;  advn_wx = 0.*wx;
+dwxdt   = 0.*wx; dwxdto = dwxdt;  advn_Mx = 0.*wx;
 dXdt    = 0.*x;  dXdto  = dXdt;
 dMdt    = 0.*m;  dMdto  = dMdt;
+dMxdt   = 0.*Mx; dMxdto = dMxdt;
 upd_X   = 0.*X;
 upd_M   = 0.*M;
-upd_wx  = 0.*wx;
+upd_Mx  = 0.*Mx;
 upd_rho = 0.*rho;
 
 % initialise timing and iterative parameters
@@ -199,8 +201,6 @@ if restart
         corrl;
         update;
         store;
-        fluidmech;
-        update;
         output;
 
         time    = time+dt;
@@ -211,8 +211,6 @@ if restart
         fprintf('\n   !!! restart file does not exist !!! \n   => starting run from scratch %s \n\n',runID);
         restart = 0;
         store;
-        fluidmech;
-        update;
         history;
         output;
         step = step+1;
@@ -220,8 +218,6 @@ if restart
 else
     % complete, plot, and save initial condition
     store;
-    fluidmech;
-    update;
     history;
     output;
     step = step+1;

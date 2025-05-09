@@ -351,36 +351,55 @@ P = P - mean(mean(P(2:end-1,2:end-1)));             % reduce pressure by mean
 
 
 %% Update phase segregation speeds
-if ~bnchm
+if ~bnchm && step>=1
 
-    % advection of xtal segregation speed
-    advn_wx(2:end-1,2:end-1) = - advect(wx(2:end-1,2:end-1),(Ux(2:end-2,:)+Ux(3:end-1,:))/2,(Wx(1:end-1,2:end-1)+Wx(2:end,2:end-1))/2,h,{ADVN,''},[1,2],BCA);
-    advn_wx([1,end],:) = min(1,1-[top;bot]).*advn_wx([2,end-1],:);
-    advn_wx(:,[1 end]) = advn_wx(:,[end-1 2]);
-
-    % terminal xtal segregation speed
-    wx0(2:end-1,2:end-1) = Drhox(2:end-1,:).*g0.*(Ksgr_x(1:end-1,:).*Ksgr_x(2:end,:)).^0.5; % solid segregation speed
+    % terminal xtal segregation speed for comparison
+    wx0(2:end-1,2:end-1) = chiw./Cvxw(2:end-1,:).*Drhox(2:end-1,:).*g0; % solid segregation speed
     wx0([1,end],:) = min(1,1-[top;bot]).*wx0([2,end-1],:);
     wx0(:,[1 end]) = wx0(:,[end-1 2]);
+    
+    % previous treatment
+    % tw = max(dt,d0.^2.*rho./eta0);
+    % Gw = (wx0-wx)./((tw(icz(1:end-1),icx)+tw(icz(2:end),icx))./2);
+    % 
+    % % total rate of change
+    % dwxdt  = advn_wx + Gw;
+    % 
+    % % residual of xtal settling speed evolution
+    % res_wx = (a1*wx-a2*wxo-a3*wxoo)/dt - (b1*dwxdt + b2*dwxdto + b3*dwxdtoo);
 
-    tw = max(dt,d0.^2.*rho./eta0);
-    Gw = (wx0-wx)./((tw(icz(1:end-1),icx)+tw(icz(2:end),icx))./2);
+    % advection of crystal momentum
+    advn_Mx = - advect(Mx(2:end-1,:),(Ux(2:end-2,:)+Ux(3:end-1,:))/2,(Wx(1:end-1,2:end-1)+Wx(2:end,2:end-1))/2,h,{ADVN,''},[1,2],BCA);
 
-    % total rate of change
-    dwxdt  = advn_wx + Gw;
+    % crystal momentum transfer from mixture
+    Gvx     = - Cvxw(2:end-1,:) .* wx(2:end-1,2:end-1);
 
-    % residual of xtal settling speed evolution
-    res_wx = (a1*wx-a2*wxo-a3*wxoo)/dt - (b1*dwxdt + b2*dwxdto + b3*dwxdtoo);
+    % crystal momentum source
+    Qvx     = + chiw .* Drhox(2:end-1,:) .* g0;
 
-    % semi-implicit update of xtal settling speed
-    upd_wx = - alpha*res_wx*dt/a1 + beta*upd_wx;
+    % max rate
+    % dMxdtmax = X./dt.*(wx0-wx);
 
-    % update xtal settling speed
-    wx     = wx + upd_wx;
+    % get total rate of change
+    dMxdt(2:end-1,:) = advn_Mx + Gvx + Qvx;
 
-    xw   = (x(icz(1:end-1),icx)+x(icz(2:end),icx))./2;
-    mw   = (m(icz(1:end-1),icx)+m(icz(2:end),icx))./2;
-    wm   = -xw./mw.*wx;
+    % residual of xtal partial momentum deviation
+    res_Mx = (a1*Mx-a2*Mxo-a3*Mxoo)/dt - (b1*dMxdt + b2*dMxdto + b3*dMxdtoo);
+
+    % semi-implicit update of xtal momentum
+    upd_Mx = - alpha*res_Mx*dt/a1 + beta*upd_Mx;
+
+    % update crystal momentum with dynamic under-relaxation
+    tau_p = d0^2*rhox0/etam0;
+    relax = dt ./ (dt + 2*tau_p);
+    Mx = (1-relax) .* (Mx + upd_Mx) + relax .* Mx;
+
+    % update crystal settling speed
+    wx(:,2:end-1) = Mx./Xw;
+    wx([1,end],:) = min(1,1-[top;bot]).*wx([2,end-1],:);
+    wx(:,[1 end]) = wx(:,[end-1 2]);
+
+    wm  = -xw./mw.*wx;
 
     % update phase velocities
     Wx  = W + wx;  % xtl z-velocity

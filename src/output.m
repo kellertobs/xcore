@@ -124,8 +124,8 @@ set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\nabla \cdot \mathbf{v}$ [1/
 % plot density, rheology, and segregation speeds in Fig. 2
 set(0,'CurrentFigure',fh2)
 set(fh2,'CurrentAxes',ax(21));
-imagesc(Xsc,Zsc,chi.*100.*(chi>eps^0.5) ); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\chi$ [vol\%]'],TX{:},FS{:}); set(gca,'XTickLabel',[]);
+imagesc(Xsc,Zsc,x.*100.*(x>eps^0.5) ); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$x$ [wt\%]'],TX{:},FS{:}); set(gca,'XTickLabel',[]);
 set(fh2,'CurrentAxes',ax(22));
 imagesc(Xsc,Zsc,Gx./rho*TimeScale*100.*(chi>eps^0.5)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Gamma_x/\bar{\rho}$ [wt\%/',TimeUnits,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);

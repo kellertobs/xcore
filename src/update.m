@@ -24,6 +24,15 @@ rhoU   = rhou.*U(2:end-1,:);
 chi    = max(0,min(1, x.*rho./rhox0));
 mu     = max(0,min(1, m.*rho./rhom0));
 
+chiw   = (chi(1:end-1,:)+chi(2:end,:))/2;
+ muw   = ( mu(1:end-1,:)+ mu(2:end,:))/2;
+
+xw     = (x(icz(1:end-1),icx)+x(icz(2:end),icx))./2;
+mw     = (m(icz(1:end-1),icx)+m(icz(2:end),icx))./2;
+
+Xw     = (X(icz(1:end-1),:)+X(icz(2:end),:))/2;
+Mw     = (M(icz(1:end-1),:)+M(icz(2:end),:))/2;
+
 % update lithostatic pressure
 Pl(1,:)     = repmat(rhoref(1).*g0.*h/2,1,Nx) + Ptop;
 Pl(2:end,:) = Pl(1,:) + repmat(cumsum(rhoref(2:end-1).*g0.*h),1,Nx);
@@ -53,7 +62,13 @@ Cv   = Kv.*(1-ff)./dd.^2;
 eta0 = squeeze(sum(Kv,1));
 
 % get segregation cofficients
-Ksgr   = ff./Cv;
+Ksgr = ff./Cv;
+
+Cvx  = squeeze(Cv(1,:,:));
+Cvm  = squeeze(Cv(2,:,:));
+
+Cvxw = (Cvx(icz(1:end-1),:).*Cvx(icz(2:end),:)).^0.5;
+Cvmw = (Cvm(icz(1:end-1),:).*Cvm(icz(2:end),:)).^0.5;
 
 Ksgr_x = squeeze(Ksgr(1,:,:)) + eps^2;
 Ksgr_m = squeeze(Ksgr(2,:,:)) + eps^2;
