@@ -135,7 +135,7 @@ imagesc(Xsc,Zsc,log10(eta0)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\eta_\chi$ [Pas]'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 set(fh2,'CurrentAxes',ax(24));
 imagesc(Xsc,Zsc,-wx(2:end-1,2:end-1)/SpeedScale); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta w^x$ [',SpeedUnits,']'],TX{:},FS{:}); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:});  xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:});
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta W^x$ [',SpeedUnits,']'],TX{:},FS{:}); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:});  xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:});
 set(fh2,'CurrentAxes',ax(25));
 imagesc(Xsc,Zsc,log10(Cvx)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $C_v^x$ [Pas/m$^2$]'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:}); 
@@ -169,7 +169,6 @@ set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Re$_x$ [1]'],TX{:}
 if ~exist('fh14','var'); fh14 = figure(VIS{:});
 else; set(0, 'CurrentFigure', fh14); clf;
 end
-% sgtitle('Model history',TX{:},FS{1},18)
 
 subplot(3,1,1)
 plot(hist.time/TimeScale,hist.x(:,2)*100,'k-' ,LW{:}); hold on; axis tight; box on;
@@ -181,15 +180,20 @@ title('Crystallinity [wt\%]',TX{:},FS{1},15);
 subplot(3,1,2)
 semilogy(hist.time/TimeScale,hist.V(:,2)/SpeedScale,'k-' ,LW{:}); hold on; axis tight; box on;
 semilogy(hist.time/TimeScale,hist.wx(:,2)/SpeedScale,'k--',LW{:});
-set(gca,TL{:},FS{:},'Xticklabels',[])
+yticks = 10.^(-6:2:6);
+yticklabels = {'$10^{-6}$','$10^{-4}$','$10^{-2}$','$10^{0}$','$10^{2}$','$10^{4}$','$10^{6}$'};
+set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
+set(gca,TL{:},FS{:},'Xticklabel',[]);
 legend('convection','xtal settling',TX{:},FS{:},'Location','northwest')
 title(['Flow speeds [',SpeedUnits,']'],TX{:},FS{1},15);
 
 subplot(3,1,3)
 semilogy(hist.time/TimeScale,hist.RaD(:,2),'k-' ,LW{:}); hold on; axis tight; box on;
-semilogy(hist.time/TimeScale,hist.ReD(:,2),'k--',LW{:});
-semilogy(hist.time/TimeScale,hist.Rux(:,2),'k-.',LW{:});
-set(gca,TL{:},FS{:})
+semilogy(hist.time/TimeScale,hist.ReD(:,2),'k-.',LW{:});
+semilogy(hist.time/TimeScale,hist.Rux(:,2),'k--',LW{:});
+yticks = 10.^(-6:2:6);
+yticklabels = {'$10^{-6}$','$10^{-4}$','$10^{-2}$','$10^{0}$','$10^{2}$','$10^{4}$','$10^{6}$'};
+set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
 legend('Ra','Re','Ru',TX{:},FS{:},'Location','northwest')
 title(['Dimensionless numbers'],TX{:},FS{1},15);
 xlabel(['Time [',TimeUnits,']'],TX{:},FS{1},15);
@@ -199,8 +203,8 @@ if ~exist('fh15','var'); fh15 = figure(VIS{:});
 else; set(0, 'CurrentFigure', fh15); clf;
 end
 plot(hist.time/TimeScale,hist.EB,'k-' ,LW{:}); hold on; axis tight; box on;
-plot(hist.time/TimeScale,hist.EM,'k--',LW{:});
-plot(hist.time/TimeScale,hist.EX,'k-.',LW{:});
+plot(hist.time/TimeScale,hist.EM,'k-.',LW{:});
+plot(hist.time/TimeScale,hist.EX,'k--',LW{:});
 set(gca,TL{:},FS{:})
 legend('xtal','melt','mixt',TX{:},FS{:},'Location','northwest')
 ylabel('Rel. error [1]',TX{:},FS{1},15);

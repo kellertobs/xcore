@@ -68,10 +68,6 @@ hist.mu(stp,1) = min(min(mu));
 hist.mu(stp,2) = mean(mean(mu));
 hist.mu(stp,3) = max(max(mu));
 
-hist.Gm(stp,1) = min(min(Gm));
-hist.Gm(stp,2) = mean(mean(Gm));
-hist.Gm(stp,3) = max(max(Gm));
-
 hist.Gx(stp,1) = min(min(Gx));
 hist.Gx(stp,2) = mean(mean(Gx));
 hist.Gx(stp,3) = max(max(Gx));
@@ -84,9 +80,9 @@ hist.rho(stp,1) = min(min(rho));
 hist.rho(stp,2) = mean(mean(rho));
 hist.rho(stp,3) = max(max(rho));
 
-hist.eta(stp,1) = min(min(eta0));
-hist.eta(stp,2) = geomean(geomean(eta0));
-hist.eta(stp,3) = max(max(eta0));
+hist.eta0(stp,1) = min(min(eta0));
+hist.eta0(stp,2) = geomean(geomean(eta0));
+hist.eta0(stp,3) = max(max(eta0));
 
 hist.eta(stp,1) = min(min(eta));
 hist.eta(stp,2) = geomean(geomean(eta));
@@ -96,9 +92,9 @@ hist.wx(stp,1) = min(min(abs(wx(:,2:end-1))));
 hist.wx(stp,2) = mean(mean(abs(wx(:,2:end-1))));
 hist.wx(stp,3) = max(max(abs(wx(:,2:end-1))));
 
-hist.wx(stp,1) = min(min(abs(wm(:,2:end-1))));
-hist.wx(stp,2) = mean(mean(abs(wm(:,2:end-1))));
-hist.wx(stp,3) = max(max(abs(wm(:,2:end-1))));
+hist.wm(stp,1) = min(min(abs(wm(:,2:end-1))));
+hist.wm(stp,2) = mean(mean(abs(wm(:,2:end-1))));
+hist.wm(stp,3) = max(max(abs(wm(:,2:end-1))));
 
 hist.Ra(stp,1) = min(min(Ra));
 hist.Ra(stp,2) = geomean(geomean(Ra));
