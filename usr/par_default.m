@@ -34,7 +34,7 @@ dxg       =  0;                   % background crystallinity gaussian perturbati
 xb        =  0.00;                % initial boundary layer crystallinity [wt]
 dxb       =  xb/3;                % boundary layer crystallinity perturbation [wt]
 seed      =  24;                  % random perturbation seed
-smth      =  25;                  % random perturbation smoothness
+smth      =  5;                   % random perturbation smoothness
 
 % set buoyancy parameters
 rhom0     =  2500;                % melt density constant [kg/m3]
@@ -59,6 +59,7 @@ bnd_w     =  2*h;                 % width of boundary layer [m]
 xeq       =  0.1;                 % equilibrium crystallinity of boundary layer [wt]
 Da        =  0.1;                 % Dahmköhler number of boundary layer rate [s]
 Ptop      =  1e5;                 % top boundary pressure [Pa]
+closed_bot= 1;                    % switch for closed bottom boundary to form cumulate pile
 
 % set numerical model parameters
 TINT      =  'bd2im';             % time integration scheme ('be1im','bd2im','cn2si','bd2si')
@@ -73,7 +74,7 @@ lambda1   =  0e-7;                % pressure regularisation parameter
 lambda2   =  0e-7;                % pressure regularisation parameter
 etacntr   =  1e+6;                % maximum viscosity contrast
 Delta_cnv =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)
-Delta_sgr =  dx0*10;              % correlation length for phase fluctuation diffusivity (multiple of dx0, df0, 10-20)
+Delta_sgr =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of dx0, df0, 10-20)
 etamin    =  1e-6;                % minimum viscosity
 kmin      =  1e-16;               % minimum diffusivity
 kmax      =  1e+16;               % maximum diffusivity

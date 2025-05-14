@@ -415,9 +415,9 @@ if ~bnchm && step>=1
 
     
     %% update time step
-    dtk = (h/2)^2/max(kx(:)); % diffusive time step size  
+    dtk = (h/2)^2/max([kx(:);ke(:)]); % diffusive time step size  
     dta =  h/2   /max(abs([Um(:);Wm(:);Ux(:);Wx(:)]+eps));  % advective time step size
-    dt  = (dt + min([1.1*dto,min(CFL*[dtk,dta]),dtmax]))/2; % time step size
+    dt  = (dt + min([2*dto,min(CFL*[dtk,dta]),dtmax]))/2; % time step size
 end
 
 FMtime = FMtime + toc;

@@ -89,15 +89,15 @@ V  = sqrt(((W(1:end-1,2:end-1)+W(2:end,2:end-1))/2).^2 ...
 vx  = abs(wx(1:end-1,2:end-1)+wx(2:end,2:end-1))/2;                        % segregation speed magnitude
 
 % update diffusion parameters
-eII0   = eta0./rho./Delta_cnv0^2;
-eIIe   = eII .* (1-exp(-eII./eII0)+eps);
-ke     = eIIe.*Delta_cnv.^2;                                      % turbulent eddy diffusivity
-fRe    = (1-exp(-Re./Rec)+eps);
-ke  = 1./(1./kmax + 1./ke) + kmin;
+eII0 = eta0./rho./Delta_cnv0^2;
+eIIe = eII .* (1-exp(-eII./eII0)+eps);                                     % apply minimum strain rate for eddy diffusivity
+ke   = eIIe.*Delta_cnv.^2;                                                 % turbulent eddy diffusivity
+fRe  = (1-exp(-Re./Rec)+eps);                                              % ramp-up factor for eddy diffusivity
+ke   = 1./(1./kmax + 1./ke) + kmin;                                        % apply min/max on eddy diffusivity
 
-kwx = vx.*Delta_sgr.*hasx;                                                 % segregation diffusivity
-kx  = (kwx + ke.*fRe/Scx).*chi;                                            % regularised solid fraction diffusion 
-eta = ke.*rho.*fRe + eta0;                                                 % regularised momentum diffusion
+kwx  = vx.*Delta_sgr.*hasx;                                                % segregation diffusivity
+kx   = (kwx + ke.*fRe/Scx);                                                % regularised solid fraction diffusion 
+eta  = ke.*fRe.*rho + eta0;                                                % regularised momentum diffusion
 
 etamax = etacntr.*max(min(eta(:)),etamin);
 eta    = 1./(1./etamax + 1./eta) + etamin;
@@ -106,12 +106,12 @@ etaco  = (eta(icz(1:end-1),icx(1:end-1)).*eta(icz(2:end),icx(1:end-1)) ...
        .* eta(icz(1:end-1),icx(2:end  )).*eta(icz(2:end),icx(2:end  ))).^0.25;
 
 % update dimensionless numbers
-Re     = V .*Delta_cnv./(eta ./rho);                                       % Reynolds number on correlation length scale
-ReD    = V .*D        ./(eta ./rho);                                       % Reynolds number on domain length scale
-Rex    = vx.*d0       ./(eta0./rho);                                       % particle Reynolds number
-Ra     = V.*Delta_cnv./kx;                                                 % Rayleigh number on correlation length scale
-RaD    = V.*D        ./kx;                                                 % Rayleigh number on domain length scale
-Rux    = vx./V;                                                            % particle settling number
+Re  = V .*Delta_cnv./(eta ./rho);                                          % Reynolds number on correlation length scale
+ReD = V .*D        ./(eta ./rho);                                          % Reynolds number on domain length scale
+Rex = vx.*d0       ./(eta0./rho);                                          % particle Reynolds number
+Ra  = V.*Delta_cnv ./kx;                                                   % Rayleigh number on correlation length scale
+RaD = V.*D         ./kx;                                                   % Rayleigh number on domain length scale
+Rux = vx./V;                                                               % particle settling number
 
 % update stresses
 txx = eta   .* exx;                                                        % x-normal stress

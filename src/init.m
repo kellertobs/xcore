@@ -73,10 +73,9 @@ rng(seed);
 smth = smth*Nx*Nz*1e-4;
 rp   = randn(Nz,Nx);
 for i = 1:round(smth)
-    rp = rp + diffus(rp,1/8*ones(size(rp)),1,[1,2],BCD);
-    rp = rp - mean(mean(rp));
+    rp = rp + diffus(rp,1/8*ones(size(rp)),1,[1,2],{'periodic','periodic'});
 end
-rp = rp./max(abs(rp(:)));
+rp  = (rp-mean(rp(:)))./std(rp(:));
 
 gp = exp(-(XX-L/2  ).^2/(max(L,D)/8)^2 - (ZZ-D/2).^2/(max(L,D)/8)^2) ...
    + exp(-(XX-L/2+L).^2/(max(L,D)/8)^2 - (ZZ-D/2).^2/(max(L,D)/8)^2) ...
@@ -97,6 +96,7 @@ topshape = exp( ( -ZZ)/max(h,bnd_w));
 sds = -1;
 top =  1;
 bot = -1;
+if closed_bot; bot = 1; end
 
 % set ghosted index arrays
 icx = [Nx,1:Nx,1];
@@ -170,6 +170,7 @@ upd_X   = 0.*X;
 upd_M   = 0.*M;
 upd_Mx  = 0.*Mx;
 upd_rho = 0.*rho;
+tau_p   = 1;
 
 % initialise timing and iterative parameters
 frst    = 1;
