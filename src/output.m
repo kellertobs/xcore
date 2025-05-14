@@ -227,9 +227,9 @@ if save_op && ~restart
     print(fh14,name,'-dpng','-r300','-image');
 
     name = [outdir,'/',runID,'/',runID,'_',num2str(floor(step/nop))];
-    save(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','eII','tII','dt','time','step','dV','wx','dwxdt');
+    save(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','eII','tII','Cvx','ke','kx','RaD','ReD','Rux','Rex','dt','time','step','dV','wm','wx','Mx','dMxdt');
     name = [outdir,'/',runID,'/',runID,'_cont'];
-    save(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','eII','tII','dt','time','step','dV','wx','dwxdt');
+    save(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','eII','tII','Cvx','ke','kx','RaD','ReD','Rux','Rex','dt','time','step','dV','wm','wx','Mx','dMxdt');
     name = [outdir,'/',runID,'/',runID,'_hist'];
     save(name,'hist');
 

@@ -191,12 +191,11 @@ if restart
     end
     if exist(name,'file')
         fprintf('\n   restart from %s \n\n',name);
-        load(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','eII','tII','dt','time','step','dV','wx','dwxdt');
+        load(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','eII','tII','Cvx','ke','kx','RaD','ReD','Rux','Rex','dt','time','step','dV','wm','wx','Mx','dMxdt');
         name = [outdir,'/',runID,'/',runID,'_hist'];
         load(name,'hist');
 
         SOL = [W(:);U(:);P(:)];
-        RHO = X+M;
 
         update;
         corrl;
