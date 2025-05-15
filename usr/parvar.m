@@ -20,8 +20,8 @@ Delta_cnv  = h;      % [1/3,3]*h
 Delta_sgr  = 10*d0;  % [10/3; 30]*d0
 Rec        = 1;      % [0.1; 10]
 Scx        = 1;      % [10]
-Da         = 0.5;    % [1,0.1]
-gamma      = 1e-3;   % [0,1e-4,1e-2]
+Da         = 0.5;    % [1,0.25]
+gamma      = 1e-3;   % [0,1e-4,1e-2]; D = 1e3;
 closed_bot = 0;      % [1]
 
 % total # simulations: 36+4+16 = 56

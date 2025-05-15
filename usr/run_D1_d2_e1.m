@@ -30,7 +30,7 @@ etam0     =  1e1;                 % melt viscosity constant [kg/m3]
 bnd_w     =  2*h;                 % width of boundary layer [m]
 xeq       =  0.1;                 % equilibrium crystallinity of boundary layer [wt]
 Da        =  0.5;                 % Dahmköhler number of boundary layer rate [s]
-closed_bot= 1;                    % switch for closed bottom boundary to form cumulate pile
+closed_bot=  0;                   % switch for closed bottom boundary to form cumulate pile
 
 % set numerical model parameters
 CFL       =  0.50;                % (physical) time stepping courant number (multiplies stable step) [0,1]
