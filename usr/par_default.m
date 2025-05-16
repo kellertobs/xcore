@@ -81,6 +81,7 @@ kmin      =  1e-16;               % minimum diffusivity
 kmax      =  1e+16;               % maximum diffusivity
 Rec       =  1;                   % critical Reynolds number for ramping up eddy diffusivity
 Scx       =  1;                   % xtal Schmidt number for applying eddy diffusivity to xtal diffusivity
+Rexc      =  1;                   % critical crystal Reynolds number for ramping up turbulent drag coeff
 dtmax     =  1e32;                % maximum time step [s]
 
 % set other options

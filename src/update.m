@@ -94,7 +94,7 @@ kwx  = vx.*Delta_sgr.*hasx;                                                % seg
 kx   = (kwx + ke.*fRe/Scx);                                                % regularised solid fraction diffusion 
 eta  = ke.*fRe.*rho + eta0;                                                % regularised momentum diffusion
 
-fRex = (1-exp(-Rex./1)+eps);                                               % ramp-up factor for turbulent drag coefficient
+fRex = (1-exp(-Rex./Rexc)+eps);                                            % ramp-up factor for turbulent drag coefficient
 fRex = (fRex(icz(1:end-1),:)+fRex(icz(2:end),:))/2;
 Cvx0 = (Cvx0(icz(1:end-1),:)+Cvx0(icz(2:end),:))/2;
 Cvxt = chiw.*rhow.*abs(wx(:,2:end-1))./Delta_drg;

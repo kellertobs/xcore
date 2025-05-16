@@ -43,6 +43,7 @@ Delta_sgr =  d0*10;               % correlation length for phase fluctuation dif
 Delta_drg =  d0;                  % scaling length for turbulent particle drag coefficient (multiple of d0)
 Rec       =  1;                   % critical Reynolds number for ramping up eddy diffusivity
 Scx       =  1;                   % xtal Schmidt number for applying eddy diffusivity to xtal diffusivity
+Rexc      =  1;                   % critical crystal Reynolds number for ramping up turbulent drag coeff
 
 
 %*****  RUN NAKHLA MODEL  *************************************************

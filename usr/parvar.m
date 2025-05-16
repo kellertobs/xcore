@@ -15,9 +15,10 @@ etam0 = 1e0;          % [Pas]
 
 % magma ocean parameter variations  (5 simulations)
 D     =  1e6;          % [m]
-d0    = [1e-2; 1e-1];  % [m]
-etam0 = [1e-1; 1e+0];  % [Pas]
+d0    = [1e-2 (ref); 1e-1];  % [m]
+etam0 = [1e-1 (ref); 1e+0];  % [Pas]
 Rex   = 1;             % [0.1; 10]
+Delta_drg = 1;         % [1/3; 3]
 
 % additional parameter variations (16 simulations)
 N          = 200;    % [100; 300];
