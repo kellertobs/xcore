@@ -332,11 +332,8 @@ etagh = ones(size(P));  etagh(2:end-1,2:end-1) = eta;
 SCL = (abs(diag(LL))).^0.5;
 SCL = diag(sparse( 1./(SCL + sqrt([zeros(NU+NW,1); h./etagh(:)])) ));
 
-FF  = LL*SOL - RR;
-FF  = SCL*FF;
-
+FF  = SCL*(LL*SOL - RR);
 LL  = SCL*LL*SCL;
-RR  = SCL*RR;
 
 
 %% Solve linear system of equations for vx, vz, P
@@ -360,31 +357,18 @@ SOL = [W(:);U(:);P(:)];
 if ~bnchm && step>=1
 
     % terminal xtal segregation speed for comparison
-    wx0(2:end-1,2:end-1) = chiw./Cvxw(2:end-1,:).*Drhox(2:end-1,:).*g0; % solid segregation speed
+    wx0(2:end-1,2:end-1) = chiw(2:end-1,:)./Cvxw(2:end-1,:).*Drhox(2:end-1,:).*g0; % solid segregation speed
     wx0([1,end],:) = min(1,1-[top;bot]).*wx0([2,end-1],:);
     wx0(:,[1 end]) = wx0(:,[end-1 2]);
-    
-    % previous treatment
-    % tw = max(dt,d0.^2.*rho./eta0);
-    % Gw = (wx0-wx)./((tw(icz(1:end-1),icx)+tw(icz(2:end),icx))./2);
-    % 
-    % % total rate of change
-    % dwxdt  = advn_wx + Gw;
-    % 
-    % % residual of xtal settling speed evolution
-    % res_wx = (a1*wx-a2*wxo-a3*wxoo)/dt - (b1*dwxdt + b2*dwxdto + b3*dwxdtoo);
 
     % advection of crystal momentum
     advn_Mx = - advect(Mx(2:end-1,:),(Ux(2:end-2,:)+Ux(3:end-1,:))/2,(Wx(1:end-1,2:end-1)+Wx(2:end,2:end-1))/2,h,{ADVN,''},[1,2],BCA);
 
     % crystal momentum transfer from mixture
-    Gvx     = - Cvxw(2:end-1,:) .* wx(2:end-1,2:end-1);
+    Gvx      = - Cvxw(2:end-1,:) .* wx(2:end-1,2:end-1);
 
     % crystal momentum source
-    Qvx     = + chiw .* Drhox(2:end-1,:) .* g0;
-
-    % max rate
-    % dMxdtmax = X./dt.*(wx0-wx);
+    Qvx     = + chiw(2:end-1,:) .* Drhox(2:end-1,:) .* g0;
 
     % get total rate of change
     dMxdt(2:end-1,:) = advn_Mx + Gvx + Qvx;
@@ -396,16 +380,16 @@ if ~bnchm && step>=1
     upd_Mx = - alpha*res_Mx*dt/a1;
 
     % update crystal momentum with dynamic under-relaxation
-    tau_p = d0^2*rhox0/etam0;
+    tau_p = min(rhow(2:end-1,:).*chiw(2:end-1,:)./Cvxw(2:end-1,:),[],'all');
     relax = dt ./ (dt + tau_p);
-    Mx =  Mx + (1-relax)*upd_Mx;
+    Mx    = Mx + (1-relax)*upd_Mx;
 
     % update crystal settling speed
     wx(:,2:end-1) = Mx./Xw;
     wx([1,end],:) = min(1,1-[top;bot]).*wx([2,end-1],:);
     wx(:,[1 end]) = wx(:,[end-1 2]);
 
-    wm  = -xw./mw.*wx;
+    wm  = -xw(:,icx)./mw(:,icx).*wx;
 
     % update phase velocities
     Wx  = W + wx;  % xtl z-velocity

@@ -24,7 +24,7 @@ dt        =  0.01;                % initial time step [s]
 x0        =  0.01;                % initial background crystallinity [wt]
 dx0       =  x0/10;               % background crystallinity perturbation [wt]
 d0        =  1e-2;                % xtal size constant [m]
-etam0     =  1e1;                 % melt viscosity constant [kg/m3]
+etam0     =  1e+1;                 % melt viscosity constant [kg/m3]
 
 % set boundary layer parameters
 bnd_w     =  2*h;                 % width of boundary layer [m]
@@ -34,10 +34,10 @@ closed_bot=  0;                   % switch for closed bottom boundary to form cu
 
 % set numerical model parameters
 CFL       =  0.50;                % (physical) time stepping courant number (multiplies stable step) [0,1]
-rtol      =  1e-4;                % outer its relative tolerance
+rtol      =  1e-5;                % outer its relative tolerance
 atol      =  1e-9;                % outer its absolute tolerance
-maxit     =  20;                  % maximum outer its
-alpha     =  0.75;                % iterative step size parameter
+maxit     =  15;                  % maximum outer its
+alpha     =  0.9;                 % iterative step size parameter
 Delta_cnv =  h;                   % correlation length for eddy diffusivity (multiple of h, 0.5-1)
 Delta_sgr =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of dx0, df0, 10-20)
 Rec       =  1;                   % critical Reynolds number for ramping up eddy diffusivity

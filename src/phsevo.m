@@ -28,7 +28,7 @@ rns_X    = rns_X - mean(rns_X(:));                                         % ens
 
 % boundary phase change rate
 tau_x    = (h/2)./(norm(Wx+eps,'fro')./sqrt(length(Wx(:))));
-Gx       = max(0,Da.*(xeq.*(1+rns./100)-x).*rho./tau_x.*topshape);
+Gx       = max(0,Da.*(xeq.*(1+rns./50)-x).*rho./tau_x.*topshape);
 Gm       = -Gx;
 
 end

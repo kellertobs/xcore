@@ -24,11 +24,11 @@ rhoU   = rhou.*U(2:end-1,:);
 chi    = max(0,min(1, x.*rho./rhox0));
 mu     = max(0,min(1, m.*rho./rhom0));
 
-chiw   = (chi(1:end-1,:)+chi(2:end,:))/2;
- muw   = ( mu(1:end-1,:)+ mu(2:end,:))/2;
+chiw   = (chi(icz(1:end-1),:)+chi(icz(2:end),:))./2;
+ muw   = ( mu(icz(1:end-1),:)+ mu(icz(2:end),:))./2;
 
-xw     = (x(icz(1:end-1),icx)+x(icz(2:end),icx))./2;
-mw     = (m(icz(1:end-1),icx)+m(icz(2:end),icx))./2;
+xw     = (x(icz(1:end-1),:)+x(icz(2:end),:))./2;
+mw     = (m(icz(1:end-1),:)+m(icz(2:end),:))./2;
 
 Xw     = (X(icz(1:end-1),:)+X(icz(2:end),:))/2;
 Mw     = (M(icz(1:end-1),:)+M(icz(2:end),:))/2;
@@ -64,12 +64,7 @@ eta0 = squeeze(sum(Kv,1));
 % get segregation cofficients
 Ksgr = ff./Cv;
 
-Cvx  = squeeze(Cv(1,:,:));
-Cvm  = squeeze(Cv(2,:,:));
-
-Cvxw = (Cvx(icz(1:end-1),:)+Cvx(icz(2:end),:))/2;
-Cvmw = (Cvm(icz(1:end-1),:)+Cvm(icz(2:end),:))/2;
-
+Cvx0 = squeeze(Cv(1,:,:));
 
 % update velocity divergence
 Div_V = ddz(W(:,2:end-1),h) + ddx(U(2:end-1,:),h);                         % get velocity divergence
@@ -98,6 +93,12 @@ ke   = 1./(1./kmax + 1./ke) + kmin;                                        % app
 kwx  = vx.*Delta_sgr.*hasx;                                                % segregation diffusivity
 kx   = (kwx + ke.*fRe/Scx);                                                % regularised solid fraction diffusion 
 eta  = ke.*fRe.*rho + eta0;                                                % regularised momentum diffusion
+
+fRex = (1-exp(-Rex./1)+eps);                                               % ramp-up factor for turbulent drag coefficient
+fRex = (fRex(icz(1:end-1),:)+fRex(icz(2:end),:))/2;
+Cvx0 = (Cvx0(icz(1:end-1),:)+Cvx0(icz(2:end),:))/2;
+Cvxt = chiw.*rhow.*abs(wx(:,2:end-1))./d0;
+Cvxw = Cvx0 + fRex.*Cvxt;
 
 etamax = etacntr.*max(min(eta(:)),etamin);
 eta    = 1./(1./etamax + 1./eta) + etamin;

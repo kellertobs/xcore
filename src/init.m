@@ -111,7 +111,7 @@ xin =  x;
 
 U   =  zeros(Nz+2,Nx+1);  UBG = U; upd_U = 0*U;
 W   =  zeros(Nz+1,Nx+2);  WBG = W; wx = 0.*W; wm = 0.*W; wx0 = 0.*W; wxo = wx; upd_W = 0*W; Mx = 0*wx(:,2:end-1);
-P   =  zeros(Nz+2,Nx+2);  V   = 0.*x; upd_P = 0*P;
+P   =  zeros(Nz+2,Nx+2);  V   = 0.*x; vx = V; vxo = vx; upd_P = 0*P;
 SOL = [W(:);U(:);P(:)];
 
 % initialise auxiliary fields
@@ -119,12 +119,14 @@ Wx  = W;  Ux  = U;
 Wm  = W;  Um  = U;
 
 Delta_cnv0 = Delta_cnv;
-Re     = eps;  
+Re     = eps + 0.*x;  
+Rex    = eps + 0.*x;
 Div_V  = 0.*x;  advn_rho = 0.*x;  advn_X = 0.*x; advn_M = 0.*x; drhodt = 0.*x;  drhodto = drhodt;
 exx    = 0.*x;  ezz = 0.*x;  exz = zeros(Nz-1,Nx-1);  eII = 0.*x;  
 txx    = 0.*x;  tzz = 0.*x;  txz = zeros(Nz-1,Nx-1);  tII = 0.*x; 
 eta    = etam0 + zeros(Nz,Nx);
 etamax = min(eta(:)) .* etacntr;
+Cvx    = etam0./d0^2 + zeros(Nz,Nx);
 dV     = 0.*x; 
 ke     = 0.*x;
 Pref   = 1e5;
@@ -171,6 +173,7 @@ upd_M   = 0.*M;
 upd_Mx  = 0.*Mx;
 upd_rho = 0.*rho;
 tau_p   = 1;
+relax   = 0;
 
 % initialise timing and iterative parameters
 frst    = 1;
