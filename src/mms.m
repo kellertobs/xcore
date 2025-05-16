@@ -1,6 +1,6 @@
 % create manufactured solution
 load ./colmap/lapaz.mat
-clear x z
+clear x z SOL W U P
 TINY = 1e-16;
 syms U_mms(x,z) W_mms(x,z) P_mms(x,z) eta_mms(x,z) rho_mms(x,z) src_mms(x,z)
 
@@ -109,7 +109,7 @@ rhoUo  = zeros(size(rhou));
 rhoUoo = zeros(size(rhou));
 WBG    = 0.*W_mms;  W = WBG;
 UBG    = 0.*U_mms;  U = UBG;
-SOL    = [W_mms(:);U_mms(:);P_mms(:)];
+SOL    = 0.*[W_mms(:);U_mms(:);P_mms(:)];
 U      = 0*U_mms;  W = 0*W_mms;  P = 0*P_mms;
 dt     = 1e32;
 
