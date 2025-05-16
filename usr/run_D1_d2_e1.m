@@ -6,7 +6,7 @@ run('./par_default')
 
 % set run parameters
 runID     =  'D1_d2_e1';          % run identifier  (D = 1e2; d0 = 1e-2; etam0 = 1e1)
-restart   =  0;                   % restart from file (0: new run; <1: restart from last; >1: restart from specified frame)
+restart   =  0;                   % restart from file (0: new run; <0: restart from last; >0: restart from specified frame)
 nop       =  100;                 % output frame plotted/saved every 'nop' time steps
 plot_op   =  1;                   % switch on to live plot results
 save_op   =  1;                   % switch on to save output to file
