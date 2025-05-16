@@ -38,8 +38,9 @@ rtol      =  1e-5;                % outer its relative tolerance
 atol      =  1e-9;                % outer its absolute tolerance
 maxit     =  20;                  % maximum outer its
 alpha     =  0.75;                % iterative step size parameter
-Delta_cnv =  h;                   % correlation length for eddy diffusivity (multiple of h, 0.5-1)
-Delta_sgr =  dx0*10;              % correlation length for phase fluctuation diffusivity (multiple of dx0, df0, 10-20)
+Delta_cnv =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)
+Delta_sgr =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
+Delta_drg =  d0;                  % scaling length for turbulent particle drag coefficient (multiple of d0)
 Rec       =  1;                   % critical Reynolds number for ramping up eddy diffusivity
 Scx       =  1;                   % xtal Schmidt number for applying eddy diffusivity to xtal diffusivity
 

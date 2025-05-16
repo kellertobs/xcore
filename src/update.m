@@ -80,7 +80,7 @@ eII = (0.5.*(exx.^2 + ezz.^2 ...
 
 % update velocity magnitudes
 V  = sqrt(((W(1:end-1,2:end-1)+W(2:end,2:end-1))/2).^2 ...
-       + ((U(2:end-1,1:end-1)+U(2:end-1,2:end))/2).^2);                    % convection speed magnitude
+        + ((U(2:end-1,1:end-1)+U(2:end-1,2:end))/2).^2);                   % convection speed magnitude
 vx  = abs(wx(1:end-1,2:end-1)+wx(2:end,2:end-1))/2;                        % segregation speed magnitude
 
 % update diffusion parameters
@@ -97,7 +97,7 @@ eta  = ke.*fRe.*rho + eta0;                                                % reg
 fRex = (1-exp(-Rex./1)+eps);                                               % ramp-up factor for turbulent drag coefficient
 fRex = (fRex(icz(1:end-1),:)+fRex(icz(2:end),:))/2;
 Cvx0 = (Cvx0(icz(1:end-1),:)+Cvx0(icz(2:end),:))/2;
-Cvxt = chiw.*rhow.*abs(wx(:,2:end-1))./d0;
+Cvxt = chiw.*rhow.*abs(wx(:,2:end-1))./Delta_drg;
 Cvxw = Cvx0 + fRex.*Cvxt;
 
 etamax = etacntr.*max(min(eta(:)),etamin);
