@@ -25,7 +25,7 @@ L         =  D;                   % chamber width (equal to h for 1-D mode) [m]
 % set model timing parameters
 Nt        =  1e6;                 % number of time steps to take
 tend      =  1*yr;                % end time for simulation [s]
-chiend    =  0.05;                % stop run when mean crystallinity reaches threshold
+xend      =  0.05;                % stop run when mean crystallinity reaches threshold
 dt        =  0.1;                 % initial time step [s]
 
 % set initial phase fraction parameters

@@ -29,6 +29,7 @@ Scx        = 1;      % [10]
 Da         = 0.5;    % [1,0.25]
 gamma      = 1e-3;   % [1e-4,1e-2]; D = 1e3;
 closed_bot = 0;      % [1]
+xend       = xeq/2 = 0.05; 
 
 % total # simulations: 27+6+17 = 50
 

@@ -203,7 +203,6 @@ semilogy(HST.time/TimeScale,HST.Rux(:,2),'k--',LW{:});
 yticks = 10.^(-8:2:8);
 yticklabels = {'$10^{-8}$','$10^{-6}$','$10^{-4}$','$10^{-2}$','$10^{0}$','$10^{2}$','$10^{4}$','$10^{6}$','$10^{8}$'};
 set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
-set(gca,TL{:},FS{:},'Xticklabel',[]);
 legend('Ra$_D$','Re$_D$','Re$_x$','Ru$_x$',TX{:},FS{:},'Location','east')
 title(['Dimensionless numbers'],TX{:},FS{1},15);
 xlabel(['Time [',TimeUnits,']'],TX{:},FS{1},15);
