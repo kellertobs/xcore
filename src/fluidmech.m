@@ -357,7 +357,7 @@ SOL = [W(:);U(:);P(:)];
 if ~bnchm && step>=1
 
     % terminal xtal segregation speed for comparison
-    wx0(2:end-1,2:end-1) = chiw(2:end-1,:)./Cvxw(2:end-1,:).*Drhox(2:end-1,:).*g0; % solid segregation speed
+    wx0(2:end-1,2:end-1) = chiw(2:end-1,:)./Cxw(2:end-1,:).*Drhox(2:end-1,:).*g0; % solid segregation speed
     wx0([1,end],:) = min(1,1-[top;bot]).*wx0([2,end-1],:);
     wx0(:,[1 end]) = wx0(:,[end-1 2]);
 
@@ -365,7 +365,7 @@ if ~bnchm && step>=1
     advn_Mx = - advect(Mx(2:end-1,:),(Ux(2:end-2,:)+Ux(3:end-1,:))/2,(Wx(1:end-1,2:end-1)+Wx(2:end,2:end-1))/2,h,{ADVN,''},[1,2],BCA);
 
     % crystal momentum transfer from mixture
-    Gvx      = - Cvxw(2:end-1,:) .* wx(2:end-1,2:end-1);
+    Gvx      = - Cxw(2:end-1,:) .* wx(2:end-1,2:end-1);
 
     % crystal momentum source
     Qvx     = + chiw(2:end-1,:) .* Drhox(2:end-1,:) .* g0;
@@ -380,7 +380,7 @@ if ~bnchm && step>=1
     upd_Mx = - alpha*res_Mx*dt/a1;
 
     % update crystal momentum with dynamic under-relaxation
-    tau_p = min(rhow(2:end-1,:).*chiw(2:end-1,:)./Cvxw(2:end-1,:),[],'all');
+    tau_p = min(chiw(2:end-1,:).*(1-chiw(2:end-1,:)).*rhow(2:end-1,:)./Cxw(2:end-1,:),[],'all');
     relax = dt ./ (dt + tau_p);
     Mx    = Mx + (1-relax)*upd_Mx;
 
@@ -399,9 +399,10 @@ if ~bnchm && step>=1
 
     
     %% update time step
-    dtk = (h/2)^2/max([kx(:);ke(:)]); % diffusive time step size  
+    dtk = (h/2)^2/max(kx(:)); % diffusive time step size  
     dta =  h/2   /max(abs([Um(:);Wm(:);Ux(:);Wx(:)]+eps));  % advective time step size
     dt  = (dt + min([2*dto,min(CFL*[dtk,dta]),dtmax]))/2; % time step size
 end
 
+% record timing
 FMtime = FMtime + toc;

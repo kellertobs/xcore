@@ -20,7 +20,7 @@ for atol = ATOL
     N        =  100;                 % number of grid points in z-direction (incl. 2 ghosts)
 
     % set model timing parameters
-    Nt       =  2*nop;              % number of time steps to take
+    Nt       =  2*nop;               % number of time steps to take
     dt       =  0.1;                 % set initial time step
 
     % set initial crystallinity parameters
@@ -34,8 +34,9 @@ for atol = ATOL
     CFL       =  1;                   % (physical) time stepping courant number (multiplies stable step) [0,1]
     rtol      =  atol/1e6;            % outer its absolute tolerance
     maxit     =  100;                 % maximum outer its
-    alpha     =  0.75;                % iterative step size parameter
-    Delta_cnv = h;
+    alpha     =  0.9;                 % iterative step size parameter
+    Delta_cnv =  h;                   % correlation length for eddy diffusivity (multiple of h, 0.5-1)
+    Delta_sgr =  d0*20;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
 
     % create output directory
     if ~isfolder([outdir,'/',runID])

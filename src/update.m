@@ -61,10 +61,8 @@ Cv   = Kv.*(1-ff)./dd.^2;
 % get effective viscosity
 eta0 = squeeze(sum(Kv,1));
 
-% get segregation cofficients
-Ksgr = ff./Cv;
-
-Cvx0 = squeeze(Cv(1,:,:));
+% get segregation drag cofficient
+Cx0 = squeeze(Cv(1,:,:));
 
 % update velocity divergence
 Div_V = ddz(W(:,2:end-1),h) + ddx(U(2:end-1,:),h);                         % get velocity divergence
@@ -81,28 +79,36 @@ eII = (0.5.*(exx.^2 + ezz.^2 ...
 % update velocity magnitudes
 V  = sqrt(((W(1:end-1,2:end-1)+W(2:end,2:end-1))/2).^2 ...
         + ((U(2:end-1,1:end-1)+U(2:end-1,2:end))/2).^2);                   % convection speed magnitude
-vx  = abs(wx(1:end-1,2:end-1)+wx(2:end,2:end-1))/2;                        % segregation speed magnitude
+vx = abs(wx([2,2:end-1],2:end-1)+wx(2:end,2:end-1))/2;                         % segregation speed magnitude
 
 % update diffusion parameters
-eII0 = eta0./rho./Delta_cnv0^2;
-eIIe = eII .* (1-exp(-eII./eII0)+eps);                                     % apply minimum strain rate for eddy diffusivity
-ke   = eIIe.*Delta_cnv.^2;                                                 % turbulent eddy diffusivity
-fRe  = (1-exp(-Re./Rec)+eps);                                              % ramp-up factor for eddy diffusivity
-ke   = 1./(1./kmax + 1./ke) + kmin;                                        % apply min/max on eddy diffusivity
+ke   = eII.*Delta_cnv.^2;                                                  % turbulent eddy diffusivity
 
-kwx  = vx.*Delta_sgr.*hasx;                                                % segregation diffusivity
-kx   = (kwx + ke.*fRe/Scx);                                                % regularised solid fraction diffusion 
-eta  = ke.*fRe.*rho + eta0;                                                % regularised momentum diffusion
+fRe  = (1-exp(-Re./Rec)+eps);                                              % ramp-up factor for eddy diffusivity
+etae = ke.*rho;                                                            % eddy viscosity
+eta  = (eta + eta0 + fRe.*etae)/2;                                         % effective viscosity
+
+ks   = vx.*Delta_sgr.*hasx;                                                % segregation diffusivity
+kx   = (ks + ke.*fRe/Scx);                                                 % regularised particle diffusivity 
 
 fRex = (1-exp(-Rex./Rexc)+eps);                                            % ramp-up factor for turbulent drag coefficient
-fRex = (fRex(icz(1:end-1),:)+fRex(icz(2:end),:))/2;
-Cvx0 = (Cvx0(icz(1:end-1),:)+Cvx0(icz(2:end),:))/2;
-Cvxt = chiw.*rhow.*abs(wx(:,2:end-1))./Delta_drg;
-Cvxw = Cvx0 + fRex.*Cvxt;
+Cxt  = chi.*(1-chi).*rho.*ks./d0^2/30;                                     % turbulent drag coefficient
+Cx   = (Cx + Cx0 + fRex.*Cxt)/2;                                           % effective drag coefficient   
 
-etamax = etacntr.*max(min(eta(:)),etamin);
+% limit total contrast in Cx
+Cxmax = geomean(Cx(:)).*(Cxcntr/2);
+Cxmin = geomean(Cx(:))./(Cxcntr/2);
+Cx    = 1./(1./Cxmax + 1./Cx) + Cxmin;
+
+% interpolate to staggered nodes
+Cxw   = (Cx(icz(1:end-1),:)+Cx(icz(2:end),:))/2;
+
+% limit total contrast in eta
+etamax = geomean(eta(:)).*(etacntr/2);
+etamin = geomean(eta(:))./(etacntr/2);
 eta    = 1./(1./etamax + 1./eta) + etamin;
 
+% interpolate to staggered nodes
 etaco  = (eta(icz(1:end-1),icx(1:end-1)).*eta(icz(2:end),icx(1:end-1)) ...
        .* eta(icz(1:end-1),icx(2:end  )).*eta(icz(2:end),icx(2:end  ))).^0.25;
 
@@ -123,4 +129,5 @@ tII = (0.5.*(txx.^2 + tzz.^2 ...
        + 2.*(txz(1:end-1,1:end-1).^2+txz(2:end,1:end-1).^2 ...
        +     txz(1:end-1,2:end  ).^2+txz(2:end,2:end  ).^2)/4)).^0.5 + eps;
 
+% record timing
 UDtime = UDtime + toc;

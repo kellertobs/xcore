@@ -25,14 +25,15 @@ L         =  D;                   % chamber width (equal to h for 1-D mode) [m]
 % set model timing parameters
 Nt        =  1e6;                 % number of time steps to take
 tend      =  1*yr;                % end time for simulation [s]
+chiend    =  0.05;                % stop run when mean crystallinity reaches threshold
 dt        =  0.1;                 % initial time step [s]
 
 % set initial phase fraction parameters
 x0        =  0.01;                % initial background crystallinity [wt]
-dx0       =  x0/3;                % background crystallinity random perturbation [wt]
+dx0       =  x0/10;               % background crystallinity random perturbation [wt]
 dxg       =  0;                   % background crystallinity gaussian perturbation [wt]
 xb        =  0.00;                % initial boundary layer crystallinity [wt]
-dxb       =  xb/3;                % boundary layer crystallinity perturbation [wt]
+dxb       =  xb/10;               % boundary layer crystallinity perturbation [wt]
 seed      =  24;                  % random perturbation seed
 smth      =  5;                   % random perturbation smoothness
 
@@ -57,32 +58,31 @@ CC        = [[0.9826, 0.0174]*9.1697; ... % permission step widths
 % set boundary layer parameters
 bnd_w     =  2*h;                 % width of boundary layer [m]
 xeq       =  0.1;                 % equilibrium crystallinity of boundary layer [wt]
-Da        =  0.1;                 % Dahmköhler number of boundary layer rate [s]
+Da        =  0.5;                 % Dahmköhler number of boundary layer rate [s]
 Ptop      =  1e5;                 % top boundary pressure [Pa]
-closed_bot= 1;                    % switch for closed bottom boundary to form cumulate pile
+closed_bot = 1;                    % switch for closed bottom boundary to form cumulate pile
 
 % set numerical model parameters
 TINT      =  'bd2im';             % time integration scheme ('be1im','bd2im','cn2si','bd2si')
 ADVN      =  'weno5';             % advection scheme ('centr','upw1','quick','fromm','weno3','weno5','tvdim')
 CFL       =  0.50;                % (physical) time stepping courant number (multiplies stable step) [0,1]
-rtol      =  1e-4;                % outer its relative tolerance
-atol      =  1e-8;                % outer its absolute tolerance
-maxit     =  50;                  % maximum outer its
+rtol      =  1e-5;                % outer its relative tolerance
+atol      =  1e-9;                % outer its absolute tolerance
+maxit     =  20;                  % maximum outer its
 alpha     =  0.75;                % iterative step size parameter
 gamma     =  0e-3;                % artificial horizontal inertia parameter (only applies if periodic)
 lambda1   =  0e-7;                % pressure regularisation parameter
 lambda2   =  0e-7;                % pressure regularisation parameter
-etacntr   =  1e+6;                % maximum viscosity contrast
 Delta_cnv =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)
 Delta_sgr =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
-Delta_drg =  d0;                  % scaling length for turbulent particle drag coefficient (multiple of d0)
-etamin    =  1e-6;                % minimum viscosity
 kmin      =  1e-16;               % minimum diffusivity
 kmax      =  1e+16;               % maximum diffusivity
 Rec       =  1;                   % critical Reynolds number for ramping up eddy diffusivity
 Scx       =  1;                   % xtal Schmidt number for applying eddy diffusivity to xtal diffusivity
 Rexc      =  1;                   % critical crystal Reynolds number for ramping up turbulent drag coeff
 dtmax     =  1e32;                % maximum time step [s]
+etacntr   =  1e+6;                % maximum viscosity contrast
+Cxcntr    =  1e+6;                % maximum drag coefficient contrast
 
 % set other options
 bnchm     =  0;                   % not a benchmark run

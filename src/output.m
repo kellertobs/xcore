@@ -139,8 +139,8 @@ imagesc(Xsc,Zsc,Gx./rho*TimeScale*100.*(chi>eps^0.5)); axis ij equal tight; box 
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Gamma_x/\bar{\rho}$ [wt\%/',TimeUnits,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 text(0.5,1.2,['time = ',num2str(time/TimeScale,3),' [',TimeUnits,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
 set(fh2,'CurrentAxes',ax(23));
-imagesc(Xsc,Zsc,log10(eta0)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\eta_\chi$ [Pas]'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
+imagesc(Xsc,Zsc,log10(kx)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $k_\chi$ [m$^2$/s]'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 set(fh2,'CurrentAxes',ax(24));
 imagesc(Xsc,Zsc,-wx(2:end-1,2:end-1)/SpeedScale); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta W^x$ [',SpeedUnits,']'],TX{:},FS{:}); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:});  xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:});
@@ -148,14 +148,14 @@ set(fh2,'CurrentAxes',ax(25));
 imagesc(Xsc,Zsc,-wm(2:end-1,2:end-1)/SpeedScale); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta W^m$ [',SpeedUnits,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:}); 
 set(fh2,'CurrentAxes',ax(26));
-imagesc(Xsc,Zsc,log10(Cvxw(2:end-1,:))); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $C_v^x$ [Pas/m$^2$]'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:});
+imagesc(Xsc,Zsc,log10(Cx)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $C^x$ [Pas/m$^2$]'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:});
 
 % plot phase and eddy diffusivities, Ra and Re numbers in Fig. 3
 set(0,'CurrentFigure',fh3)
 set(fh3,'CurrentAxes',ax(31));
-imagesc(Xsc,Zsc,log10(kwx)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $k_{w_x}$ [m$^2$/s]'],TX{:},FS{:}); set(gca,'XTickLabel',[]); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:});
+imagesc(Xsc,Zsc,log10(ks)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $k_s$ [m$^2$/s]'],TX{:},FS{:}); set(gca,'XTickLabel',[]); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:});
 set(fh3,'CurrentAxes',ax(32));
 imagesc(Xsc,Zsc,log10(RaD)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Ra$_D$ [1]'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
@@ -179,41 +179,80 @@ else; set(0, 'CurrentFigure', fh14); clf;
 end
 
 subplot(3,1,1)
-plot(hist.time/TimeScale,hist.x(:,2)*100,'k-' ,LW{:}); hold on; axis tight; box on;
-plot(hist.time/TimeScale,hist.x(:,[1,3])*100,'k:',LW{:});
+plot(HST.time/TimeScale,HST.x(:,2)*100,'k-' ,LW{:}); hold on; axis tight; box on;
+plot(HST.time/TimeScale,HST.x(:,[1,3])*100,'k:',LW{:});
 set(gca,TL{:},FS{:},'Xticklabels',[])
 legend('mean','min/max',TX{:},FS{:},'Location','northwest')
 title('Crystallinity [wt\%]',TX{:},FS{1},15);
 
 subplot(3,1,2)
-semilogy(hist.time/TimeScale,hist.V(:,2)/SpeedScale,'k-' ,LW{:}); hold on; axis tight; box on;
-semilogy(hist.time/TimeScale,hist.wx(:,2)/SpeedScale,'k--',LW{:});
+semilogy(HST.time/TimeScale,HST.V(:,2)/SpeedScale,'k-' ,LW{:}); hold on; axis tight; box on;
+semilogy(HST.time/TimeScale,HST.wx(:,2)/SpeedScale,'k--',LW{:});
 yticks = 10.^(-4:1:4);
 yticklabels = {'$10^{-4}$','$10^{-3}$','$10^{-2}$','$10^{-1}$','$10^{0}$','$10^{1}$','$10^{2}$','$10^{3}$','$10^{4}$'};
 set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
 set(gca,TL{:},FS{:},'Xticklabel',[]);
-legend('convection','xtal settling',TX{:},FS{:},'Location','northwest')
+legend('convection','xtal settling',TX{:},FS{:},'Location','southeast')
 title(['Flow speeds [',SpeedUnits,']'],TX{:},FS{1},15);
 
 subplot(3,1,3)
-semilogy(hist.time/TimeScale,hist.RaD(:,2),'k-' ,LW{:}); hold on; axis tight; box on;
-semilogy(hist.time/TimeScale,hist.ReD(:,2),'k-.',LW{:});
-semilogy(hist.time/TimeScale,hist.Rex(:,2),'k:' ,LW{:});
-semilogy(hist.time/TimeScale,hist.Rux(:,2),'k--',LW{:});
+semilogy(HST.time/TimeScale,HST.RaD(:,2),'k-' ,LW{:}); hold on; axis tight; box on;
+semilogy(HST.time/TimeScale,HST.ReD(:,2),'k-.',LW{:});
+semilogy(HST.time/TimeScale,HST.Rex(:,2),'k:' ,LW{:});
+semilogy(HST.time/TimeScale,HST.Rux(:,2),'k--',LW{:});
 yticks = 10.^(-8:2:8);
 yticklabels = {'$10^{-8}$','$10^{-6}$','$10^{-4}$','$10^{-2}$','$10^{0}$','$10^{2}$','$10^{4}$','$10^{6}$','$10^{8}$'};
 set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
-legend('Ra$_D$','Re$_D$','Re$_x$','Ru$_x$',TX{:},FS{:},'Location','northwest')
+set(gca,TL{:},FS{:},'Xticklabel',[]);
+legend('Ra$_D$','Re$_D$','Re$_x$','Ru$_x$',TX{:},FS{:},'Location','east')
 title(['Dimensionless numbers'],TX{:},FS{1},15);
 xlabel(['Time [',TimeUnits,']'],TX{:},FS{1},15);
 
-if plot_cv
+% plot model history
 if ~exist('fh15','var'); fh15 = figure(VIS{:});
 else; set(0, 'CurrentFigure', fh15); clf;
 end
-plot(hist.time/TimeScale,hist.EB,'k-' ,LW{:}); hold on; axis tight; box on;
-plot(hist.time/TimeScale,hist.EM,'k-.',LW{:});
-plot(hist.time/TimeScale,hist.EX,'k--',LW{:});
+
+subplot(2,1,1)
+yyaxis left
+semilogy(HST.time/TimeScale,HST.ke(:,2),'k-' ,LW{:},'Color',lncls(1,:)); hold on; axis tight; box on;
+semilogy(HST.time/TimeScale,HST.ke(:,[1,3]),'k:',LW{:},'Color',lncls(1,:));
+set(gca,TL{:},FS{:},'YColor',lncls(1,:),'YScale','log');
+yticks = 10.^(-8:2:8);
+yticklabels = {'$10^{-8}$','$10^{-6}$','$10^{-4}$','$10^{-2}$','$10^{0}$','$10^{2}$','$10^{4}$','$10^{6}$','$10^{8}$'};
+set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
+
+yyaxis right
+semilogy(HST.time/TimeScale,HST.etae(:,2),'k--' ,LW{:},'Color',lncls(2,:)); hold on; axis tight; box on;
+semilogy(HST.time/TimeScale,HST.etae(:,[1,3]),'k:',LW{:},'Color',lncls(2,:));
+set(gca,TL{:},FS{:},'YColor',lncls(2,:),'YScale','log');
+yticks = 10.^(-8:2:8);
+yticklabels = {'$10^{-8}$','$10^{-6}$','$10^{-4}$','$10^{-2}$','$10^{0}$','$10^{2}$','$10^{4}$','$10^{6}$','$10^{8}$'};
+set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
+legend('mean','min/max',TX{:},FS{:},'Location','southeast')
+title('Eddy diffusivity [m$^2$/s]  $|$  Eddy viscosity [Pas]',TX{:},FS{1},15);
+
+subplot(2,1,2)
+yyaxis left
+semilogy(HST.time/TimeScale,HST.ks(:,2),'-' ,LW{:},'Color',lncls(1,:)); hold on; box on;
+semilogy(HST.time/TimeScale,HST.ks(:,[1,3]),':',LW{:},'Color',lncls(1,:));
+set(gca,TL{:},FS{:},'YColor',lncls(1,:),'YScale','log');
+
+yyaxis right
+semilogy(HST.time/TimeScale,HST.Cxt(:,2),'k-' ,LW{:},'Color',lncls(2,:)); hold on; axis tight; box on;
+semilogy(HST.time/TimeScale,HST.Cxt(:,[1,3]),'k:',LW{:},'Color',lncls(2,:));
+set(gca,TL{:},FS{:},'YColor',lncls(2,:),'YScale','log');
+legend('mean','min/max',TX{:},FS{:},'Location','southeast')
+title(['Segregation diffusivity [m$^2$/s]  $|$  Turbulent drag coeff. [m$^2$/Pas]'],TX{:},FS{1},15);
+xlabel(['Time [',TimeUnits,']'],TX{:},FS{1},15);
+
+if plot_cv
+if ~exist('fh16','var'); fh16 = figure(VIS{:});
+else; set(0, 'CurrentFigure', fh16); clf;
+end
+plot(HST.time/TimeScale,HST.EB,'k-' ,LW{:}); hold on; axis tight; box on;
+plot(HST.time/TimeScale,HST.EM,'k-.',LW{:});
+plot(HST.time/TimeScale,HST.EX,'k--',LW{:});
 set(gca,TL{:},FS{:})
 legend('xtal','melt','mixt',TX{:},FS{:},'Location','northwest')
 ylabel('Rel. error [1]',TX{:},FS{1},15);
@@ -231,15 +270,17 @@ if save_op && ~restart
     print(fh2,name,'-dpng','-r300','-image');
     name = [outdir,'/',runID,'/',runID,'_anl_',num2str(floor(step/nop))];
     print(fh3,name,'-dpng','-r300','-image');
-    name = [outdir,'/',runID,'/',runID,'_hst'];
+    name = [outdir,'/',runID,'/',runID,'_hnd'];
     print(fh14,name,'-dpng','-r300','-image');
+    name = [outdir,'/',runID,'/',runID,'_hdf'];
+    print(fh15,name,'-dpng','-r300','-image');
 
     name = [outdir,'/',runID,'/',runID,'_',num2str(floor(step/nop))];
-    save(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','eII','tII','Cvx','ke','kx','RaD','ReD','Rux','Rex','dt','time','step','dV','wm','wx','Mx','dMxdt');
+    save(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','eII','tII','Cx','ke','ks','kx','RaD','ReD','Rux','Rex','dt','time','step','dV','wm','wx','Mx','dMxdt');
     name = [outdir,'/',runID,'/',runID,'_cont'];
-    save(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','eII','tII','Cvx','ke','kx','RaD','ReD','Rux','Rex','dt','time','step','dV','wm','wx','Mx','dMxdt');
-    name = [outdir,'/',runID,'/',runID,'_hist'];
-    save(name,'hist');
+    save(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','eII','tII','Cx','ke','ks','kx','RaD','ReD','Rux','Rex','dt','time','step','dV','wm','wx','Mx','dMxdt');
+    name = [outdir,'/',runID,'/',runID,'_HST'];
+    save(name,'HST');
 
 end
 

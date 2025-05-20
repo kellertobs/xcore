@@ -22,7 +22,7 @@ if iter==1
     end
     rns  = (rns - mean(rns(:)))./std(rns(:)); % normalise to mean=0, var=1
 end
-var_rns  = 4/3*pi*d0^3.*chi.*kwx./(h+Delta_sgr)^3./(dt+Delta_sgr./vx);     % variance of random noise source
+var_rns  = 4/3*pi*d0^3.*chi.*ks./(h+Delta_sgr)^3./(dt+Delta_sgr./vx);      % variance of random noise source
 rns_X    = rho.*sqrt(var_rns)./h.*rns;                                     % approximate random flux divergence
 rns_X    = rns_X - mean(rns_X(:));                                         % ensure global mass conservation
 

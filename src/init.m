@@ -50,6 +50,7 @@ switch colourmap
         colmap = lajolla;  
 end
 nclmp = length(colmap);
+lncls = colmap([5,135],:);
 
 BCA     =  {'closed','periodic'};  % boundary condition on advection (top/bot, sides)
 BCD     =  {'closed','periodic'};  % boundary condition on advection (top/bot, sides)
@@ -126,7 +127,7 @@ exx    = 0.*x;  ezz = 0.*x;  exz = zeros(Nz-1,Nx-1);  eII = 0.*x;
 txx    = 0.*x;  tzz = 0.*x;  txz = zeros(Nz-1,Nx-1);  tII = 0.*x; 
 eta    = etam0 + zeros(Nz,Nx);
 etamax = min(eta(:)) .* etacntr;
-Cvx    = etam0./d0^2 + zeros(Nz,Nx);
+Cx     = x0.*(1-x0).*etam0./d0^2 + zeros(Nz,Nx);
 dV     = 0.*x; 
 ke     = 0.*x;
 Pref   = 1e5;
@@ -180,7 +181,7 @@ frst    = 1;
 step    = 0;
 time    = 0;
 iter    = 0;
-hist    = [];
+HST     = [];
 dsumBdt = 0; dsumBdto = 0;
 dsumMdt = 0; dsumMdto = 0;
 dsumXdt = 0; dsumXdto = 0;
@@ -194,9 +195,9 @@ if restart
     end
     if exist(name,'file')
         fprintf('\n   restart from %s \n\n',name);
-        load(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','eII','tII','Cvx','ke','kx','RaD','ReD','Rux','Rex','dt','time','step','dV','wm','wx','Mx','dMxdt');
-        name = [outdir,'/',runID,'/',runID,'_hist'];
-        load(name,'hist');
+        load(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','eII','tII','Cx','ke','ks','kx','RaD','ReD','Rux','Rex','dt','time','step','dV','wm','wx','Mx','dMxdt');
+        name = [outdir,'/',runID,'/',runID,'_HST'];
+        load(name,'HST');
 
         SOL = [W(:);U(:);P(:)];
 

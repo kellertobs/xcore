@@ -91,7 +91,7 @@ for Ni = NN
         resnorm  = 1;
         resnorm0 = resnorm;
         iter     = 1;
-        if frst; alpha = alpha/2; beta = beta/2; end
+        if frst; alpha = alpha/2; end
 
         % non-linear iteration loop
         while resnorm/resnorm0 >= rtol && resnorm >= atol && iter <= maxit
@@ -119,7 +119,7 @@ for Ni = NN
         % increment time/step
         time = time+dt;
         step = step+1;
-        if frst; alpha = alpha*2; beta = beta*2; frst=0; end
+        if frst; alpha = alpha*2; frst=0; end
 
         figure(100); clf;
         plot(XX(ceil(Nz/2),:), Xout(ceil(Nz/2),:)./rhoout(ceil(Nz/2),:),'k',XX(ceil(Nz/4),:), X(ceil(Nz/2),:)./rho(ceil(Nz/2),:),'r','LineWidth',1.5); axis tight; box on;

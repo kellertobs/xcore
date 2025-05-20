@@ -24,7 +24,7 @@ dt        =  0.01;                % initial time step [s]
 x0        =  0.01;                % initial background crystallinity [wt]
 dx0       =  x0/10;               % background crystallinity perturbation [wt]
 d0        =  1e-2;                % xtal size constant [m]
-etam0     =  1e+1;                 % melt viscosity constant [kg/m3]
+etam0     =  1e+1;                % melt viscosity constant [kg/m3]
 
 % set boundary layer parameters
 bnd_w     =  2*h;                 % width of boundary layer [m]
@@ -39,8 +39,7 @@ atol      =  1e-9;                % outer its absolute tolerance
 maxit     =  15;                  % maximum outer its
 alpha     =  0.9;                 % iterative step size parameter
 Delta_cnv =  h;                   % correlation length for eddy diffusivity (multiple of h, 0.5-1)
-Delta_sgr =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
-Delta_drg =  d0;                  % scaling length for turbulent particle drag coefficient (multiple of d0)
+Delta_sgr =  d0*20;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
 Rec       =  1;                   % critical Reynolds number for ramping up eddy diffusivity
 Scx       =  1;                   % xtal Schmidt number for applying eddy diffusivity to xtal diffusivity
 Rexc      =  1;                   % critical crystal Reynolds number for ramping up turbulent drag coeff

@@ -5,7 +5,7 @@
 init;
 
 %*****  physical time stepping loop  **************************************
-while time <= tend && step <= Nt
+while time <= tend && step <= Nt && HST.chi(end,2)<=chiend
     
     %***  time step info
     timing;
