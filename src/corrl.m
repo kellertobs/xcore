@@ -1,8 +1,12 @@
 % Identify convective layer boundaries
 laybnd = zeros(Nz+1,Nx);
 laybnd(2:end-1,:) = sqrt(eta(1:end-1,:).*eta(2:end,:))>etamax/2;
-laybnd([1 end],:) = 1;
-laybnd(2:end-1,:) = min(1,laybnd(2:end-1,:) + islocalmax(diff(rho,1,1),1,'MinProminence',5,'MinSeparation',10));
+if closed_bot
+    laybnd([1 end],:) = 1;
+else
+    laybnd(1,:) = 1;
+end
+laybnd(2:end-1,:) = min(1,laybnd(2:end-1,:) + islocalmax(diff(rho,1,1),1,'MinProminence',100,'MinSeparation',10));
 
 % Create a matrix of row indices matching A.
 rowind = repmat((1:(Nz+1))', [1, Nx]);
@@ -36,5 +40,9 @@ Delta_cnv = min(h * dist, Delta_cnv0);
 % smooth correlation length to avoid sharp contrasts in regularisation
 for i=1:10
     Delta_cnv = Delta_cnv + diffus(Delta_cnv,1/8*ones(size(Delta_cnv)),1,[1,2],BCD);
-    Delta_cnv([1 end],:) = min(h/2,Delta_cnv0);
+    if closed_bot
+        Delta_cnv([1 end],:) = min(h/2,Delta_cnv0);
+    else
+        Delta_cnv(1,:) = min(h/2,Delta_cnv0);
+    end
 end

@@ -71,9 +71,8 @@ Nz = length(Zc);
 
 % get smoothed initialisation field
 rng(seed);
-smth = smth*Nx*Nz*1e-4;
 rp   = randn(Nz,Nx);
-for i = 1:round(smth)
+for i = 1:smth
     rp = rp + diffus(rp,1/8*ones(size(rp)),1,[1,2],{'periodic','periodic'});
 end
 rp  = (rp-mean(rp(:)))./std(rp(:));
@@ -122,7 +121,8 @@ Wm  = W;  Um  = U;
 Delta_cnv0 = Delta_cnv;
 Re     = eps + 0.*x;  
 Rex    = eps + 0.*x;
-Div_V  = 0.*x;  advn_rho = 0.*x;  advn_X = 0.*x; advn_M = 0.*x; drhodt = 0.*x;  drhodto = drhodt;
+Div_V  = 0.*x;  advn_rho = 0.*x;  advn_X = 0.*x; advn_M = 0.*x; drhodt = 0.*x;  drhodto = drhodt; 
+rns_Xs = 0.*x;  rns_Xe = 0.*x;
 exx    = 0.*x;  ezz = 0.*x;  exz = zeros(Nz-1,Nx-1);  eII = 0.*x;  
 txx    = 0.*x;  tzz = 0.*x;  txz = zeros(Nz-1,Nx-1);  tII = 0.*x; 
 eta    = etam0 + zeros(Nz,Nx);

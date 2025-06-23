@@ -38,8 +38,8 @@ seed      =  24;                  % random perturbation seed
 smth      =  5;                   % random perturbation smoothness
 
 % set buoyancy parameters
-rhom0     =  2500;                % melt density constant [kg/m3]
-rhox0     =  3000;                % xtal density constant [kg/m3]
+rhom0     =  2700;                % melt density constant [kg/m3]
+rhox0     =  3200;                % xtal density constant [kg/m3]
 d0        =  0.01;                % xtal size constant [m]
 g0        =  10.;                 % gravity constant [m/s2]
 

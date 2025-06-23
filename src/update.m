@@ -38,16 +38,15 @@ Pl(1,:)     = repmat(rhoref(1).*g0.*h/2,1,Nx) + Ptop;
 Pl(2:end,:) = Pl(1,:) + repmat(cumsum(rhoref(2:end-1).*g0.*h),1,Nx);
 Pt          = max(Ptop/100,Pl + P(2:end-1,2:end-1));
 
-% update effective constituent sizes
-dm = d0.*(1-mu ).^0.5;
-dx = d0.*(1-chi).^0.5;
+% % update effective constituent sizes
+% dm = d0.*(1-mu ).^0.5;
+% dx = d0.*(1-chi).^0.5;
 
 % get coefficient contrasts
 kv = [etax0;etam0];
 Mv = [etax0;etam0].'./[etax0;etam0];
 
 % get permission weights
-dd = max(eps^0.5,min(1-eps^0.5,permute(cat(3,dx ,dm ),[3,1,2])));
 ff = max(eps^0.5,min(1-eps^0.5,permute(cat(3,chi,mu ),[3,1,2])));
 FF = permute(repmat(ff,1,1,1,2),[4,1,2,3]);
 Sf = (FF./BB).^(1./CC);  Sf = Sf./sum(Sf,2);
@@ -56,7 +55,7 @@ Xf = sum(AA.*Sf,2).*FF + (1-sum(AA.*Sf,2)).*Sf;
 % get momentum flux and transfer coefficients
 thtv = squeeze(prod(Mv.^Xf,2));
 Kv   = ff.*kv.*thtv;
-Cv   = Kv.*(1-ff)./dd.^2;
+Cv   = Kv./d0.^2;
 
 % get effective viscosity
 eta0 = squeeze(sum(Kv,1));
@@ -92,7 +91,7 @@ ks   = vx.*Delta_sgr.*hasx;                                                % seg
 kx   = (ks + ke.*fRe/Scx);                                                 % regularised particle diffusivity 
 
 fRex = (1-exp(-Rex./Rexc)+eps);                                            % ramp-up factor for turbulent drag coefficient
-Cxt  = chi.*(1-chi).*rho.*ks./d0^2/30;                                     % turbulent drag coefficient
+Cxt  = chi.*rho.*ks./d0^2;                                                 % turbulent drag coefficient
 Cx   = (Cx + Cx0 + fRex.*Cxt)/2;                                           % effective drag coefficient   
 
 % limit total contrast in Cx
@@ -113,11 +112,12 @@ etaco  = (eta(icz(1:end-1),icx(1:end-1)).*eta(icz(2:end),icx(1:end-1)) ...
        .* eta(icz(1:end-1),icx(2:end  )).*eta(icz(2:end),icx(2:end  ))).^0.25;
 
 % update dimensionless numbers
-Re  = V .*Delta_cnv./(eta ./rho);                                          % Reynolds number on correlation length scale
-ReD = V .*D        ./(eta ./rho);                                          % Reynolds number on domain length scale
-Rex = vx.*d0       ./(eta0./rho);                                          % particle Reynolds number
-Ra  = V.*Delta_cnv ./kx;                                                   % Rayleigh number on correlation length scale
-RaD = V.*D         ./kx;                                                   % Rayleigh number on domain length scale
+etasgr = Cx.*d0^2./chi;
+Re  = V .*Delta_cnv./(eta   ./rho);                                        % Reynolds number on correlation length scale
+ReD = V .*D/10     ./(eta   ./rho);                                        % Reynolds number on domain length scale
+Rex = vx.*d0       ./(etasgr./rho);                                        % particle Reynolds number
+Ra  = V .*Delta_cnv./kx;                                                   % Rayleigh number on correlation length scale
+RaD = V .*D/10     ./kx;                                                   % Rayleigh number on domain length scale
 Rux = vx./V;                                                               % particle settling number
 
 % update stresses
