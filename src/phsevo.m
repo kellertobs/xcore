@@ -21,28 +21,37 @@ if iter==1
         rns = rns + diffus(rns,1/8*ones(size(rns)),1,[1,2],{'periodic','periodic'});
     end
     rns  = (rns - mean(rns(:)))./std(rns(:)); % normalise to mean=0, var=1
+
+    rnsw   = randn(Nz+1,Nx);
+    for i = 1:smth  % apply same smoothing as for initial condition
+        rnsw = rnsw + diffus(rnsw,1/8*ones(size(rnsw)),1,[1,2],{'periodic','periodic'});
+    end
+    rnsw  = (rnsw - mean(rnsw(:)))./std(rnsw(:)); % normalise to mean=0, var=1
+
+    rnsu  = randn(Nz,Nx+1);
+    for i = 1:smth  % apply same smoothing as for initial condition
+        rnsu = rnsu + diffus(rnsu,1/8*ones(size(rnsu)),1,[1,2],{'periodic','periodic'});
+    end
+    rnsu  = (rnsu - mean(rnsu(:)))./std(rnsu(:)); % normalise to mean=0, var=1
+
     isx  = randi(Nx,1); isz = randi(Nz,1);
-    rns1 = circshift(circshift(rns,isx,2),isz,1);
+    rnsws = circshift(circshift(rnsw,isx,2),isz,1);
     isx  = randi(Nx,1); isz = randi(Nz,1);
-    rns2 = circshift(circshift(rns,isx,2),isz,1);
+    rnsws = circshift(circshift(rnsws,isx,2),isz,1);
     isx  = randi(Nx,1); isz = randi(Nz,1);
-    rns3 = circshift(circshift(rns,isx,2),isz,1);
+    rnsus = circshift(circshift(rnsu,isx,2),isz,1);
     isx  = randi(Nx,1); isz = randi(Nz,1);
-    rns4 = circshift(circshift(rns,isx,2),isz,1);
+    rnsus = circshift(circshift(rnsus,isx,2),isz,1);
 end
 
 % random noise source for particle fluctuations
 var_rnss = ks.*(Delta_sgr./(h+Delta_sgr)).^3./(dt+Delta_sgr./vx);          % variance of random noise source
-rnsz     = (rns1(icz(1:end-1),:)+rns1(icz(2:end),:))/2;
-rnsx     = (rns2(:,icx(1:end-1))+rns2(:,icx(2:end)))/2;
-rns_Xs   = X.*sqrt(var_rnss).*(ddz(rnsz,h)+ddx(rnsx,h));                   % random flux divergence
+rns_Xs   = X.*sqrt(var_rnss).*(ddz(rnsws,h)+ddx(rnsus,h));                   % random flux divergence
 rns_Xs   = rns_Xs - mean(rns_Xs(:));                                       % ensure global mass conservation
 
 % random noise source for subgrid eddy fluctuations
 var_rnse = ke.*(Delta_cnv./(h+Delta_cnv)).^3./(dt+Delta_cnv./V );          % variance of random noise source
-rnsz     = (rns3(icz(1:end-1),:)+rns3(icz(2:end),:))/2;
-rnsx     = (rns4(:,icx(1:end-1))+rns4(:,icx(2:end)))/2;
-rns_Xe   = X.*sqrt(var_rnse).*(ddz(rnsz,h)+ddx(rnsx,h));                   % random flux divergence
+rns_Xe   = X.*sqrt(var_rnse).*(ddz(rnsw,h)+ddx(rnsu,h));                   % random flux divergence
 rns_Xe   = rns_Xe - mean(rns_Xe(:));                                       % ensure global mass conservation
 
 % boundary phase change rate

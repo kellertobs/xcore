@@ -380,7 +380,7 @@ if ~bnchm && step>=1
     upd_Mx = - alpha*res_Mx*dt/a1;
 
     % update crystal momentum with dynamic under-relaxation
-    tau_p = min(chiw(2:end-1,:).*rhow(2:end-1,:)./Cxw(2:end-1,:),[],'all');
+    tau_p = min(chiw(2:end-1,:).*rhow(2:end-1,:)./Cxw(2:end-1,:)/2,[],'all');
     relax = dt ./ (dt + tau_p);
     Mx    = Mx + (1-relax)*upd_Mx;
 
