@@ -14,55 +14,15 @@ dffn_X   = diffus(chi,X.*kx,h,[1,2],BCD);
 
 if ~bnchm
 
-% generate smooth random noise (once per timestep)
-if iter==1
-    rns   = randn(Nz,Nx);
-    for i = 1:smth  % apply same smoothing as for initial condition
-        rns = rns + diffus(rns,1/8*ones(size(rns)),1,[1,2],{'periodic','periodic'});
-    end
-    rns  = (rns - mean(rns(:)))./std(rns(:)); % normalise to mean=0, var=1
-
-    rnsw   = randn(Nz+1,Nx);
-    for i = 1:smth  % apply same smoothing as for initial condition
-        rnsw = rnsw + diffus(rnsw,1/8*ones(size(rnsw)),1,[1,2],{'periodic','periodic'});
-    end
-    rnsw  = (rnsw - mean(rnsw(:)))./std(rnsw(:)); % normalise to mean=0, var=1
-
-    rnsu  = randn(Nz,Nx+1);
-    for i = 1:smth  % apply same smoothing as for initial condition
-        rnsu = rnsu + diffus(rnsu,1/8*ones(size(rnsu)),1,[1,2],{'periodic','periodic'});
-    end
-    rnsu  = (rnsu - mean(rnsu(:)))./std(rnsu(:)); % normalise to mean=0, var=1
-
-    isx  = randi(Nx,1); isz = randi(Nz,1);
-    rnsws = circshift(circshift(rnsw,isx,2),isz,1);
-    isx  = randi(Nx,1); isz = randi(Nz,1);
-    rnsws = circshift(circshift(rnsws,isx,2),isz,1);
-    isx  = randi(Nx,1); isz = randi(Nz,1);
-    rnsus = circshift(circshift(rnsu,isx,2),isz,1);
-    isx  = randi(Nx,1); isz = randi(Nz,1);
-    rnsus = circshift(circshift(rnsus,isx,2),isz,1);
-end
-
-% random noise source for particle fluctuations
-var_rnss = ks.*(Delta_sgr./(h+Delta_sgr)).^3./(dt+Delta_sgr./vx);          % variance of random noise source
-rns_Xs   = X.*sqrt(var_rnss).*(ddz(rnsws,h)+ddx(rnsus,h));                   % random flux divergence
-rns_Xs   = rns_Xs - mean(rns_Xs(:));                                       % ensure global mass conservation
-
-% random noise source for subgrid eddy fluctuations
-var_rnse = ke.*(Delta_cnv./(h+Delta_cnv)).^3./(dt+Delta_cnv./V );          % variance of random noise source
-rns_Xe   = X.*sqrt(var_rnse).*(ddz(rnsw,h)+ddx(rnsu,h));                   % random flux divergence
-rns_Xe   = rns_Xe - mean(rns_Xe(:));                                       % ensure global mass conservation
-
 % boundary phase change rate
-tau_x    = (h/2)./(W0 + w0) + dt;
-Gx       = max(0,Da.*(xeq.*(1+rns./10)-x).*rho./tau_x.*topshape);
+tau_x    = (h/2)./(W0 + w0 + eps) + dt;
+Gx       = max(0,Da.*(xeq-x).*rho./tau_x.*topshape);
 Gm       = -Gx;
 
 end
 
 % total rates of change
-dXdt     = advn_X + dffn_X + Gx + rns_Xs + rns_Xe;
+dXdt     = advn_X + dffn_X + Gx;
 
 % residual of phase density evolution
 res_X    = (a1*X-a2*Xo-a3*Xoo)/dt - (b1*dXdt + b2*dXdto + b3*dXdtoo);
@@ -71,7 +31,7 @@ res_X    = (a1*X-a2*Xo-a3*Xoo)/dt - (b1*dXdt + b2*dXdto + b3*dXdtoo);
 upd_X    = - alpha*res_X*dt/a1;
 
 X        = X + upd_X;
-X        = max(rho.*eps^0.5,X);
+X        = max(rho.*1e-6,X);
 M        = rho - X;
 
 %***  update phase fractions and component concentrations

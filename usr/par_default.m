@@ -25,7 +25,7 @@ L         =  D;                   % chamber width (equal to h for 1-D mode) [m]
 % set model timing parameters
 Nt        =  1e6;                 % number of time steps to take
 tend      =  1*yr;                % end time for simulation [s]
-xend      =  0.05;                % stop run when mean crystallinity reaches threshold
+xend      =  0.10;                % stop run when mean crystallinity reaches threshold
 dt        =  0.1;                 % initial time step [s]
 
 % set initial phase fraction parameters
@@ -58,7 +58,7 @@ CC        = [[0.9826, 0.0174]*9.1697; ... % permission step widths
 % set boundary layer parameters
 bnd_w     =  2*h;                 % width of boundary layer [m]
 xeq       =  0.1;                 % equilibrium crystallinity of boundary layer [wt]
-Da        =  0.5;                 % Dahmköhler number of boundary layer rate [s]
+Da        =  0.1;                 % Dahmköhler number of boundary layer rate [s]
 Ptop      =  1e5;                 % top boundary pressure [Pa]
 closed_bot = 1;                    % switch for closed bottom boundary to form cumulate pile
 
@@ -77,9 +77,7 @@ Delta_cnv =  h/2;                 % correlation length for eddy diffusivity (mul
 Delta_sgr =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
 kmin      =  1e-16;               % minimum diffusivity
 kmax      =  1e+16;               % maximum diffusivity
-Rec       =  1;                   % critical Reynolds number for ramping up eddy diffusivity
-Scx       =  1;                   % xtal Schmidt number for applying eddy diffusivity to xtal diffusivity
-Rexc      =  1;                   % critical crystal Reynolds number for ramping up turbulent drag coeff
+xi0       =  0.5;                 % relative amplitude of random noise flux
 dtmax     =  1e32;                % maximum time step [s]
 etacntr   =  1e+6;                % maximum viscosity contrast
 Cxcntr    =  1e+6;                % maximum drag coefficient contrast

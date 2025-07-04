@@ -70,10 +70,12 @@ Nx = length(Xc);
 Nz = length(Zc);
 
 % get smoothed initialisation field
+smth = max(4,max((Delta_sgr/2/h)^2,(Delta_cnv/2/h)^2));   % random perturbation smoothness
 rng(seed);
 rp   = randn(Nz,Nx);
-for i = 1:smth
-    rp = rp + diffus(rp,1/8*ones(size(rp)),1,[1,2],{'periodic','periodic'});
+for i = 1:ceil(smth)
+    ksmth = min(1,smth-i+1);
+    rp = rp + diffus(rp,ksmth/8*ones(size(rp)),1,[1,2],{'periodic','periodic'});
 end
 rp  = (rp-mean(rp(:)))./std(rp(:));
 
@@ -90,7 +92,7 @@ MapW = reshape(1:NW,Nz+1,Nx+2);
 MapU = reshape(1:NU,Nz+2,Nx+1) + NW;
 
 % set up shape functions for transient boundary layers
-topshape = exp( ( -ZZ)/max(h,bnd_w));
+topshape = exp( (-ZZ+h/2)/max(h,bnd_w));
 
 % set specified boundaries to no slip, else to free slip
 sds = -1;
@@ -109,25 +111,24 @@ x   =  x0 + dx0.*rp + dxg.*gp + topshape.*(xb + dxb.*rp);  % potential temperatu
 m   =  1-x;
 xin =  x;
 
-U   =  zeros(Nz+2,Nx+1);  UBG = U; upd_U = 0*U;
-W   =  zeros(Nz+1,Nx+2);  WBG = W; wx = 0.*W; wm = 0.*W; wx0 = 0.*W; wxo = wx; upd_W = 0*W; Mx = 0*wx(:,2:end-1);
+U   =  zeros(Nz+2,Nx+1);  UBG = U; upd_U = 0*U; 
+W   =  zeros(Nz+1,Nx+2);  WBG = W; wx = 0.*W; wm = 0.*W; wx0 = 0.*W; wxo = wx; upd_W = 0*W; Mx = 0*wx(:,2:end-1); 
 P   =  zeros(Nz+2,Nx+2);  V   = 0.*x; vx = V; vxo = vx; upd_P = 0*P;
 SOL = [W(:);U(:);P(:)];
 
 % initialise auxiliary fields
-Wx  = W;  Ux  = U;
-Wm  = W;  Um  = U;
+Wx  = W;  Ux = U;  wx = W;  xiw = W;
+Wm  = W;  Um = U;  ux = U;  xiu = U;
 
 Delta_cnv0 = Delta_cnv;
 Re     = eps + 0.*x;  
 Rex    = eps + 0.*x;
 Div_V  = 0.*x;  advn_rho = 0.*x;  advn_X = 0.*x; advn_M = 0.*x; drhodt = 0.*x;  drhodto = drhodt; 
-rns_Xs = 0.*x;  rns_Xe = 0.*x;
+xis = 0.*x;  xie = 0.*x;  r = 0*x;  rwe = W(:,2:end-1);  rue = U(2:end-1,:);  rws = W(:,2:end-1);  rus = U(2:end-1,:);
 exx    = 0.*x;  ezz = 0.*x;  exz = zeros(Nz-1,Nx-1);  eII = 0.*x;  
 txx    = 0.*x;  tzz = 0.*x;  txz = zeros(Nz-1,Nx-1);  tII = 0.*x; 
 eta    = etam0 + zeros(Nz,Nx);
-etamax = min(eta(:)) .* etacntr;
-Cx     = x0.*(1-x0).*etam0./d0^2 + zeros(Nz,Nx);
+etas   = etam0 + zeros(Nz,Nx);
 dV     = 0.*x; 
 ke     = 0.*x;
 Pref   = 1e5;
@@ -143,6 +144,7 @@ step    = 0;
 FMtime  = 0;
 XEtime  = 0;
 UDtime  = 0;
+dto     = dt;
 a1      = 1; a2 = 0; a3 = 0; b1 = 1; b2 = 0; b3 = 0;
 
 X    = rho.*x;  Xo = X;  res_X = 0.*X;
@@ -186,6 +188,70 @@ dsumBdt = 0; dsumBdto = 0;
 dsumMdt = 0; dsumMdto = 0;
 dsumXdt = 0; dsumXdto = 0;
 
+% calculate and print characteristic scales
+D0      =  D;
+d0      =  d0;
+L0      =  Delta_cnv0;
+l0      =  Delta_sgr;
+h0      =  h;
+
+rho0    =  rhom0;
+Drho0   =  rhox0-rhom0;
+Dchi0   =  xeq/10;
+eta0    =  etam0*(1-Dchi0)^-5;
+C0      =  Dchi0*eta0/d0^2;
+
+W0      =  1./(2.*L0.*rho0).*(sqrt(4.*Dchi0.*Drho0.*g0.*L0.*rho0.*(D0/10).^2 + eta0.^2) - eta0);
+w0      =  1./(2.*l0.*rho0).*(sqrt(4.*       Drho0.*g0.*l0.*rho0.* d0    .^2 + eta0.^2) - eta0);
+tW0     =  D0/W0;
+tw0     =  D0/w0;
+
+ke0     =  W0*L0;
+ks0     =  w0*l0;
+dt0     =  min([(h0/2)^2/(ks0+ke0) , (h0/2)/(W0+w0)]);
+
+xie0    =  xi*sqrt(ke0.*(L0./(h0+L0)).^3./(dt0+L0/2/W0));
+xis0    =  xi*sqrt(ks0.*(l0./(h0+l0)).^3./(dt0+l0/2/w0));
+xi0     =  xie0 + xis0;
+
+etae0   =  ke0*rho0;
+etas0   =  ks0*rho0;
+Ns0     =  (xie0 + xis0)/(W0 + w0);
+Rs0     =  w0/W0;
+Ra0     =  W0*D0/10/(ks0 + ke0);
+ReD0    =  W0*D0/10/((eta0+etae0)/rho0);
+Red0    =  w0*d0   /((eta0+etas0)/rho0);
+
+fprintf(1,'\n  Domain depth        D0    = %1.0e [m]',D0);
+fprintf(1,'\n  Crystal size        d0    = %1.0e [m]',d0);
+fprintf(1,'\n  Eddy  corrl. length L0    = %1.0e [m]',L0);
+fprintf(1,'\n  Segr. corrl. length l0    = %1.0e [m] \n',l0);
+
+fprintf(1,'\n  Density             rho0  = %1.0f [kg/m3]',rho0);
+fprintf(1,'\n  Density contrast    Drho0 = %1.0f [kg/m3]',Drho0);
+fprintf(1,'\n  Viscosity           eta0  = %1.0e [Pas]',eta0);
+fprintf(1,'\n  Drag coefficient    Cx0   = %1.0e [Pas/m2] \n',C0);
+
+fprintf(1,'\n  Eddy  diffusivity   ke0   = %1.1e [m2/s]',ke0);
+fprintf(1,'\n  Segr. diffusivity   ks0   = %1.1e [m2/s]',ks0);
+fprintf(1,'\n  Eddy  viscosity     etae  = %1.1e [Pas]',etae0);
+fprintf(1,'\n  Segr. viscosity     etas0 = %1.1e [Pas] \n',etas0);
+
+fprintf(1,'\n  Eddy noise rate     xie0  = %1.2e [m/s]',xie0);
+fprintf(1,'\n  Segr. noise rate    xis0  = %1.2e [m/s]',xis0);
+
+fprintf(1,'\n  Convection  speed   W0    = %1.2e [m/s]',W0);
+fprintf(1,'\n  Segregation speed   w0    = %1.2e [m/s]',w0);
+
+fprintf(1,'\n  Convection  time    tW0   = %1.2e [s]',tW0);
+fprintf(1,'\n  Segregation time    tw0   = %1.2e [s] \n',tw0);
+
+fprintf(1,'\n  Noise No            Ns0   = %1.2e [1]',Ns0);
+fprintf(1,'\n  Segregation No      Rs0   = %1.2e [1]',Rs0);
+fprintf(1,'\n  Rayleigh No         Ra0   = %1.2e [1]',Ra0);
+fprintf(1,'\n  Domain  Reynolds No ReD0  = %1.2e [1]',ReD0);
+fprintf(1,'\n  Crystal Reynolds No Red0  = %1.2e [1]\n\n\n',Red0);
+
 % overwrite fields from file if restarting run
 if restart
     if     restart < 0  % restart from last continuation frame
@@ -195,7 +261,7 @@ if restart
     end
     if exist(name,'file')
         fprintf('\n   restart from %s \n\n',name);
-        load(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','eII','tII','Cx','ke','ks','kx','RaD','ReD','Rux','Rex','dt','time','step','dV','wm','wx','Mx','dMxdt');
+        load(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','etas','eII','tII','ke','ks','kx','RaD','ReD','Rs','Red','dt','time','step','dV','wm','wx','Mx','dMxdt');
         name = [outdir,'/',runID,'/',runID,'_HST'];
         load(name,'HST');
 

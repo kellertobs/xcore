@@ -30,6 +30,9 @@ chiw   = (chi(icz(1:end-1),:)+chi(icz(2:end),:))./2;
 xw     = (x(icz(1:end-1),:)+x(icz(2:end),:))./2;
 mw     = (m(icz(1:end-1),:)+m(icz(2:end),:))./2;
 
+xu     = (x(:,icx(1:end-1))+x(:,icx(2:end)))./2;
+muu    = (m(:,icx(1:end-1))+m(:,icx(2:end)))./2;
+
 Xw     = (X(icz(1:end-1),:)+X(icz(2:end),:))/2;
 Mw     = (M(icz(1:end-1),:)+M(icz(2:end),:))/2;
 
@@ -54,14 +57,11 @@ Xf = sum(AA.*Sf,2).*FF + (1-sum(AA.*Sf,2)).*Sf;
 
 % get momentum flux and transfer coefficients
 thtv = squeeze(prod(Mv.^Xf,2));
-Kv   = ff.*kv.*thtv;
-Cv   = Kv./d0.^2;
+etai = kv.*thtv;
 
 % get effective viscosity
-eta0 = squeeze(sum(Kv,1));
-
-% get segregation drag cofficient
-Cx0 = squeeze(Cv(1,:,:));
+etax   = squeeze(etai(1,:,:));
+etamix = squeeze(sum(ff.*etai,1));
 
 % update velocity divergence
 Div_V = ddz(W(:,2:end-1),h) + ddx(U(2:end-1,:),h);                         % get velocity divergence
@@ -78,29 +78,30 @@ eII = (0.5.*(exx.^2 + ezz.^2 ...
 % update velocity magnitudes
 V  = sqrt(((W(1:end-1,2:end-1)+W(2:end,2:end-1))/2).^2 ...
         + ((U(2:end-1,1:end-1)+U(2:end-1,2:end))/2).^2);                   % convection speed magnitude
-vx = abs(wx([2,2:end-1],2:end-1)+wx(2:end,2:end-1))/2;                         % segregation speed magnitude
+% vx = sqrt((wx([2,2:end-1],2:end-1)+wx([2:end-1,end-1],2:end-1)).^2);       % segregation speed magnitude
+vx = d0^2./etas.*(rhox0-rho).*g0; % solid segregation speed
 
 % update diffusion parameters
 ke   = eII.*Delta_cnv.^2;                                                  % turbulent eddy diffusivity
 
-fRe  = (1-exp(-Re./Rec)+eps);                                              % ramp-up factor for eddy diffusivity
 etae = ke.*rho;                                                            % eddy viscosity
-eta  = (eta + eta0 + fRe.*etae)/2;                                         % effective viscosity
+eta  = (eta + etamix + etae)/2;                                              % effective viscosity
+etacnv = eta;
 
-ks   = vx.*Delta_sgr.*hasx;                                                % segregation diffusivity
-kx   = (ks + ke.*fRe/Scx);                                                 % regularised particle diffusivity 
+ks   = vx.*Delta_sgr;                                                      % segregation diffusivity
+kx   = (ks + ke);                                                          % regularised particle diffusivity 
 
-fRex = (1-exp(-Rex./Rexc)+eps);                                            % ramp-up factor for turbulent drag coefficient
-Cxt  = chi.*rho.*ks./d0^2;                                                 % turbulent drag coefficient
-Cx   = (Cx + Cx0 + fRex.*Cxt)/2;                                           % effective drag coefficient   
+etat = ks.*rho;                                                            % turbulent drag viscosity
+etas = (etas + etax + etat)/2;                                             % effective drag viscosity   
 
 % limit total contrast in Cx
-Cxmax = geomean(Cx(:)).*(Cxcntr/2);
-Cxmin = geomean(Cx(:))./(Cxcntr/2);
-Cx    = 1./(1./Cxmax + 1./Cx) + Cxmin;
+etamax = geomean(etas(:)).*(etacntr/2);
+etamin = geomean(etas(:))./(etacntr/2);
+etas   = 1./(1./etamax + 1./etas) + etamin;
 
 % interpolate to staggered nodes
-Cxw   = (Cx(icz(1:end-1),:)+Cx(icz(2:end),:))/2;
+% etasw = (etas(icz(1:end-1),:)+etas(icz(2:end),:)).*0.5;
+etasw = (etas(icz(1:end-1),:).*etas(icz(2:end),:)).^0.5;
 
 % limit total contrast in eta
 etamax = geomean(eta(:)).*(etacntr/2);
@@ -108,17 +109,19 @@ etamin = geomean(eta(:))./(etacntr/2);
 eta    = 1./(1./etamax + 1./eta) + etamin;
 
 % interpolate to staggered nodes
+% etaco  = (eta(icz(1:end-1),icx(1:end-1))+eta(icz(2:end),icx(1:end-1)) ...
+%        +  eta(icz(1:end-1),icx(2:end  ))+eta(icz(2:end),icx(2:end  ))).*0.25;
 etaco  = (eta(icz(1:end-1),icx(1:end-1)).*eta(icz(2:end),icx(1:end-1)) ...
        .* eta(icz(1:end-1),icx(2:end  )).*eta(icz(2:end),icx(2:end  ))).^0.25;
 
 % update dimensionless numbers
-etasgr = Cx.*d0^2./chi;
-Re  = V .*Delta_cnv./(eta   ./rho);                                        % Reynolds number on correlation length scale
-ReD = V .*D/10     ./(eta   ./rho);                                        % Reynolds number on domain length scale
-Rex = vx.*d0       ./(etasgr./rho);                                        % particle Reynolds number
+Re  = V .*Delta_cnv./(eta ./rho);                                          % Reynolds number on correlation length scale
+ReD = V .*D/10     ./(eta ./rho);                                          % Reynolds number on domain length scale
+Red = vx.*d0       ./(etas./rho);                                          % particle Reynolds number
 Ra  = V .*Delta_cnv./kx;                                                   % Rayleigh number on correlation length scale
 RaD = V .*D/10     ./kx;                                                   % Rayleigh number on domain length scale
-Rux = vx./V;                                                               % particle settling number
+Rs  = vx./V;                                                               % particle settling number
+Ns  = (xie + xis)./(V + vx);
 
 % update stresses
 txx = eta   .* exx;                                                        % x-normal stress
@@ -128,6 +131,11 @@ txz = etaco .* exz;                                                        % xz-
 tII = (0.5.*(txx.^2 + tzz.^2 ...
        + 2.*(txz(1:end-1,1:end-1).^2+txz(2:end,1:end-1).^2 ...
        +     txz(1:end-1,2:end  ).^2+txz(2:end,2:end  ).^2)/4)).^0.5 + eps;
+
+% update time step
+dtk = (h/2)^2/max(kx(:)); % diffusive time step size
+dta =  h/2   /max(abs([Um(:);Wm(:);Ux(:);Wx(:)]+eps));  % advective time step size
+dt  = (dt + min([1.5*dto,min([dtk,CFL*dta]),dtmax]))/2; % time step size
 
 % record timing
 UDtime = UDtime + toc;

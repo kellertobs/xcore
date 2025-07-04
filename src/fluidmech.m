@@ -357,51 +357,117 @@ SOL = [W(:);U(:);P(:)];
 if ~bnchm && step>=1
 
     % terminal xtal segregation speed for comparison
-    wx0(2:end-1,2:end-1) = chiw(2:end-1,:)./Cxw(2:end-1,:).*Drhox(2:end-1,:).*g0; % solid segregation speed
+    wx0(2:end-1,2:end-1) = d0^2./etasw(2:end-1,:).*Drhox(2:end-1,:).*g0; % solid segregation speed
     wx0([1,end],:) = min(1,1-[top;bot]).*wx0([2,end-1],:);
     wx0(:,[1 end]) = wx0(:,[end-1 2]);
 
-    % advection of crystal momentum
-    advn_Mx = - advect(Mx(2:end-1,:),(Ux(2:end-2,:)+Ux(3:end-1,:))/2,(Wx(1:end-1,2:end-1)+Wx(2:end,2:end-1))/2,h,{ADVN,''},[1,2],BCA);
+    % % advection of crystal momentum
+    % % advn_Mx = - advect(Mx(2:end-1,:),(Ux(2:end-2,:)+Ux(3:end-1,:))/2,(Wx(1:end-1,2:end-1)+Wx(2:end,2:end-1))/2,h,{ADVN,''},[1,2],BCA);
+    % advn_Mx = - advect(Mx(2:end-1,:),(U(2:end-2,:)+U(3:end-1,:))/2,(W(1:end-1,2:end-1)+W(2:end,2:end-1))/2,h,{ADVN,''},[1,2],BCA);
+    % 
+    % % crystal momentum transfer from mixture
+    % Gvx     = - Cxw(2:end-1,:) .* wx(2:end-1,2:end-1);
+    % 
+    % % crystal momentum source
+    % Qvx     = + chiw(2:end-1,:) .* Drhox(2:end-1,:) .* g0;
+    % 
+    % % get total rate of change
+    % dMxdt(2:end-1,:) = advn_Mx + Gvx + Qvx;
+    % 
+    % % residual of xtal partial momentum deviation
+    % res_Mx = (a1*Mx-a2*Mxo-a3*Mxoo)/dt - (b1*dMxdt + b2*dMxdto + b3*dMxdtoo);
+    % 
+    % % semi-implicit update of xtal momentum
+    % upd_Mx = - alpha*res_Mx*dt/a1;
+    % 
+    % % update crystal momentum with dynamic under-relaxation
+    % tau_p  = chiw.*rhow./Cxw;
+    % relax  = dt ./ (dt + tau_p);
+    % upd_Mx = (1-relax).*upd_Mx;
+    % 
+    % Mx     = Mx + upd_Mx;
+    % 
+    % % update crystal settling speed
+    % wx(:,2:end-1) = Mx./Xw;
+    % wx([1,end],:) = min(1,1-[top;bot]).*wx([2,end-1],:);
+    % wx(:,[1 end]) = wx(:,[end-1 2]);
 
-    % crystal momentum transfer from mixture
-    Gvx      = - Cxw(2:end-1,:) .* wx(2:end-1,2:end-1);
+    wx  = wx0;
+    wm  = -xw(:,icx)./mw (:,icx).*wx;
 
-    % crystal momentum source
-    Qvx     = + chiw(2:end-1,:) .* Drhox(2:end-1,:) .* g0;
+    % generate smooth random noise (once per timestep)
+    if iter==1
+        rweo  = rwe;
+        rwe   = randn(Nz+1,Nx);
+        for i = 1:ceil(smth)  % apply same smoothing as for initial condition
+            ksmth = min(1,smth-i+1);
+            rwe = rwe + diffus(rwe,ksmth/8*ones(size(rwe)),1,[1,2],{'periodic','periodic'});
+        end
+        rwe  = (rwe - mean(rwe(:)))./std(rwe(:)); % normalise to mean=0, var=1
+        if step==1; rweo = rwe; end
 
-    % get total rate of change
-    dMxdt(2:end-1,:) = advn_Mx + Gvx + Qvx;
+        rueo = rue;
+        rue  = randn(Nz,Nx+1);
+        for i = 1:ceil(smth)  % apply same smoothing as for initial condition
+            ksmth = min(1,smth-i+1);
+            rue = rue + diffus(rue,ksmth/8*ones(size(rue)),1,[1,2],{'periodic','periodic'});
+        end
+        rue  = (rue - mean(rue(:)))./std(rue(:)); % normalise to mean=0, var=1
+        if step==1; rueo = rue; end
 
-    % residual of xtal partial momentum deviation
-    res_Mx = (a1*Mx-a2*Mxo-a3*Mxoo)/dt - (b1*dMxdt + b2*dMxdto + b3*dMxdtoo);
+        rwso = rws;
+        ruso = rus;
+        isx  = randi(Nx,1); isz = randi(Nz,1);
+        rws  = circshift(circshift(rwe,isx,2),isz,1);
+        isx  = randi(Nx,1); isz = randi(Nz,1);
+        rus  = circshift(circshift(rue,isx,2),isz,1);
+        if step==1; rwso = rws; end
+        if step==1; rwso = rws; end
 
-    % semi-implicit update of xtal momentum
-    upd_Mx = - alpha*res_Mx*dt/a1;
+        tau  = sqrt(smth)/2*dt;
+        rwe  = rweo + (rwe-rweo).*dt./tau;
+        rue  = rueo + (rue-rueo).*dt./tau;
+        rws  = rwso + (rws-rwso).*dt./tau;
+        rus  = ruso + (rus-ruso).*dt./tau;
+        rwe  = (rwe - mean(rwe(:)))./std(rwe(:)); % normalise to mean=0, var=1
+        rue  = (rue - mean(rue(:)))./std(rue(:)); 
+        rws  = (rws - mean(rws(:)))./std(rws(:));
+        rus  = (rus - mean(rus(:)))./std(rus(:));
+      
+    end
 
-    % update crystal momentum with dynamic under-relaxation
-    tau_p = min(chiw(2:end-1,:).*rhow(2:end-1,:)./Cxw(2:end-1,:)/2,[],'all');
-    relax = dt ./ (dt + tau_p);
-    Mx    = Mx + (1-relax)*upd_Mx;
+    % random noise source variance
+    xie  = xi*sqrt(ke.*(Delta_cnv./(h+Delta_cnv)).^3./(dt+Delta_cnv/2./V ));      % eddy noise
+    xis  = xi*sqrt(ks.*(Delta_sgr./(h+Delta_sgr)).^3./(dt+Delta_sgr/2./vx));      % segregation noise
 
-    % update crystal settling speed
-    wx(:,2:end-1) = Mx./Xw;
-    wx([1,end],:) = min(1,1-[top;bot]).*wx([2,end-1],:);
-    wx(:,[1 end]) = wx(:,[end-1 2]);
+    xisw = (xis(icz(1:end-1),icx) + xis(icz(2:end),icx))./2;
+    xisu = (xis(icz,icx(1:end-1)) + xis(icz,icx(2:end)))./2;
 
-    wm  = -xw(:,icx)./mw(:,icx).*wx;
+    xiew = (xie(icz(1:end-1),icx) + xie(icz(2:end),icx))./2;
+    xieu = (xie(icz,icx(1:end-1)) + xie(icz,icx(2:end)))./2;
+
+    xiw = xisw .* rws(:,icx) + xiew .* rwe(:,icx); 
+    xiu = xisu .* rus(icz,:) + xieu .* rue(icz,:);
+
+    xiw = xiw - mean(xiw(:));
+    xiu = xiu - mean(xiu(:)); 
+
+    xiw([1,end],:) = xiw([2,end-1],:);
+    xiw(:,[1 end]) = xiw(:,[end-1 2]);
+    xiu([1 end],:) = xiu([2 end-1],:);
+    xiu(:,[1 end]) = repmat(mean(xiu(:,[1 end]),2),1,2);
+
+    xixw  = xiw;
+    xixu  = xiu;
+    ximw  = -xw(:,icx)./mw (:,icx).*xixw;
+    ximu  = -xu(icz,:)./muu(icz,:).*xixu;
 
     % update phase velocities
-    Wx  = W + wx;  % xtl z-velocity
-    Ux  = U;       % xtl x-velocity
-    Wm  = W + wm;  % mlt z-velocity
-    Um  = U;       % mlt x-velocity
+    Wx  = W + wx + xixw;  % xtl z-velocity
+    Ux  = U + 0  + xixu;  % xtl x-velocity
+    Wm  = W + wm + ximw;  % mlt z-velocity
+    Um  = U + 0  + ximu;  % mlt x-velocity
 
-    
-    %% update time step
-    dtk = (h/2)^2/max(kx(:)); % diffusive time step size  
-    dta =  h/2   /max(abs([Um(:);Wm(:);Ux(:);Wx(:)]+eps));  % advective time step size
-    dt  = (dt + min([2*dto,min(CFL*[dtk,dta]),dtmax]))/2; % time step size
 end
 
 % record timing
