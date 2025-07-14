@@ -323,22 +323,41 @@ end
 
 %% assemble and scale global coefficient matrix and right-hand side vector
 
-LL  = [ KV   GG  ; ...
-        DD   KP ];
+% Sizes of blocks
+[n1, m1] = size(KV);
+[n2, m2] = size(KP);
 
-RR  = [RV; RP];
+% Total size
+Ntot = n1 + n2;
+
+% Preallocate LL as sparse
+if ~exist('total_nnz','var'); total_nnz = nnz(KV) + nnz(GG) + nnz(KP) + nnz(DD);  end
+LL = spalloc(Ntot, Ntot, total_nnz);
+
+% Assign blocks
+LL(1:n1,       1:m1      ) = KV;
+LL(1:n1,    m1+1:m1+m2   ) = GG;
+
+LL(n1+1:n1+n2,    1:m1    ) = DD;
+LL(n1+1:n1+n2, m1+1:m1+m2 ) = KP;
+
+RR  = [RV; RP;];
 
 etagh = ones(size(P));  etagh(2:end-1,2:end-1) = eta;
 SCL = (abs(diag(LL))).^0.5;
-SCL = diag(sparse( 1./(SCL + sqrt([zeros(NU+NW,1); h./etagh(:)])) ));
+SCL = diag(sparse( 1./(SCL + sqrt([zeros(NU+NW,1); 1./etagh(:)])) ));
 
 FF  = SCL*(LL*SOL - RR);
-LL  = SCL*LL*SCL;
+LL  = SCL*LL;
 
 
 %% Solve linear system of equations for vx, vz, P
 
-UPD = SCL*(LL\FF);  % update solution
+if ~exist('pcol','var'); pcol = colamd(LL); end % get column permutation for sparsity pattern once per run
+dLL        = decomposition(LL(:,pcol), 'lu');  % get LU-decomposition for consistent performance of LL \ RR
+UPD(pcol,1) = dLL \ FF;                        % solve permuted decomposed system
+
+% UPD = LL \ FF;
 
 % map solution vector to 2D arrays
 upd_W = -full(reshape(UPD(MapW(:))        ,Nz+1,Nx+2));  % matrix z-velocity
