@@ -54,6 +54,7 @@ lncls = colmap([5,135],:);
 
 BCA     =  {'closed','periodic'};  % boundary condition on advection (top/bot, sides)
 BCD     =  {'closed','periodic'};  % boundary condition on advection (top/bot, sides)
+open    = 1-closed;
 
 % get coordinate arrays
 Xc        = -h/2:h:L+h/2;
@@ -129,7 +130,7 @@ exx    = 0.*x;  ezz = 0.*x;  exz = zeros(Nz-1,Nx-1);  eII = 0.*x;
 txx    = 0.*x;  tzz = 0.*x;  txz = zeros(Nz-1,Nx-1);  tII = 0.*x; 
 eta    = etam0 + zeros(Nz,Nx);
 etas   = etam0 + zeros(Nz,Nx);
-dV     = 0.*x; 
+MFS    = 0.*x; 
 ke     = 0.*x;
 Pref   = 1e5;
 rho    = (x./rhox0 + m./rhom0).^-1;
@@ -206,6 +207,7 @@ w0      =  1./(2.*l0.*rho0).*(sqrt(4.*       Drho0.*g0.*l0.*rho0.*d0.^2 + eta0.^
 tW0     =  D0/W0;
 tw0     =  D0/w0;
 t0      =  D0/(W0 + w0);
+p0      =  W0*eta0/D0;
 
 ke0     =  W0*L0;
 ks0     =  w0*l0;
@@ -269,7 +271,7 @@ if restart
     end
     if exist(name,'file')
         fprintf('\n   restart from %s \n\n',name);
-        load(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','etas','eII','tII','ke','ks','kx','RaD','ReD','Rs','Red','dt','time','step','dV','wm','wx','Mx','dMxdt');
+        load(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','etas','eII','tII','ke','ks','kx','RaD','ReD','Rs','Red','dt','time','step','MFS','wm','wx','Mx','dMxdt');
         name = [outdir,'/',runID,'/',runID,'_HST'];
         load(name,'HST');
 

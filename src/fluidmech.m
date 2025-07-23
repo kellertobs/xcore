@@ -1,6 +1,7 @@
 %*****  FLUID MECHANICS SOLVER  *******************************************
 
-tic;
+
+%% update mass flux divergence source term
 
 if ~bnchm && step>0 && ~restart
 
@@ -11,10 +12,10 @@ drhodt  = advn_rho;
 res_rho = (a1*rho-a2*rhoo-a3*rhooo)/dt - (b1*drhodt + b2*drhodto + b3*drhodtoo);
 
 % volume source and background velocity passed to fluid-mechanics solver
-upd_dV = - alpha*res_rho./b1./rho;
-dV     = dV + upd_dV;  % correct volume source term by scaled residual
+upd_MFS = - alpha*res_rho./b1;
+MFS     = MFS + upd_MFS;  % correct volume source term by scaled residual
 
-dVmean = mean(dV,'all');
+dVmean = mean(MFS,'all');
 
 UBG    = - 0*dVmean./2 .* (L/2-XXu);
 WBG    = - 2*dVmean./2 .* (   -ZZw);
@@ -55,13 +56,15 @@ IIR = [IIR; ii(:)]; AAR = [AAR; aa(:)];
 
 % bottom boundary
 ii  = MapW(end,2:end-1); jj1 = ii; jj2 = MapW(end-1,2:end-1); jj3 = MapU(end-1,2:end); jj4 = MapU(end-1,1:end-1);
-aa  = zeros(size(ii));
-open = 1-closed;
-IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL; aa(:)+1   /h];
-IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL; aa(:)-open/h];
-IIL = [IIL; ii(:)]; JJL = [JJL; jj3(:)];   AAL = [AAL; aa(:)+open/h];
-IIL = [IIL; ii(:)]; JJL = [JJL; jj4(:)];   AAL = [AAL; aa(:)-open/h];
-aa  = zeros(size(ii)) + open.*dV(end,:) + closed.*WBG(end,2:end-1)/h;
+rho1 = rhow(end  ,:    );
+rho2 = rhow(end-1,:    );
+rho3 = rhou(end,2:end  );
+rho4 = rhou(end,1:end-1);
+IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL;+     rho1(:)/h];
+IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL;-open*rho2(:)/h];
+IIL = [IIL; ii(:)]; JJL = [JJL; jj3(:)];   AAL = [AAL;+open*rho3(:)/h];
+IIL = [IIL; ii(:)]; JJL = [JJL; jj4(:)];   AAL = [AAL;-open*rho4(:)/h];
+aa  = open.*MFS(end,:) + closed.*rho1.*WBG(end,2:end-1)/h;
 IIR = [IIR; ii(:)]; AAR = [AAR; aa(:)];
 
 % internal points
@@ -203,29 +206,30 @@ if ~exist('GG','var') || bnchm
 end
 
 
-%% assemble coefficients for divergence operator
+%% assemble coefficients for divergence of matrix mass flux (DM)
 
-if ~exist('DD','var') || bnchm
-    IIL = [];       % equation indeces into A
-    JJL = [];       % variable indeces into A
-    AAL = [];       % coefficients for A
-    
-    %internal points
-    ii  = MapP(2:end-1,2:end-1);
-    
-    % coefficients multiplying velocities U, W
-    %          left U          ||           right U       ||           top W           ||          bottom W
-    jj1 = MapU(2:end-1,1:end-1); jj2 = MapU(2:end-1,2:end); jj3 = MapW(1:end-1,2:end-1); jj4 = MapW(2:end,2:end-1);
+IIL = [];       % equation indeces into A
+JJL = [];       % variable indeces into A
+AAL = [];       % coefficients for A
 
-    aa  = zeros(size(ii));
-    IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL; aa(:)-1/h];  % U one to the left
-    IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL; aa(:)+1/h];  % U one to the right
-    IIL = [IIL; ii(:)]; JJL = [JJL; jj3(:)];   AAL = [AAL; aa(:)-1/h];  % W one above
-    IIL = [IIL; ii(:)]; JJL = [JJL; jj4(:)];   AAL = [AAL; aa(:)+1/h];  % W one below
+%internal points
+ii  = MapP(2:end-1,2:end-1);
 
-    % assemble coefficient matrix
-    DD  = sparse(IIL,JJL,AAL,NP,NW+NU);
-end
+% coefficients multiplying velocities U, W
+%          left U          ||           right U       ||           top W           ||          bottom W
+jj1 = MapU(2:end-1,1:end-1); jj2 = MapU(2:end-1,2:end); jj3 = MapW(1:end-1,2:end-1); jj4 = MapW(2:end,2:end-1);
+rho1 = rhou(:,1:end-1);
+rho2 = rhou(:,2:end  );
+rho3 = rhow(1:end-1,:);
+rho4 = rhow(2:end  ,:);
+
+IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL; -rho1(:)/h];  % U one to the left
+IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL; +rho2(:)/h];  % U one to the right
+IIL = [IIL; ii(:)]; JJL = [JJL; jj3(:)];   AAL = [AAL; -rho3(:)/h];  % W one above
+IIL = [IIL; ii(:)]; JJL = [JJL; jj4(:)];   AAL = [AAL; +rho4(:)/h];  % W one below
+
+% Assemble coefficient matrix
+DM  = sparse(IIL,JJL,AAL,NP,NW+NU);
 
 
 %% assemble coefficients for matrix pressure diagonal and right-hand side
@@ -256,25 +260,9 @@ if ~exist('KP','var') || bnchm || lambda1+lambda2>0
 
     % internal points
     ii  = MapP(2:end-1,2:end-1);
-    jj1 = MapP(1:end-2,2:end-1);
-    jj2 = MapP(3:end-0,2:end-1);
-    jj3 = MapP(2:end-1,1:end-2);
-    jj4 = MapP(2:end-1,3:end-0);
 
     % coefficients multiplying matrix pressure P
-    aa  = zeros(size(ii)) + lambda1*eps*h^2./eta;
-    IIL = [IIL; ii(:)]; JJL = [JJL; ii(:)];    AAL = [AAL; aa(:)];  % P on stencil centre
-    
-    kP  = lambda2*h^2./eta;
-    kP1 = (kP(icz(1:end-2),:).*kP(icz(2:end-1),:)).^0.5;   kP2 = (kP(icz(2:end-1),:).*kP(icz(3:end-0),:)).^0.5;
-    kP3 = (kP(:,icx(1:end-2)).*kP(:,icx(2:end-1))).^0.5;   kP4 = (kP(:,icx(2:end-1)).*kP(:,icx(3:end-0))).^0.5;
-
-    aa  = (kP1+kP2+kP3+kP4)/h^2;
-    IIL = [IIL; ii(:)]; JJL = [JJL;  ii(:)];   AAL = [AAL;-aa(:)     ];      % P on stencil centre
-    IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL; kP1(:)/h^2];      % P one above
-    IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL; kP2(:)/h^2];      % P one below
-    IIL = [IIL; ii(:)]; JJL = [JJL; jj3(:)];   AAL = [AAL; kP3(:)/h^2];      % P one above
-    IIL = [IIL; ii(:)]; JJL = [JJL; jj4(:)];   AAL = [AAL; kP4(:)/h^2];      % P one below
+    aa  = zeros(size(ii));
     
 end
 
@@ -287,7 +275,7 @@ AAR = [];       % forcing entries for R
 
 ii  = MapP(2:end-1,2:end-1);
 
-rr  = dV;       % add volume source term
+rr  = MFS;       % add volume source term
 if bnchm; rr = rr + src_P_mms(2:end-1,2:end-1); end
 
 IIR = [IIR; ii(:)]; AAR = [AAR; rr(:)];
@@ -335,13 +323,13 @@ end
 %% assemble and scale global coefficient matrix and right-hand side vector
 
 LL  = [KV GG  ; ...
-       DD KP ];
+       DM KP ];
 
 RR  = [RV; RP;];
 
-etagh = ones(size(P));  etagh(2:end-1,2:end-1) = eta;
+scl = ones(size(P));  scl(2:end-1,2:end-1) = rho./eta;
 SCL = (abs(diag(LL))).^0.5;
-SCL = diag(sparse( 1./(SCL + sqrt([zeros(NU+NW,1); 1./etagh(:)])) ));
+SCL = diag(sparse( 1./(SCL + sqrt([zeros(NU+NW,1); 1./scl(:)])) ));
 
 FF  = SCL*(LL*SOL - RR);
 LL  = SCL*LL*SCL;

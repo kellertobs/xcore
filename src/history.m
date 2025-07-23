@@ -72,10 +72,6 @@ HST.Gx(stp,1) = min(Gx(:));
 HST.Gx(stp,2) = mean(Gx(:));
 HST.Gx(stp,3) = max(Gx(:));
 
-HST.dV(stp,1) = min(dV(:));
-HST.dV(stp,2) = mean(dV(:));
-HST.dV(stp,3) = max(dV(:));
-
 HST.rho(stp,1) = min(rho(:));
 HST.rho(stp,2) = mean(rho(:));
 HST.rho(stp,3) = max(rho(:));

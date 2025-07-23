@@ -138,8 +138,8 @@ set(fh1,'CurrentAxes',ax(15));
 imagesc(Xsc,Zsc,log10(eta)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\eta$ [Pas]'],TX{:},FS{:}); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]);
 set(fh1,'CurrentAxes',ax(16));
-imagesc(Xsc,Zsc,Div_V*TimeScale); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\nabla \cdot \mathbf{v}$ [1/',TimeUnits,']'],TX{:},FS{:}); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]);
+imagesc(Xsc,Zsc,MFS*TimeScale); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\nabla \cdot \bar{\rho} \mathbf{v}$ [kg/m$^3$/',TimeUnits,']'],TX{:},FS{:}); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]);
 
 % plot density, rheology, and segregation speeds in Fig. 2
 set(0,'CurrentFigure',fh2)
@@ -204,6 +204,7 @@ subplot(3,1,1)
 plot(HST.time/TimeScale,HST.x(:,2)*100,'k-' ,LW{:}); hold on; axis tight; box on;
 plot(HST.time/TimeScale,HST.x(:,[1,3])*100,'k:',LW{:});
 plot(HST.time/TimeScale,HST.x_tavg(:,2)*100,'k-',LW{1},1,'Color',[1 1 1]*0.5);
+plot(HST.time/TimeScale,HST.x_tavg(:,[1,3])*100,'k:',LW{1},1,'Color',[1 1 1]*0.5);
 
 set(gca,TL{:},FS{:},'Xticklabels',[])
 legend('mean','min/max',TX{:},FS{:},'Location','northwest')
@@ -226,7 +227,7 @@ yticks = 10.^(-4:1:4);
 yticklabels = {'$10^{-4}$','$10^{-3}$','$10^{-2}$','$10^{-1}$','$10^{0}$','$10^{1}$','$10^{2}$','$10^{3}$','$10^{4}$'};
 set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
 set(gca,TL{:},FS{:},'Xticklabel',[]);
-legend('convection','settling','noise flux',TX{:},FS{:},'Location','southeast')
+legend('convection','settling','noise flux',TX{:},FS{:},'Location','northwest')
 title(['Flow speeds [',SpeedUnits,']'],TX{:},FS{1},15);
 
 subplot(3,1,3)
@@ -243,7 +244,7 @@ semilogy(HST.time/TimeScale,HST.Rs_tavg (:,2),'k--',LW{1},1,'Color',[1 1 1]*0.5)
 yticks = 10.^(-8:2:8);
 yticklabels = {'$10^{-8}$','$10^{-6}$','$10^{-4}$','$10^{-2}$','$10^{0}$','$10^{2}$','$10^{4}$','$10^{6}$','$10^{8}$'};
 set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
-legend('Ra','Re$_D$','Re$_d$','Rs',TX{:},FS{:},'Location','east')
+legend('Ra','Re$_D$','Re$_d$','Rs',TX{:},FS{:},'Location','northwest')
 title(['Dimensionless numbers'],TX{:},FS{1},15);
 xlabel(['Time [',TimeUnits,']'],TX{:},FS{1},15);
 
@@ -317,9 +318,9 @@ if save_op && ~restart
     print(fh15,name,'-dpng','-r300','-image');
 
     name = [outdir,'/',runID,'/',runID,'_',num2str(floor(step/nop))];
-    save(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','etas','eII','tII','ke','ks','kx','RaD','ReD','Rs','Red','dt','time','step','dV','wm','wx','Mx','dMxdt');
+    save(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','etas','eII','tII','ke','ks','kx','RaD','ReD','Rs','Red','dt','time','step','MFS','wm','wx','Mx','dMxdt');
     name = [outdir,'/',runID,'/',runID,'_cont'];
-    save(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','etas','eII','tII','ke','ks','kx','RaD','ReD','Rs','Red','dt','time','step','dV','wm','wx','Mx','dMxdt');
+    save(name,'U','W','P','Pt','x','m','chi','mu','X','M','dXdt','dMdt','drhodt','Gx','Gm','rho','eta','etas','eII','tII','ke','ks','kx','RaD','ReD','Rs','Red','dt','time','step','MFS','wm','wx','Mx','dMxdt');
     name = [outdir,'/',runID,'/',runID,'_HST'];
     save(name,'HST');
 
