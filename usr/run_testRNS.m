@@ -19,6 +19,7 @@ L         =  D/2.0;               % chamber width (equal to h for 1-D mode) [m]
 
 % set model timing parameters
 dt        =  0.01;                % initial time step [s]
+xend      =  0.10;                % stop run when mean crystallinity reaches threshold
 
 % set physical parameters
 xeq       =  0.01;                % equilibrium crystallinity of boundary layer [wt]
@@ -41,7 +42,7 @@ Delta_cnv =  h/2;                 % correlation length for eddy diffusivity (mul
 Delta_sgr =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
 xi        =  1.0;                 % relative amplitude of random noise flux
 gamma     =  1e-3;                % artificial horizontal inertia parameter (only applies if periodic)
-bnd_w     =  max(Delta_sgr/2,2*h);    % width of boundary layer [m]
+bnd_w     =  max(Delta_sgr/2,2*h);% width of boundary layer [m]
 
 %*****  RUN NAKHLA MODEL  *************************************************
 run('../src/main')

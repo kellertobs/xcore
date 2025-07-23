@@ -26,6 +26,8 @@ L         =  D;                   % chamber width (equal to h for 1-D mode) [m]
 Nt        =  1e6;                 % number of time steps to take
 tend      =  1*yr;                % end time for simulation [s]
 xend      =  0.10;                % stop run when mean crystallinity reaches threshold
+Dxend     =  1e-6;                % stop run when time-averaged change of crystallinity drops below threshold
+DVend     =  1e-6;                % stop run when time-averaged change of convective speed drops below threshold
 dt        =  0.1;                 % initial time step [s]
 
 % set initial phase fraction parameters
@@ -77,7 +79,7 @@ Delta_cnv =  h/2;                 % correlation length for eddy diffusivity (mul
 Delta_sgr =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
 kmin      =  1e-16;               % minimum diffusivity
 kmax      =  1e+16;               % maximum diffusivity
-xi0       =  0.5;                 % relative amplitude of random noise flux
+xi        =  0.5;                 % relative amplitude of random noise flux
 dtmax     =  1e32;                % maximum time step [s]
 etacntr   =  1e+6;                % maximum viscosity contrast
 Cxcntr    =  1e+6;                % maximum drag coefficient contrast

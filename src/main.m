@@ -5,7 +5,8 @@
 init;
 
 %*****  physical time stepping loop  **************************************
-while time <= tend && step <= Nt && HST.x(end,2) <= xend
+while time <= tend && step <= Nt && HST.x(end,2) <= xend ...
+   && HST.Dx_tavg(end) >= Dxend && HST.DV_tavg(end) >= DVend
     
     %***  time step info
     timing;

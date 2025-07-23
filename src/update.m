@@ -41,10 +41,6 @@ Pl(1,:)     = repmat(rhoref(1).*g0.*h/2,1,Nx) + Ptop;
 Pl(2:end,:) = Pl(1,:) + repmat(cumsum(rhoref(2:end-1).*g0.*h),1,Nx);
 Pt          = max(Ptop/100,Pl + P(2:end-1,2:end-1));
 
-% % update effective constituent sizes
-% dm = d0.*(1-mu ).^0.5;
-% dx = d0.*(1-chi).^0.5;
-
 % get coefficient contrasts
 kv = [etax0;etam0];
 Mv = [etax0;etam0].'./[etax0;etam0];
@@ -78,8 +74,9 @@ eII = (0.5.*(exx.^2 + ezz.^2 ...
 % update velocity magnitudes
 V  = sqrt(((W(1:end-1,2:end-1)+W(2:end,2:end-1))/2).^2 ...
         + ((U(2:end-1,1:end-1)+U(2:end-1,2:end))/2).^2);                   % convection speed magnitude
-% vx = sqrt((wx([2,2:end-1],2:end-1)+wx([2:end-1,end-1],2:end-1)).^2);       % segregation speed magnitude
-vx = d0^2./etas.*(rhox0-rho).*g0; % solid segregation speed
+vx = d0^2./etas.*(rhox0-rho).*g0;                                          % solid segregation speed magnitude
+xi = sqrt(((xiw(1:end-1,2:end-1)+xiw(2:end,2:end-1))/2).^2 ...
+        + ((xiu(2:end-1,1:end-1)+xiu(2:end-1,2:end))/2).^2);               % noise flux magnitude
 
 % update diffusion parameters
 ke   = eII.*Delta_cnv.^2;                                                  % turbulent eddy diffusivity

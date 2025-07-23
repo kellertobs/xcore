@@ -80,9 +80,9 @@ HST.rho(stp,1) = min(rho(:));
 HST.rho(stp,2) = mean(rho(:));
 HST.rho(stp,3) = max(rho(:));
 
-HST.vx(stp,1) = min(wx(:));
-HST.vx(stp,2) = mean(wx(:));
-HST.vx(stp,3) = max(wx(:));
+HST.vx(stp,1) = min(vx(:));
+HST.vx(stp,2) = mean(vx(:));
+HST.vx(stp,3) = max(vx(:));
 
 HST.wx(stp,1) = min(abs(wx(:)));
 HST.wx(stp,2) = mean(abs(wx(:)));
@@ -92,9 +92,9 @@ HST.wm(stp,1) = min(abs(wm(:)));
 HST.wm(stp,2) = mean(abs(wm(:)));
 HST.wm(stp,3) = max(abs(wm(:)));
 
-HST.xiw(stp,1) = min(abs(xiw(:)));
-HST.xiw(stp,2) = mean(abs(xiw(:)));
-HST.xiw(stp,3) = max(abs(xiw(:)));
+HST.xi(stp,1) = min(xi(:));
+HST.xi(stp,2) = mean(xi(:));
+HST.xi(stp,3) = max(xi(:));
 
 HST.Ra(stp,1) = min(Ra(:));
 HST.Ra(stp,2) = geomean(Ra(:));
@@ -153,15 +153,27 @@ HST.etat(stp,2) = geomean(etat(:));
 HST.etat(stp,3) = max(etat(:));
 
 % time-averaged diagnostics
-stp0 = max(min(24,stp),ceil(stp*2/3));
-HST.x_tavg(stp,:)   = mean(HST.x(stp0:stp,:),1);
+stp0 = round((1./stp.^10 + 1./(30 + (stp-30)/2).^10).^-(1/10));
+HST.x_tavg(stp,:)    = mean(HST.x(stp0:stp,:),1);
 
-HST.V_tavg(stp,:)   = mean(HST.V(stp0:stp,:),1);
-HST.wx_tavg(stp,:)  = mean(HST.wx(stp0:stp,:),1);
-HST.xiw_tavg(stp,:) = mean(HST.xiw(stp0:stp,:),1);
+HST.V_tavg(stp,:)    = mean(HST.V(stp0:stp,:),1);
+HST.vx_tavg(stp,:)   = mean(HST.vx(stp0:stp,:),1);
+HST.xi_tavg(stp,:)   = mean(HST.xi(stp0:stp,:),1);
 
-HST.Rs_tavg(stp,:)  = mean(HST.Rs(stp0:stp,:),1);
-HST.RaD_tavg(stp,:) = mean(HST.RaD(stp0:stp,:),1);
+HST.Rs_tavg(stp,:)   = mean(HST.Rs(stp0:stp,:),1);
+HST.RaD_tavg(stp,:)  = mean(HST.RaD(stp0:stp,:),1);
 
-HST.ReD_tavg(stp,:) = mean(HST.ReD(stp0:stp,:),1);
-HST.Red_tavg(stp,:) = mean(HST.Red(stp0:stp,:),1);
+HST.ReD_tavg(stp,:)  = mean(HST.ReD(stp0:stp,:),1);
+HST.Red_tavg(stp,:)  = mean(HST.Red(stp0:stp,:),1);
+
+if stp>1
+    HST.Dx_tavg(stp,:) = abs(mean(diff(HST.x(min(stp-1,stp0):stp,2))))/Dchi0;
+else
+    HST.Dx_tavg(stp,:) = 1e-3;
+end
+
+if stp>1
+    HST.DV_tavg(stp,:) = abs(mean(diff(HST.V(min(stp-1,stp0):stp,2))))/W0;
+else
+    HST.DV_tavg(stp,:) = 1e-3;
+end

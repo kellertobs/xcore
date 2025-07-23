@@ -15,8 +15,8 @@ dffn_X   = diffus(chi,X.*kx,h,[1,2],BCD);
 if ~bnchm
 
 % boundary phase change rate
-tau_x    = (h/2)./(W0 + w0 + eps) + dt;
-Gx       = max(0,Da.*(xeq-x).*rho./tau_x.*topshape);
+tau_x    = h./(W0 + w0 + eps) + dt;
+Gx       = max(0,R.*(xeq-x).*rho./tau_x.*topshape);
 Gm       = -Gx;
 
 end

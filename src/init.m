@@ -98,7 +98,7 @@ topshape = exp( (-ZZ+h/2)/max(h,bnd_w));
 sds = -1;
 top =  1;
 bot = -1;
-if closed_bot; bot = 1; end
+if closed; bot = 1; end
 
 % set ghosted index arrays
 icx = [Nx,1:Nx,1];
@@ -189,7 +189,7 @@ dsumMdt = 0; dsumMdto = 0;
 dsumXdt = 0; dsumXdto = 0;
 
 % calculate and print characteristic scales
-D0      =  D;
+D0      =  D/10;
 d0      =  d0;
 L0      =  Delta_cnv0;
 l0      =  Delta_sgr;
@@ -197,32 +197,37 @@ h0      =  h;
 
 rho0    =  rhom0;
 Drho0   =  rhox0-rhom0;
-Dchi0   =  xeq/10;
+Dchi0   =  xeq/2;
 eta0    =  etam0*(1-Dchi0)^-5;
 C0      =  Dchi0*eta0/d0^2;
 
-W0      =  1./(2.*L0.*rho0).*(sqrt(4.*Dchi0.*Drho0.*g0.*L0.*rho0.*(D0/10).^2 + eta0.^2) - eta0);
-w0      =  1./(2.*l0.*rho0).*(sqrt(4.*       Drho0.*g0.*l0.*rho0.* d0    .^2 + eta0.^2) - eta0);
+W0      =  1./(2.*L0.*rho0).*(sqrt(4.*Dchi0.*Drho0.*g0.*L0.*rho0.*D0.^2 + eta0.^2) - eta0);
+w0      =  1./(2.*l0.*rho0).*(sqrt(4.*       Drho0.*g0.*l0.*rho0.*d0.^2 + eta0.^2) - eta0);
 tW0     =  D0/W0;
 tw0     =  D0/w0;
+t0      =  D0/(W0 + w0);
 
 ke0     =  W0*L0;
 ks0     =  w0*l0;
 dt0     =  min([(h0/2)^2/(ks0+ke0) , (h0/2)/(W0+w0)]);
 
-xie0    =  xi*sqrt(ke0.*(L0./(h0+L0)).^3./(dt0+L0/2/W0));
-xis0    =  xi*sqrt(ks0.*(l0./(h0+l0)).^3./(dt0+l0/2/w0));
+xie0    =  Xi*sqrt(ke0.*(L0./(h0+L0)).^3./(dt0+L0/2/W0));
+xis0    =  Xi*sqrt(ks0.*(l0./(h0+l0)).^3./(dt0+l0/2/w0));
 xi0     =  xie0 + xis0;
+
+tau0    =  h0./(W0 + w0 + eps) + dt0;
+G0      =  R.*Dchi0.*rho0./tau0;
 
 etae0   =  ke0*rho0;
 etas0   =  ks0*rho0;
+Da0     =  G0/(rho0/t0);
 Ns0     =  (xie0 + xis0)/(W0 + w0);
 Rs0     =  w0/W0;
-Ra0     =  W0*D0/10/(ks0 + ke0);
-ReD0    =  W0*D0/10/((eta0+etae0)/rho0);
-Red0    =  w0*d0   /((eta0+etas0)/rho0);
+Ra0     =  W0*D0/(ks0 + ke0);
+ReD0    =  W0*D0/((eta0+etae0)/rho0);
+Red0    =  w0*d0/((eta0+etas0)/rho0);
 
-fprintf(1,'\n  Domain depth        D0    = %1.0e [m]',D0);
+fprintf(1,'\n  Scaled domain depth D0    = %1.0e [m]',D0);
 fprintf(1,'\n  Crystal size        d0    = %1.0e [m]',d0);
 fprintf(1,'\n  Eddy  corrl. length L0    = %1.0e [m]',L0);
 fprintf(1,'\n  Segr. corrl. length l0    = %1.0e [m] \n',l0);
@@ -238,14 +243,17 @@ fprintf(1,'\n  Eddy  viscosity     etae  = %1.1e [Pas]',etae0);
 fprintf(1,'\n  Segr. viscosity     etas0 = %1.1e [Pas] \n',etas0);
 
 fprintf(1,'\n  Eddy noise rate     xie0  = %1.2e [m/s]',xie0);
-fprintf(1,'\n  Segr. noise rate    xis0  = %1.2e [m/s]',xis0);
+fprintf(1,'\n  Segr. noise rate    xis0  = %1.2e [m/s]\n',xis0);
+
+fprintf(1,'\n  Reaction rate       G0    = %1.2e [kg/m3/s]\n',G0);
 
 fprintf(1,'\n  Convection  speed   W0    = %1.2e [m/s]',W0);
-fprintf(1,'\n  Segregation speed   w0    = %1.2e [m/s]',w0);
+fprintf(1,'\n  Segregation speed   w0    = %1.2e [m/s]\n',w0);
 
 fprintf(1,'\n  Convection  time    tW0   = %1.2e [s]',tW0);
 fprintf(1,'\n  Segregation time    tw0   = %1.2e [s] \n',tw0);
 
+fprintf(1,'\n  Dahmköhler No       Da0   = %1.2e [1]',Da0);
 fprintf(1,'\n  Noise No            Ns0   = %1.2e [1]',Ns0);
 fprintf(1,'\n  Segregation No      Rs0   = %1.2e [1]',Rs0);
 fprintf(1,'\n  Rayleigh No         Ra0   = %1.2e [1]',Ra0);

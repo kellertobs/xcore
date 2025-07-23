@@ -18,19 +18,20 @@ h         =  D/N;                 % grid spacing (equal in both dimensions, do n
 L         =  D*1.5;               % chamber width (equal to h for 1-D mode) [m]
 
 % set model timing parameters
-dt        =  0.01;                % initial time step [s]
+dt        =  0.1;                 % initial time step [s]
+xend      =  0.10;                % stop run when mean crystallinity reaches threshold
+Dxend     =  1e-6;                % stop run when time-averaged change of crystallinity drops below threshold
+DVend     =  1e-6;                % stop run when time-averaged change of convective speed drops below threshold
 
 % set physical parameters
-x0        =  0.01;                % initial background crystallinity [wt]
+xeq       =  0.10;                % equilibrium crystallinity of boundary layer [wt]
+x0        =  xeq/10;              % initial background crystallinity [wt]
 dx0       =  x0/10;               % background crystallinity perturbation [wt]
 d0        =  1e-2;                % xtal size constant [m]
 etam0     =  1e+1;                % melt viscosity constant [kg/m3]
-
-% set boundary layer parameters
-bnd_w     =  2*h;                 % width of boundary layer [m]
-xeq       =  0.1;                 % equilibrium crystallinity of boundary layer [wt]
-Da        =  0.5;                 % Dahmköhler number of boundary layer rate [s]
-closed_bot=  0;                   % switch for closed bottom boundary to form cumulate pile
+R         =  0.1;                 % relative amplitude of crystallisation rate [s]
+Xi        =  1.0;                 % relative amplitude of random noise flux
+closed    =  0;                   % switch for closed bottom boundary to form cumulate pile
 
 % set numerical model parameters
 CFL       =  0.50;                % (physical) time stepping courant number (multiplies stable step) [0,1]
@@ -38,12 +39,10 @@ rtol      =  1e-5;                % outer its relative tolerance
 atol      =  1e-9;                % outer its absolute tolerance
 maxit     =  15;                  % maximum outer its
 alpha     =  0.9;                 % iterative step size parameter
-Delta_cnv =  h;                   % correlation length for eddy diffusivity (multiple of h, 0.5-1)
-Delta_sgr =  d0*20;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
-Rec       =  1;                   % critical Reynolds number for ramping up eddy diffusivity
-Scx       =  1;                   % xtal Schmidt number for applying eddy diffusivity to xtal diffusivity
-Rexc      =  1;                   % critical crystal Reynolds number for ramping up turbulent drag coeff
+Delta_cnv =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)
+Delta_sgr =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
 gamma     =  1e-3;                % artificial horizontal inertia parameter (only applies if periodic)
+bnd_w     =  max(Delta_sgr/2,h);  % width of boundary layer [m]
 
 
 %*****  RUN NAKHLA MODEL  *************************************************

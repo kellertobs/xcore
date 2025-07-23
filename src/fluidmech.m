@@ -11,13 +11,13 @@ drhodt  = advn_rho;
 res_rho = (a1*rho-a2*rhoo-a3*rhooo)/dt - (b1*drhodt + b2*drhodto + b3*drhodtoo);
 
 % volume source and background velocity passed to fluid-mechanics solver
-upd_rho = - alpha*res_rho./b1./rho;
-dV      = dV + upd_rho;  % correct volume source term by scaled residual
+upd_dV = - alpha*res_rho./b1./rho;
+dV     = dV + upd_dV;  % correct volume source term by scaled residual
 
-dVmean  = mean(dV,'all');
+dVmean = mean(dV,'all');
 
-UBG     = - 0*dVmean./2 .* (L/2-XXu);
-WBG     = - 2*dVmean./2 .* (0/2-ZZw);
+UBG    = - 0*dVmean./2 .* (L/2-XXu);
+WBG    = - 2*dVmean./2 .* (   -ZZw);
 
 end
 
@@ -54,10 +54,14 @@ aa  = zeros(size(ii)) + WBG(1,2:end-1);
 IIR = [IIR; ii(:)]; AAR = [AAR; aa(:)];
 
 % bottom boundary
-ii  = MapW(end,2:end-1); jj = ii;
+ii  = MapW(end,2:end-1); jj1 = ii; jj2 = MapW(end-1,2:end-1); jj3 = MapU(end-1,2:end); jj4 = MapU(end-1,1:end-1);
 aa  = zeros(size(ii));
-IIL = [IIL; ii(:)]; JJL = [JJL; jj(:)];   AAL = [AAL; aa(:)+1];
-aa  = zeros(size(ii)) + WBG(end,2:end-1);
+open = 1-closed;
+IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL; aa(:)+1   /h];
+IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL; aa(:)-open/h];
+IIL = [IIL; ii(:)]; JJL = [JJL; jj3(:)];   AAL = [AAL; aa(:)+open/h];
+IIL = [IIL; ii(:)]; JJL = [JJL; jj4(:)];   AAL = [AAL; aa(:)-open/h];
+aa  = zeros(size(ii)) + open.*dV(end,:) + closed.*WBG(end,2:end-1)/h;
 IIR = [IIR; ii(:)]; AAR = [AAR; aa(:)];
 
 % internal points
@@ -311,35 +315,27 @@ if bnchm
     RV(nu0    ) = U_mms(nzu,nxu);
 else
     % set P = 0 in fixed point
-    nzp = 2;
-    nxp = round((Nx+2)/2);
+    if open
+        nzp = Nz+1;
+        nxp = 1:Nx+2;
+    else
+        nzp = 2;
+        nxp = round(Nx/2);
+    end
     np0 = MapP(nzp,nxp);
     KP(np0,:  ) = 0;
-    KP(np0,np0) = 1;
-    DD(np0,:  ) = 0;
-    RP(np0    ) = 0;
+    KP(np0,np0) = speye(length(np0));
+    if closed
+        DD(np0,:  ) = 0;
+        RP(np0    ) = 0;
+    end
 end
 
 
 %% assemble and scale global coefficient matrix and right-hand side vector
 
-% Sizes of blocks
-[n1, m1] = size(KV);
-[n2, m2] = size(KP);
-
-% Total size
-Ntot = n1 + n2;
-
-% Preallocate LL as sparse
-if ~exist('total_nnz','var'); total_nnz = nnz(KV) + nnz(GG) + nnz(KP) + nnz(DD);  end
-LL = spalloc(Ntot, Ntot, total_nnz);
-
-% Assign blocks
-LL(1:n1,       1:m1      ) = KV;
-LL(1:n1,    m1+1:m1+m2   ) = GG;
-
-LL(n1+1:n1+n2,    1:m1    ) = DD;
-LL(n1+1:n1+n2, m1+1:m1+m2 ) = KP;
+LL  = [KV GG  ; ...
+       DD KP ];
 
 RR  = [RV; RP;];
 
@@ -348,16 +344,15 @@ SCL = (abs(diag(LL))).^0.5;
 SCL = diag(sparse( 1./(SCL + sqrt([zeros(NU+NW,1); 1./etagh(:)])) ));
 
 FF  = SCL*(LL*SOL - RR);
-LL  = SCL*LL;
+LL  = SCL*LL*SCL;
 
 
 %% Solve linear system of equations for vx, vz, P
 
 if ~exist('pcol','var'); pcol = colamd(LL); end % get column permutation for sparsity pattern once per run
-dLL        = decomposition(LL(:,pcol), 'lu');  % get LU-decomposition for consistent performance of LL \ RR
-UPD(pcol,1) = dLL \ FF;                        % solve permuted decomposed system
-
-% UPD = LL \ FF;
+dLL         = decomposition(LL(:,pcol), 'lu');  % get LU-decomposition for consistent performance of LL \ RR
+UPD(pcol,1) = dLL \ FF;                         % solve permuted decomposed system
+UPD         = SCL*UPD;
 
 % map solution vector to 2D arrays
 upd_W = -full(reshape(UPD(MapW(:))        ,Nz+1,Nx+2));  % matrix z-velocity
@@ -456,8 +451,8 @@ if ~bnchm && step>=1
     end
 
     % random noise source variance
-    xie  = xi*sqrt(ke.*(Delta_cnv./(h+Delta_cnv)).^3./(dt+Delta_cnv/2./V ));      % eddy noise
-    xis  = xi*sqrt(ks.*(Delta_sgr./(h+Delta_sgr)).^3./(dt+Delta_sgr/2./vx));      % segregation noise
+    xie  = Xi*sqrt(ke.*(Delta_cnv./(h+Delta_cnv)).^3./(dt+Delta_cnv./V )); % eddy noise speed
+    xis  = Xi*sqrt(ks.*(Delta_sgr./(h+Delta_sgr)).^3./(dt+Delta_sgr./vx)); % segregation noise speed
 
     xisw = (xis(icz(1:end-1),icx) + xis(icz(2:end),icx))./2;
     xisu = (xis(icz,icx(1:end-1)) + xis(icz,icx(2:end)))./2;
