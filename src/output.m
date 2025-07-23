@@ -44,6 +44,19 @@ elseif max([V(:);vx(:)]) >= 1000/hr
     SpeedScale = 1;
     SpeedUnits = 'm/s';
 end
+if max(abs(P(:))) < 1e2
+    PresScale = 1;
+    PresUnits = 'Pa';
+elseif max(abs(P(:))) >= 1e3 && max(abs(P(:))) < 1e6
+    PresScale = 1e3;
+    PresUnits = 'kPa';
+elseif max(abs(P(:))) >= 1e6 && max(abs(P(:))) < 1e9
+    PresScale = 1e6;
+    PresUnits = 'MPa';
+else
+    PresScale = 1e9;
+    PresUnits = 'GPa';
+end
 Xsc = Xc./SpaceScale;
 Zsc = Zc./SpaceScale;
 Zsf = Zf./SpaceScale;
@@ -125,12 +138,12 @@ set(fh1,'CurrentAxes',ax(11));
 imagesc(Xsc,Zsc,-W(:,2:end-1)/SpeedScale); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$W$ [',SpeedUnits,']'],TX{:},FS{:}); set(gca,'XTickLabel',[]); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:});
 set(fh1,'CurrentAxes',ax(12));
-imagesc(Xsc,Zsc, U(2:end-1,:)./W0); axis ij equal tight; box on; cb = colorbar;
+imagesc(Xsc,Zsc, U(2:end-1,:)./SpeedScale); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$U$ [',SpeedUnits,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 text(0.5,1.2,['time = ',num2str(time/TimeScale,3),' [',TimeUnits,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
 set(fh1,'CurrentAxes',ax(13));
-imagesc(Xsc,Zsc, P(2:end-1,2:end-1)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$P$ [Pa]'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
+imagesc(Xsc,Zsc, P(2:end-1,2:end-1)/PresScale); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$P$ [',PresUnits,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 set(fh1,'CurrentAxes',ax(14));
 imagesc(Xsc,Zsc,rho); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\bar{\rho}$ [kg/m$^3$]'],TX{:},FS{:}); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:}); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:});
