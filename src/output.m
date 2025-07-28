@@ -157,7 +157,7 @@ set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\nabla \cdot \bar{\rho} \mat
 % plot density, rheology, and segregation speeds in Fig. 2
 set(0,'CurrentFigure',fh2)
 set(fh2,'CurrentAxes',ax(21));
-imagesc(Xsc,Zsc,min(1.25*xeq,x)); axis ij equal tight; box on; cb = colorbar;
+imagesc(Xsc,Zsc,min(1.5*xeq,x)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$x$ [wt\%]'],TX{:},FS{:});  ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:}); set(gca,'XTickLabel',[]);
 set(fh2,'CurrentAxes',ax(22));
 imagesc(Xsc,Zsc,Gx./rho*TimeScale*100.*(chi>eps^0.5)); axis ij equal tight; box on; cb = colorbar;

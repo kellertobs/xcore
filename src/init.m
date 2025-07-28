@@ -76,8 +76,8 @@ ke0     =  W0*L0;
 ks0     =  w0*l0;
 dt0     =  min([(h0/2)^2/(ks0+ke0) , (h0/2)/(W0+w0)]);
 
-xie0    =  Xi*sqrt(ke0.*(L0./(h0+L0)).^3./(dt0+L0/W0))*2;
-xis0    =  Xi*sqrt(ks0.*(l0./(h0+l0)).^3./(dt0+l0/w0))*2;
+xie0    =  Xi*sqrt(ke0.*(L0./(L0+h0)).^3./((L0+h0)/2/W0)+dt0);
+xis0    =  Xi*sqrt(ks0.*(l0./(l0+h0)).^3./((L0+h0)/2/w0)+dt0);
 xi0     =  (xie0 + xis0);
 
 tau0    =  h0./(W0 + w0 + eps) + dt0;
@@ -177,11 +177,11 @@ ku2 = kux.^2 + kuz.^2;
 kp2 = kpx.^2 + kpz.^2;
 
 % Gaussian spatial filter in Fourier space
-Gkwe = exp(-0.5 * ((elle/2)^2) * kw2);
-Gkue = exp(-0.5 * ((elle/2)^2) * ku2);
-Gkws = exp(-0.5 * ((ells/2)^2) * kw2);
-Gkus = exp(-0.5 * ((ells/2)^2) * ku2);
-Gkp  = exp(-0.5 * (((elle+ells)/2)^2) * kp2);
+Gkwe = exp(-0.5 * (((elle+h)/2)^2) * kw2);
+Gkue = exp(-0.5 * (((elle+h)/2)^2) * ku2);
+Gkws = exp(-0.5 * (((ells+h)/2)^2) * kw2);
+Gkus = exp(-0.5 * (((ells+h)/2)^2) * ku2);
+Gkp  = exp(-0.5 * (((elle+ells+h)/2)^2) * kp2);
 
 % Generate new white noise
 rwe = randn(Nz+1, Nx+0);
