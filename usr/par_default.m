@@ -24,11 +24,12 @@ L         =  D;                   % chamber width (equal to h for 1-D mode) [m]
 
 % set model timing parameters
 Nt        =  1e6;                 % number of time steps to take
-tend      =  1*yr;                % end time for simulation [s]
-xend      =  0.10;                % stop run when mean crystallinity reaches threshold
-Dxend     =  1e-6;                % stop run when time-averaged change of crystallinity drops below threshold
-DVend     =  1e-6;                % stop run when time-averaged change of convective speed drops below threshold
 dt        =  0.1;                 % initial time step [s]
+t0end     =  1e+9;                % stop when dimensionless time is reached
+xend      =  1.00;                % stop run when mean crystallinity reaches threshold
+Dxend     =  1e-9;                % stop run when time-averaged change of crystallinity drops below threshold
+DVend     =  1e-9;                % stop run when time-averaged change of convective speed drops below threshold
+tend      =  1*yr;                % end time for simulation [s]
 
 % set initial phase fraction parameters
 x0        =  0.01;                % initial background crystallinity [wt]

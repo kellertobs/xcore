@@ -21,8 +21,8 @@ rhoW   = rhow.*W(:,2:end-1);
 rhoU   = rhou.*U(2:end-1,:);
 
 % convert weight to volume fraction, update bulk density
-chi    = max(0,min(1, x.*rho./rhox0));
-mu     = max(0,min(1, m.*rho./rhom0));
+chi    = max(eps,min(1-eps, x.*rho./rhox0));
+mu     = max(eps,min(1-eps, m.*rho./rhom0));
 
 chiw   = (chi(icz(1:end-1),:)+chi(icz(2:end),:))./2;
  muw   = ( mu(icz(1:end-1),:)+ mu(icz(2:end),:))./2;
@@ -46,7 +46,7 @@ kv = [etax0;etam0];
 Mv = [etax0;etam0].'./[etax0;etam0];
 
 % get permission weights
-ff = max(eps^0.5,min(1-eps^0.5,permute(cat(3,chi,mu ),[3,1,2])));
+ff = permute(cat(3,chi,mu ),[3,1,2]);
 FF = permute(repmat(ff,1,1,1,2),[4,1,2,3]);
 Sf = (FF./BB).^(1./CC);  Sf = Sf./sum(Sf,2);
 Xf = sum(AA.*Sf,2).*FF + (1-sum(AA.*Sf,2)).*Sf;
@@ -72,20 +72,20 @@ eII = (0.5.*(exx.^2 + ezz.^2 ...
        +     exz(1:end-1,2:end  ).^2+exz(2:end,2:end  ).^2)/4)).^0.5 + eps;
 
 % update velocity magnitudes
-V  = sqrt(((W(1:end-1,2:end-1)+W(2:end,2:end-1))/2).^2 ...
-        + ((U(2:end-1,1:end-1)+U(2:end-1,2:end))/2).^2);                   % convection speed magnitude
+V  = sqrt(((W  (1:end-1,2:end-1)+W  (2:end,2:end-1))/2).^2 ...
+        + ((U  (2:end-1,1:end-1)+U  (2:end-1,2:end))/2).^2);               % convection speed magnitude
 vx = d0^2./etas.*(rhox0-rho).*g0;                                          % solid segregation speed magnitude
 xi = sqrt(((xiw(1:end-1,2:end-1)+xiw(2:end,2:end-1))/2).^2 ...
         + ((xiu(2:end-1,1:end-1)+xiu(2:end-1,2:end))/2).^2);               % noise flux magnitude
 
 % update diffusion parameters
-ke   = eII.*Delta_cnv.^2;                                                  % turbulent eddy diffusivity
+ke   = eII.*elle.^2;                                                  % turbulent eddy diffusivity
 
 etae = ke.*rho;                                                            % eddy viscosity
 eta  = (eta + etamix + etae)/2;                                              % effective viscosity
 etacnv = eta;
 
-ks   = vx.*Delta_sgr;                                                      % segregation diffusivity
+ks   = vx.*ells;                                                      % segregation diffusivity
 kx   = (ks + ke);                                                          % regularised particle diffusivity 
 
 etat = ks.*rho;                                                            % turbulent drag viscosity
@@ -97,7 +97,6 @@ etamin = geomean(etas(:))./(etacntr/2);
 etas   = 1./(1./etamax + 1./etas) + etamin;
 
 % interpolate to staggered nodes
-% etasw = (etas(icz(1:end-1),:)+etas(icz(2:end),:)).*0.5;
 etasw = (etas(icz(1:end-1),:).*etas(icz(2:end),:)).^0.5;
 
 % limit total contrast in eta
@@ -106,19 +105,15 @@ etamin = geomean(eta(:))./(etacntr/2);
 eta    = 1./(1./etamax + 1./eta) + etamin;
 
 % interpolate to staggered nodes
-% etaco  = (eta(icz(1:end-1),icx(1:end-1))+eta(icz(2:end),icx(1:end-1)) ...
-%        +  eta(icz(1:end-1),icx(2:end  ))+eta(icz(2:end),icx(2:end  ))).*0.25;
 etaco  = (eta(icz(1:end-1),icx(1:end-1)).*eta(icz(2:end),icx(1:end-1)) ...
        .* eta(icz(1:end-1),icx(2:end  )).*eta(icz(2:end),icx(2:end  ))).^0.25;
 
 % update dimensionless numbers
-Re  = V .*Delta_cnv./(eta ./rho);                                          % Reynolds number on correlation length scale
-ReD = V .*D/10     ./(eta ./rho);                                          % Reynolds number on domain length scale
-Red = vx.*d0       ./(etas./rho);                                          % particle Reynolds number
-Ra  = V .*Delta_cnv./kx;                                                   % Rayleigh number on correlation length scale
-RaD = V .*D/10     ./kx;                                                   % Rayleigh number on domain length scale
+ReD = V .*D0./(eta ./rho);                                                 % Reynolds number on scaled domain length
+Red = vx.*d0./(etas./rho);                                                 % particle Reynolds number
+RaD = V .*D0./kx;                                                          % Rayleigh number on scale domain length 
 Rs  = vx./V;                                                               % particle settling number
-Ns  = (xie + xis)./(V + vx);
+Ns  = (xie + xis)./(V + vx);                                               % noise flux number
 
 % update stresses
 txx = eta   .* exx;                                                        % x-normal stress

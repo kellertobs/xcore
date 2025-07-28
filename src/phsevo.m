@@ -28,7 +28,7 @@ res_X    = (a1*X-a2*Xo-a3*Xoo)/dt - (b1*dXdt + b2*dXdto + b3*dXdtoo);
 upd_X    = - alpha*res_X*dt/a1;
 
 X        = X + upd_X;
-X        = max(rho.*1e-6,X);
+X        = max(rho.*eps,min(rho.*(1-eps), X ));
 M        = rho - X;
 
 %***  update phase fractions and component concentrations

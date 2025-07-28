@@ -15,10 +15,9 @@ res_rho = (a1*rho-a2*rhoo-a3*rhooo)/dt - (b1*drhodt + b2*drhodto + b3*drhodtoo);
 upd_MFS = - alpha*res_rho./b1;
 MFS     = MFS + upd_MFS;  % correct volume source term by scaled residual
 
-dVmean = mean(MFS,'all');
+MFSmean = mean(MFS,'all');
 
-UBG    = - 0*dVmean./2 .* (L/2-XXu);
-WBG    = - 2*dVmean./2 .* (   -ZZw);
+MFBG    = MFSmean .* ZZw;
 
 end
 
@@ -64,7 +63,7 @@ IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL;+     rho1(:)/h];
 IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL;-open*rho2(:)/h];
 IIL = [IIL; ii(:)]; JJL = [JJL; jj3(:)];   AAL = [AAL;+open*rho3(:)/h];
 IIL = [IIL; ii(:)]; JJL = [JJL; jj4(:)];   AAL = [AAL;-open*rho4(:)/h];
-aa  = open.*MFS(end,:) + closed.*rho1.*WBG(end,2:end-1)/h;
+aa  = open.*MFS(end,:) + closed.*MFBG(end,2:end-1)/h;
 IIR = [IIR; ii(:)]; AAR = [AAR; aa(:)];
 
 % internal points
@@ -307,16 +306,12 @@ else
         nzp = Nz+1;
         nxp = 1:Nx+2;
     else
-        nzp = 2;
+        nzp = round(Nz/2);
         nxp = round(Nx/2);
     end
     np0 = MapP(nzp,nxp);
     KP(np0,:  ) = 0;
     KP(np0,np0) = speye(length(np0));
-    if closed
-        DD(np0,:  ) = 0;
-        RP(np0    ) = 0;
-    end
 end
 
 
@@ -399,48 +394,54 @@ if ~bnchm && step>=1
 
     % generate smooth random noise (once per timestep)
     if iter==1
-        rweo  = rwe;
-        rwe   = randn(Nz+1,Nx);
-        for i = 1:ceil(smth)  % apply same smoothing as for initial condition
-            ksmth = min(1,smth-i+1);
-            rwe = rwe + diffus(rwe,ksmth/8*ones(size(rwe)),1,[1,2],{'periodic','periodic'});
-        end
-        rwe  = (rwe - mean(rwe(:)))./std(rwe(:)); % normalise to mean=0, var=1
-        if step==1; rweo = rwe; end
-
-        rueo = rue;
-        rue  = randn(Nz,Nx+1);
-        for i = 1:ceil(smth)  % apply same smoothing as for initial condition
-            ksmth = min(1,smth-i+1);
-            rue = rue + diffus(rue,ksmth/8*ones(size(rue)),1,[1,2],{'periodic','periodic'});
-        end
-        rue  = (rue - mean(rue(:)))./std(rue(:)); % normalise to mean=0, var=1
-        if step==1; rueo = rue; end
-
-        rwso = rws;
-        ruso = rus;
-        isx  = randi(Nx,1); isz = randi(Nz,1);
-        rws  = circshift(circshift(rwe,isx,2),isz,1);
-        isx  = randi(Nx,1); isz = randi(Nz,1);
-        rus  = circshift(circshift(rue,isx,2),isz,1);
-        if step==1; rwso = rws; end
-        if step==1; rwso = rws; end
-
-        tau  = sqrt(smth)/2*dt;
-        rwe  = rweo + (rwe-rweo).*dt./tau;
-        rue  = rueo + (rue-rueo).*dt./tau;
-        rws  = rwso + (rws-rwso).*dt./tau;
-        rus  = ruso + (rus-ruso).*dt./tau;
-        rwe  = (rwe - mean(rwe(:)))./std(rwe(:)); % normalise to mean=0, var=1
-        rue  = (rue - mean(rue(:)))./std(rue(:)); 
-        rws  = (rws - mean(rws(:)))./std(rws(:));
-        rus  = (rus - mean(rus(:)))./std(rus(:));
       
+        % store previous random noise fields
+        rweo = rwe; rueo = rue;
+        rwso = rws; ruso = rus;
+
+        % Generate new white noise
+        rwe = randn(Nz+1, Nx+0);
+        rue = randn(Nz+0, Nx+1);
+        rws = randn(Nz+1, Nx+0);
+        rus = randn(Nz+0, Nx+1);
+
+        rwe = fft2(rwe);
+        rue = fft2(rue);
+        rws = fft2(rws);
+        rus = fft2(rus);
+
+        % Filter white noise spatially
+        rwe = real(ifft2(Gkwe .* rwe));
+        rue = real(ifft2(Gkue .* rue));
+        rws = real(ifft2(Gkws .* rws));
+        rus = real(ifft2(Gkus .* rus));
+
+        % Rescale to unit standard deviation
+        rwe = (rwe - mean(rwe(:))) / std(rwe(:)) .* (1-exp((-ZZw(:,2:end-1))/max(h,elle/2)) - closed.*exp(-(D-ZZw(:,2:end-1))/max(h,elle/2)));
+        rue = (rue - mean(rue(:))) / std(rue(:));
+        rws = (rws - mean(rws(:))) / std(rws(:)) .* (1-exp((-ZZw(:,2:end-1))/max(h,ells/2)) - closed.*exp(-(D-ZZw(:,2:end-1))/max(h,ells/2)));
+        rus = (rus - mean(rus(:))) / std(rus(:));
+
+        % Ornstein–Uhlenbeck temporal update
+        % Temporal correlation coefficient
+        taus = ells/2./(vx+eps);
+        taue = elle/2./(V +eps);
+        Fts  = exp(-dt ./ taus);
+        Fte  = exp(-dt ./ taue);
+        Ftwe = (Fte(icz(1:end-1),:)+Fte(icz(2:end),:))/2;
+        Ftue = (Fte(:,icx(1:end-1))+Fte(:,icx(2:end)))/2;
+        Ftws = (Fts(icz(1:end-1),:)+Fts(icz(2:end),:))/2;
+        Ftus = (Fts(:,icx(1:end-1))+Fts(:,icx(2:end)))/2;
+        rwe =  Ftwe .* rweo + sqrt(1 - Ftwe.^2) .* rwe;
+        rue =  Ftue .* rueo + sqrt(1 - Ftue.^2) .* rue;
+        rws =  Ftws .* rwso + sqrt(1 - Ftws.^2) .* rws;
+        rus =  Ftus .* ruso + sqrt(1 - Ftus.^2) .* rus;
+
     end
 
     % random noise source variance
-    xie  = Xi*sqrt(ke.*(Delta_cnv./(h+Delta_cnv)).^3./(dt+Delta_cnv./V )); % eddy noise speed
-    xis  = Xi*sqrt(ks.*(Delta_sgr./(h+Delta_sgr)).^3./(dt+Delta_sgr./vx)); % segregation noise speed
+    xie  = Xi*sqrt(ke.*(elle./(elle+h)).^3./(taue+dt)); % eddy noise speed
+    xis  = Xi*sqrt(ks.*(ells./(ells+h)).^3./(taus+dt)); % segregation noise speed
 
     xisw = (xis(icz(1:end-1),icx) + xis(icz(2:end),icx))./2;
     xisu = (xis(icz,icx(1:end-1)) + xis(icz,icx(2:end)))./2;
@@ -448,13 +449,14 @@ if ~bnchm && step>=1
     xiew = (xie(icz(1:end-1),icx) + xie(icz(2:end),icx))./2;
     xieu = (xie(icz,icx(1:end-1)) + xie(icz,icx(2:end)))./2;
 
-    xiw = xisw .* rws(:,icx) + xiew .* rwe(:,icx); 
-    xiu = xisu .* rus(icz,:) + xieu .* rue(icz,:);
+    xiw  = xisw .* rws(:,icx) + xiew .* rwe(:,icx); 
+    xiu  = xisu .* rus(icz,:) + xieu .* rue(icz,:);
 
-    xiw = xiw - mean(xiw(:));
-    xiu = xiu - mean(xiu(:)); 
+    xiw  = xiw - mean(xiw(:));
+    xiu  = xiu - mean(xiu(:));
 
-    xiw([1,end],:) = xiw([2,end-1],:);
+    xiw( 1     ,:) = 0;
+    xiw( end   ,:) = open.*xiw(end-1,:) + closed.*0;
     xiw(:,[1 end]) = xiw(:,[end-1 2]);
     xiu([1 end],:) = xiu([2 end-1],:);
     xiu(:,[1 end]) = repmat(mean(xiu(:,[1 end]),2),1,2);

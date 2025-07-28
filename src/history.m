@@ -33,8 +33,16 @@ HST.EX(stp  ) = (HST.sumX(stp) - HST.DX(stp) - HST.sumX(1))./HST.sumB(1);  % [kg
 
 % record variable and coefficient diagnostics
 HST.V(stp,1) = min(V(:));
-HST.V(stp,2) = mean(V(:));
+HST.V(stp,2) = sqrt(mean(V(:).^2));
 HST.V(stp,3) = max(V(:));
+
+HST.vx(stp,1) = min(vx(:));
+HST.vx(stp,2) = sqrt(mean(vx(:).^2));
+HST.vx(stp,3) = max(vx(:));
+
+HST.xi(stp,1) = min(xi(:));
+HST.xi(stp,2) = sqrt(mean(xi(:).^2));
+HST.xi(stp,3) = max(xi(:));
 
 HST.W(stp,1) = min(-W(:));
 HST.W(stp,2) = mean(abs(W(:)));
@@ -76,10 +84,6 @@ HST.rho(stp,1) = min(rho(:));
 HST.rho(stp,2) = mean(rho(:));
 HST.rho(stp,3) = max(rho(:));
 
-HST.vx(stp,1) = min(vx(:));
-HST.vx(stp,2) = mean(vx(:));
-HST.vx(stp,3) = max(vx(:));
-
 HST.wx(stp,1) = min(abs(wx(:)));
 HST.wx(stp,2) = mean(abs(wx(:)));
 HST.wx(stp,3) = max(abs(wx(:)));
@@ -88,14 +92,6 @@ HST.wm(stp,1) = min(abs(wm(:)));
 HST.wm(stp,2) = mean(abs(wm(:)));
 HST.wm(stp,3) = max(abs(wm(:)));
 
-HST.xi(stp,1) = min(xi(:));
-HST.xi(stp,2) = mean(xi(:));
-HST.xi(stp,3) = max(xi(:));
-
-HST.Ra(stp,1) = min(Ra(:));
-HST.Ra(stp,2) = geomean(Ra(:));
-HST.Ra(stp,3) = max(Ra(:));
-
 HST.RaD(stp,1) = min(RaD(:));
 HST.RaD(stp,2) = geomean(RaD(:));
 HST.RaD(stp,3) = max(RaD(:));
@@ -103,10 +99,6 @@ HST.RaD(stp,3) = max(RaD(:));
 HST.Rs(stp,1) = min(Rs(:));
 HST.Rs(stp,2) = geomean(Rs(:));
 HST.Rs(stp,3) = max(Rs(:));
-
-HST.Re(stp,1) = min(Re(:));
-HST.Re(stp,2) = geomean(Re(:));
-HST.Re(stp,3) = max(Re(:));
 
 HST.ReD(stp,1) = min(ReD(:));
 HST.ReD(stp,2) = geomean(ReD(:));
@@ -163,13 +155,13 @@ HST.ReD_tavg(stp,:)  = mean(HST.ReD(stp0:stp,:),1);
 HST.Red_tavg(stp,:)  = mean(HST.Red(stp0:stp,:),1);
 
 if stp>1
-    HST.Dx_tavg(stp,:) = abs(mean(diff(HST.x(min(stp-1,stp0):stp,2))))/Dchi0;
+    HST.Dx_tavg(stp,:) = abs(mean(diff(HST.x(min(stp-1,stp0):stp,2))));
 else
     HST.Dx_tavg(stp,:) = 1e-3;
 end
 
 if stp>1
-    HST.DV_tavg(stp,:) = abs(mean(diff(HST.V(min(stp-1,stp0):stp,2))))/W0;
+    HST.DV_tavg(stp,:) = abs(mean(diff(HST.V(min(stp-1,stp0):stp,3))));
 else
     HST.DV_tavg(stp,:) = 1e-3;
 end

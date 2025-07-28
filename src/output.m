@@ -157,7 +157,7 @@ set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\nabla \cdot \bar{\rho} \mat
 % plot density, rheology, and segregation speeds in Fig. 2
 set(0,'CurrentFigure',fh2)
 set(fh2,'CurrentAxes',ax(21));
-imagesc(Xsc,Zsc,x.*100.*(x>eps^0.5) ); axis ij equal tight; box on; cb = colorbar;
+imagesc(Xsc,Zsc,min(1.25*xeq,x)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$x$ [wt\%]'],TX{:},FS{:});  ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:}); set(gca,'XTickLabel',[]);
 set(fh2,'CurrentAxes',ax(22));
 imagesc(Xsc,Zsc,Gx./rho*TimeScale*100.*(chi>eps^0.5)); axis ij equal tight; box on; cb = colorbar;
@@ -165,13 +165,13 @@ set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Gamma_x/\bar{\rho}$ [wt\%/'
 text(0.5,1.2,['time = ',num2str(time/TimeScale,3),' [',TimeUnits,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
 set(fh2,'CurrentAxes',ax(23));
 imagesc(Xsc,Zsc,log10(kx)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\kappa$ [m$^2$/s]'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\kappa_x$ [m$^2$/s]'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 set(fh2,'CurrentAxes',ax(24));
 imagesc(Xsc,Zsc,-wx(2:end-1,2:end-1)/SpeedScale); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta W^x$ [',SpeedUnits,']'],TX{:},FS{:}); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:});  xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:});
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta W_x$ [',SpeedUnits,']'],TX{:},FS{:}); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:});  xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:});
 set(fh2,'CurrentAxes',ax(25));
 imagesc(Xsc,Zsc,-wm(2:end-1,2:end-1)/SpeedScale); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta W^m$ [',SpeedUnits,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:}); 
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta W_m$ [',SpeedUnits,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:}); 
 set(fh2,'CurrentAxes',ax(26));
 imagesc(Xsc,Zsc,log10(etas)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\eta_s$ [Pas]'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',SpaceUnits,']'],TX{:},FS{:});
@@ -224,17 +224,17 @@ legend('mean','min/max',TX{:},FS{:},'Location','northwest')
 title('Crystallinity [wt\%]',TX{:},FS{1},15);
 
 subplot(3,1,2)
-semilogy(HST.time/TimeScale,HST.V(:,3)/SpeedScale,'k-' ,LW{:}); hold on; axis tight; box on;
-semilogy(HST.time/TimeScale,HST.vx(:,3)/SpeedScale,'k--',LW{:});
-semilogy(HST.time/TimeScale,HST.xi(:,3)/SpeedScale,'k-.',LW{:});
+semilogy(HST.time/TimeScale,HST.V(:,2)/SpeedScale,'k-' ,LW{:}); hold on; axis tight; box on;
+semilogy(HST.time/TimeScale,HST.vx(:,2)/SpeedScale,'k--',LW{:});
+semilogy(HST.time/TimeScale,HST.xi(:,2)/SpeedScale,'k-.',LW{:});
 
-semilogy(HST.time/TimeScale,HST.V(:,3)*0+W0/SpeedScale,':' ,LW{1},1,'Color',[1 1 1]*0.5);
-semilogy(HST.time/TimeScale,HST.vx(:,3)*0+w0/SpeedScale,':',LW{1},1,'Color',[1 1 1]*0.5);
-semilogy(HST.time/TimeScale,HST.xi(:,3)*0+xi0/SpeedScale,':',LW{1},1,'Color',[1 1 1]*0.5);
+semilogy(HST.time/TimeScale,HST.V(:,2)*0+W0/SpeedScale,':' ,LW{1},1,'Color',[1 1 1]*0.5);
+semilogy(HST.time/TimeScale,HST.vx(:,2)*0+w0/SpeedScale,':',LW{1},1,'Color',[1 1 1]*0.5);
+semilogy(HST.time/TimeScale,HST.xi(:,2)*0+xi0/SpeedScale,':',LW{1},1,'Color',[1 1 1]*0.5);
 
-semilogy(HST.time/TimeScale,HST.V_tavg(:,3)/SpeedScale,'k-' ,LW{1},1,'Color',[1 1 1]*0.5);
-semilogy(HST.time/TimeScale,HST.vx_tavg(:,3)/SpeedScale,'k--',LW{1},1,'Color',[1 1 1]*0.5);
-semilogy(HST.time/TimeScale,HST.xi_tavg(:,3)/SpeedScale,'k-.',LW{1},1,'Color',[1 1 1]*0.5);
+semilogy(HST.time/TimeScale,HST.V_tavg(:,2)/SpeedScale,'k-' ,LW{1},1,'Color',[1 1 1]*0.5);
+semilogy(HST.time/TimeScale,HST.vx_tavg(:,2)/SpeedScale,'k--',LW{1},1,'Color',[1 1 1]*0.5);
+semilogy(HST.time/TimeScale,HST.xi_tavg(:,2)/SpeedScale,'k-.',LW{1},1,'Color',[1 1 1]*0.5);
 
 yticks = 10.^(-4:1:4);
 yticklabels = {'$10^{-4}$','$10^{-3}$','$10^{-2}$','$10^{-1}$','$10^{0}$','$10^{1}$','$10^{2}$','$10^{3}$','$10^{4}$'};

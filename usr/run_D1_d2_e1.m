@@ -19,19 +19,20 @@ L         =  D*1.5;               % chamber width (equal to h for 1-D mode) [m]
 
 % set model timing parameters
 dt        =  0.1;                 % initial time step [s]
+t0end     =  1e+9;                % stop when dimensionless time is reached
 xend      =  0.10;                % stop run when mean crystallinity reaches threshold
-Dxend     =  1e-6;                % stop run when time-averaged change of crystallinity drops below threshold
-DVend     =  1e-6;                % stop run when time-averaged change of convective speed drops below threshold
+Dxend     =  1e-9;                % stop run when time-averaged change of crystallinity drops below threshold
+DVend     =  1e-9;                % stop run when time-averaged change of convective speed drops below threshold
 
 % set physical parameters
-xeq       =  0.10;                % equilibrium crystallinity of boundary layer [wt]
-x0        =  xeq/10;              % initial background crystallinity [wt]
+xeq       =  0.01;                % equilibrium crystallinity of boundary layer [wt]
+x0        =  xeq/100;             % initial background crystallinity [wt]
 dx0       =  x0/10;               % background crystallinity perturbation [wt]
 d0        =  1e-2;                % xtal size constant [m]
 etam0     =  1e+1;                % melt viscosity constant [kg/m3]
 R         =  0.1;                 % relative amplitude of crystallisation rate [s]
-Xi        =  1.0;                 % relative amplitude of random noise flux
-closed    =  0;                   % switch for closed bottom boundary to form cumulate pile
+Xi        =  0.5;                 % relative amplitude of random noise flux
+closed    =  1;                   % switch for closed bottom boundary to form cumulate pile
 
 % set numerical model parameters
 CFL       =  0.50;                % (physical) time stepping courant number (multiplies stable step) [0,1]
@@ -39,10 +40,10 @@ rtol      =  1e-5;                % outer its relative tolerance
 atol      =  1e-9;                % outer its absolute tolerance
 maxit     =  15;                  % maximum outer its
 alpha     =  0.9;                 % iterative step size parameter
-Delta_cnv =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)
-Delta_sgr =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
-gamma     =  1e-3;                % artificial horizontal inertia parameter (only applies if periodic)
-bnd_w     =  max(Delta_sgr/2,h);  % width of boundary layer [m]
+elle      =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)
+ells      =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
+gamma     =  1e-4;                % artificial horizontal inertia parameter (only applies if periodic)
+bnd_w     =  max(ells/2,h);       % width of boundary layer [m]
 
 
 %*****  RUN NAKHLA MODEL  *************************************************
