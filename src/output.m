@@ -198,8 +198,8 @@ set(fh4,'CurrentAxes',ax(41));
 imagesc(Xsc,Zsc,log10(ks)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\kappa_s$ [m$^2$/s]'],TX{:},FS{:}); set(gca,'XTickLabel',[]); ylabel(['Depth [',SpaceUnits,']'],TX{:},FS{:});
 set(fh4,'CurrentAxes',ax(42));
-imagesc(Xsc,Zsc,xis/SpeedScale); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_s$ [',SpeedUnits,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
+imagesc(Xsc,Zsc,xix/SpeedScale); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_x$ [',SpeedUnits,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 text(-0.05,1.2,['time = ',num2str(time/TimeScale,3),' [',TimeUnits,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
 set(fh4,'CurrentAxes',ax(43));
 imagesc(Xsc,Zsc,log10(ke)); axis ij equal tight; box on; cb = colorbar;
@@ -226,21 +226,24 @@ title('Crystallinity [wt\%]',TX{:},FS{1},15);
 subplot(3,1,2)
 semilogy(HST.time/TimeScale,HST.V(:,2)/SpeedScale,'k-' ,LW{:}); hold on; axis tight; box on;
 semilogy(HST.time/TimeScale,HST.vx(:,2)/SpeedScale,'k--',LW{:});
-semilogy(HST.time/TimeScale,HST.xi(:,2)/SpeedScale,'k-.',LW{:});
+semilogy(HST.time/TimeScale,HST.xie(:,2)/SpeedScale,'-',LW{:},'Color',[1 1 1]/2);
+semilogy(HST.time/TimeScale,HST.xix(:,2)/SpeedScale,'--',LW{:},'Color',[1 1 1]/2);
 
-semilogy(HST.time/TimeScale,HST.V(:,2)*0+W0/SpeedScale,':' ,LW{1},1,'Color',[1 1 1]*0.5);
-semilogy(HST.time/TimeScale,HST.vx(:,2)*0+w0/SpeedScale,':',LW{1},1,'Color',[1 1 1]*0.5);
-semilogy(HST.time/TimeScale,HST.xi(:,2)*0+xi0/SpeedScale,':',LW{1},1,'Color',[1 1 1]*0.5);
+semilogy(HST.time/TimeScale,HST.V(:,2)*0+W0/SpeedScale,'k:' ,LW{1},1);
+semilogy(HST.time/TimeScale,HST.vx(:,2)*0+w0/SpeedScale,'k:',LW{1},1);
+semilogy(HST.time/TimeScale,HST.xie(:,2)*0+xie0/SpeedScale,':',LW{1},1,'Color',[1 1 1]/2);
+semilogy(HST.time/TimeScale,HST.xix(:,2)*0+xix0/SpeedScale,':',LW{1},1,'Color',[1 1 1]/2);
 
-semilogy(HST.time/TimeScale,HST.V_tavg(:,2)/SpeedScale,'k-' ,LW{1},1,'Color',[1 1 1]*0.5);
-semilogy(HST.time/TimeScale,HST.vx_tavg(:,2)/SpeedScale,'k--',LW{1},1,'Color',[1 1 1]*0.5);
-semilogy(HST.time/TimeScale,HST.xi_tavg(:,2)/SpeedScale,'k-.',LW{1},1,'Color',[1 1 1]*0.5);
+semilogy(HST.time/TimeScale,HST.V_tavg(:,2)/SpeedScale,'-' ,LW{1},1,'Color',[1 1 1]/2);
+semilogy(HST.time/TimeScale,HST.vx_tavg(:,2)/SpeedScale,'--',LW{1},1,'Color',[1 1 1]/2);
+semilogy(HST.time/TimeScale,HST.xie_tavg(:,2)/SpeedScale,'-',LW{1},1,'Color',[1 1 1]/1.5);
+semilogy(HST.time/TimeScale,HST.xix_tavg(:,2)/SpeedScale,'--',LW{1},1,'Color',[1 1 1]/1.5);
 
 yticks = 10.^(-4:1:4);
 yticklabels = {'$10^{-4}$','$10^{-3}$','$10^{-2}$','$10^{-1}$','$10^{0}$','$10^{1}$','$10^{2}$','$10^{3}$','$10^{4}$'};
 set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
 set(gca,TL{:},FS{:},'Xticklabel',[]);
-legend('convection','settling','noise flux',TX{:},FS{:},'Location','northwest')
+legend('convection','settling','eddy noise flux','xtal noise flux',TX{:},FS{:},'Location','northwest')
 title(['Flow speeds [',SpeedUnits,']'],TX{:},FS{1},15);
 
 subplot(3,1,3)

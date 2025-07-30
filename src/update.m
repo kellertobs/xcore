@@ -72,20 +72,25 @@ eII = (0.5.*(exx.^2 + ezz.^2 ...
        +     exz(1:end-1,2:end  ).^2+exz(2:end,2:end  ).^2)/4)).^0.5 + eps;
 
 % update velocity magnitudes
-V  = sqrt(((W  (1:end-1,2:end-1)+W  (2:end,2:end-1))/2).^2 ...
-        + ((U  (2:end-1,1:end-1)+U  (2:end-1,2:end))/2).^2);               % convection speed magnitude
-vx = d0^2./etas.*(rhox0-rho).*g0;                                          % solid segregation speed magnitude
-xi = sqrt(((xiw(1:end-1,2:end-1)+xiw(2:end,2:end-1))/2).^2 ...
-        + ((xiu(2:end-1,1:end-1)+xiu(2:end-1,2:end))/2).^2);               % noise flux magnitude
+V   = sqrt(((W  (1:end-1,2:end-1)+W  (2:end,2:end-1))/2).^2 ...
+         + ((U  (2:end-1,1:end-1)+U  (2:end-1,2:end))/2).^2);              % convection speed magnitude
+vx  = d0^2./etas.*(rhox0-rho).*g0;                                         % solid segregation speed magnitude
+xis = sqrt(((xisw (1:end-1,2:end-1)+xisw (2:end,2:end-1))/2).^2 ...
+         + ((xisu (2:end-1,1:end-1)+xisu (2:end-1,2:end))/2).^2); 
+xiex= sqrt(((xiexw(1:end-1,2:end-1)+xiexw(2:end,2:end-1))/2).^2 ...
+         + ((xiexu(2:end-1,1:end-1)+xiexu(2:end-1,2:end))/2).^2);
+xie = sqrt(((xiew (1:end-1,2:end-1)+xiew (2:end,2:end-1))/2).^2 ...
+         + ((xieu (2:end-1,1:end-1)+xieu (2:end-1,2:end))/2).^2);          % noise flux magnitude
+xix = xis + xiex;
 
 % update diffusion parameters
-ke   = eII.*elle.^2;                                                  % turbulent eddy diffusivity
+ke   = eII.*elle.^2;                                                       % turbulent eddy diffusivity
 
 etae = ke.*rho;                                                            % eddy viscosity
-eta  = (eta + etamix + etae)/2;                                              % effective viscosity
+eta  = (eta + etamix + etae)/2;                                            % effective viscosity
 etacnv = eta;
 
-ks   = vx.*ells;                                                      % segregation diffusivity
+ks   = vx.*ells;                                                           % segregation diffusivity
 kx   = (ks + ke);                                                          % regularised particle diffusivity 
 
 etat = ks.*rho;                                                            % turbulent drag viscosity
@@ -113,7 +118,8 @@ ReD = V .*D0./(eta ./rho);                                                 % Rey
 Red = vx.*d0./(etas./rho);                                                 % particle Reynolds number
 RaD = V .*D0./kx;                                                          % Rayleigh number on scale domain length 
 Rs  = vx./V;                                                               % particle settling number
-Ns  = (xie + xis)./(V + vx);                                               % noise flux number
+Ne  = xie./V;                                                              % eddy noise flux number
+Ns  = xix./vx;                                                             % settling noise flux number
 
 % update stresses
 txx = eta   .* exx;                                                        % x-normal stress

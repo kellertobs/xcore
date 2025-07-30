@@ -17,9 +17,9 @@ HST.sumX(stp  ) = sum(  X(:)*h*h*1)+eps;  % [kg]
 % record expected rates of change by volume change and imposed boundaries layers
 dsumBdt =  sum(X(1,:).*Wx(1,2:end-1)*h*1) - sum(X(end,:).*Wx(end,2:end-1)*h*1) ...
         +  sum(M(1,:).*Wm(1,2:end-1)*h*1) - sum(M(end,:).*Wm(end,2:end-1)*h*1);  % [kg/s]
-dsumMdt =  sum(sum(Gm*h*h*1)) ...
+dsumMdt =  sum(sum(-Gm*h*h*1)) ...
         +  sum(M(1,:).*Wm(1,2:end-1)*h*1) - sum(M(end,:).*Wm(end,2:end-1)*h*1);  % [kg/s]
-dsumXdt =  sum(sum(Gx*h*h*1)) ...
+dsumXdt =  sum(sum( Gx*h*h*1)) ...
         +  sum(X(1,:).*Wx(1,2:end-1)*h*1) - sum(X(end,:).*Wx(end,2:end-1)*h*1);  % [kg/s]
 
 if step>=2; HST.DB(stp) = (a2*HST.DB(max(1,stp-1)) + a3*HST.DB(max(1,stp-2)) + (b1*dsumBdt + b2*dsumBdto + b3*dsumBdtoo)*dt)/a1; else; HST.DB(stp) = 0; end  % [kg]
@@ -40,9 +40,13 @@ HST.vx(stp,1) = min(vx(:));
 HST.vx(stp,2) = sqrt(mean(vx(:).^2));
 HST.vx(stp,3) = max(vx(:));
 
-HST.xi(stp,1) = min(xi(:));
-HST.xi(stp,2) = sqrt(mean(xi(:).^2));
-HST.xi(stp,3) = max(xi(:));
+HST.xie(stp,1) = min(xie(:));
+HST.xie(stp,2) = sqrt(mean(xie(:).^2));
+HST.xie(stp,3) = max(xie(:));
+
+HST.xix(stp,1) = min(xix(:));
+HST.xix(stp,2) = sqrt(mean(xix(:).^2));
+HST.xix(stp,3) = max(xix(:));
 
 HST.W(stp,1) = min(-W(:));
 HST.W(stp,2) = mean(abs(W(:)));
@@ -146,7 +150,9 @@ HST.x_tavg(stp,:)    = mean(HST.x(stp0:stp,:),1);
 
 HST.V_tavg(stp,:)    = mean(HST.V(stp0:stp,:),1);
 HST.vx_tavg(stp,:)   = mean(HST.vx(stp0:stp,:),1);
-HST.xi_tavg(stp,:)   = mean(HST.xi(stp0:stp,:),1);
+
+HST.xie_tavg(stp,:)  = mean(HST.xie(stp0:stp,:),1);
+HST.xix_tavg(stp,:)  = mean(HST.xix(stp0:stp,:),1);
 
 HST.Rs_tavg(stp,:)   = mean(HST.Rs(stp0:stp,:),1);
 HST.RaD_tavg(stp,:)  = mean(HST.RaD(stp0:stp,:),1);

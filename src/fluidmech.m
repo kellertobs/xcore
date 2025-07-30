@@ -394,83 +394,90 @@ if ~bnchm && step>=1
 
     % generate smooth random noise (once per timestep)
     if iter==1
-      
-        % store previous random noise fields
-        rweo = rwe; rueo = rue;
-        rwso = rws; ruso = rus;
 
         % Generate new white noise
-        rwe = randn(Nz+1, Nx+0);
-        rue = randn(Nz+0, Nx+1);
-        rws = randn(Nz+1, Nx+0);
-        rus = randn(Nz+0, Nx+1);
+        rsw = randn(Nz+1, Nx+0);
+        rsu = randn(Nz+0, Nx+1);
+        rew = randn(Nz+1, Nx+0);
+        reu = randn(Nz+0, Nx+1);
+        pse = randn(Nz+1, Nx+1);
 
-        rwe = fft2(rwe);
-        rue = fft2(rue);
-        rws = fft2(rws);
-        rus = fft2(rus);
+        rsw = fft2(rsw);
+        rsu = fft2(rsu);
+        rew = fft2(rew);
+        reu = fft2(reu);
+        pse = fft2(pse);
 
-        % Filter white noise spatially
-        rwe = real(ifft2(Gkwe .* rwe));
-        rue = real(ifft2(Gkue .* rue));
-        rws = real(ifft2(Gkws .* rws));
-        rus = real(ifft2(Gkus .* rus));
+        % Filter white noise spatially to decorrelation length
+        rsw = real(ifft2(Gkws .* rsw));
+        rsu = real(ifft2(Gkus .* rsu));
+        rew = real(ifft2(Gkwe .* rew));
+        reu = real(ifft2(Gkue .* reu));
+        pse = real(ifft2(Gkps .* pse));
 
-        % Rescale to unit standard deviation
-        rwe = (rwe - mean(rwe(:))) / std(rwe(:)) .* (1-exp((-ZZw(:,2:end-1))/max(h,elle/2)) - closed.*exp(-(D-ZZw(:,2:end-1))/max(h,elle/2)));
-        rue = (rue - mean(rue(:))) / std(rue(:));
-        rws = (rws - mean(rws(:))) / std(rws(:)) .* (1-exp((-ZZw(:,2:end-1))/max(h,ells/2)) - closed.*exp(-(D-ZZw(:,2:end-1))/max(h,ells/2)));
-        rus = (rus - mean(rus(:))) / std(rus(:));
-
-        % Ornstein–Uhlenbeck temporal update
-        % Temporal correlation coefficient
-        taus = ells/2./(vx+eps);
-        taue = elle/2./(V +eps);
-        Fts  = exp(-dt ./ taus);
-        Fte  = exp(-dt ./ taue);
-        Ftwe = (Fte(icz(1:end-1),:)+Fte(icz(2:end),:))/2;
-        Ftue = (Fte(:,icx(1:end-1))+Fte(:,icx(2:end)))/2;
-        Ftws = (Fts(icz(1:end-1),:)+Fts(icz(2:end),:))/2;
-        Ftus = (Fts(:,icx(1:end-1))+Fts(:,icx(2:end)))/2;
-        rwe =  Ftwe .* rweo + sqrt(1 - Ftwe.^2) .* rwe;
-        rue =  Ftue .* rueo + sqrt(1 - Ftue.^2) .* rue;
-        rws =  Ftws .* rwso + sqrt(1 - Ftws.^2) .* rws;
-        rus =  Ftus .* ruso + sqrt(1 - Ftus.^2) .* rus;
+        % rescale to unit RMS speed
+        ss  = sqrt(mean(rsw(:).^2) + mean(rsu(:).^2));
+        se  = sqrt(mean(rew(:).^2) + mean(reu(:).^2));
+        rsw = rsw / ss;
+        rsu = rsu / ss;
+        rew = rew / se;
+        reu = reu / se;
+        pse = pse / std(pse(:));
 
     end
 
-    % random noise source variance
-    xie  = Xi*sqrt(ke.*(elle./(elle+h)).^3./(taue+dt)); % eddy noise speed
-    xis  = Xi*sqrt(ks.*(ells./(ells+h)).^3./(taus+dt)); % segregation noise speed
+    % noise decorrelation time
+    taue = elle/2./(V +eps);
+    taus = ells/2./(vx+eps);
 
-    xisw = (xis(icz(1:end-1),icx) + xis(icz(2:end),icx))./2;
-    xisu = (xis(icz,icx(1:end-1)) + xis(icz,icx(2:end)))./2;
+    % temporal evolution factor
+    Fe   = exp(-dt./taue);
+    Fs   = exp(-dt./taus);
 
-    xiew = (xie(icz(1:end-1),icx) + xie(icz(2:end),icx))./2;
-    xieu = (xie(icz,icx(1:end-1)) + xie(icz,icx(2:end)))./2;
+    Few = (Fe(icz(1:end-1),icx)+Fe(icz(2:end),icx))/2;
+    Feu = (Fe(icz,icx(1:end-1))+Fe(icz,icx(2:end)))/2;
 
-    xiw  = xisw .* rws(:,icx) + xiew .* rwe(:,icx); 
-    xiu  = xisu .* rus(icz,:) + xieu .* rue(icz,:);
+    Fec = (Fe(icz(1:end-1),icx(1:end-1))+Fe(icz(1:end-1),icx(2:end)))/4 ...
+        + (Fe(icz(2:end  ),icx(1:end-1))+Fe(icz(2:end  ),icx(2:end)))/4;
 
-    xiw  = xiw - mean(xiw(:));
-    xiu  = xiu - mean(xiu(:));
+    Fsw = (Fs(icz(1:end-1),icx)+Fs(icz(2:end),icx))/2;
+    Fsu = (Fs(icz,icx(1:end-1))+Fs(icz,icx(2:end)))/2;
 
-    xiw( 1     ,:) = 0;
-    xiw( end   ,:) = open.*xiw(end-1,:) + closed.*0;
-    xiw(:,[1 end]) = xiw(:,[end-1 2]);
-    xiu([1 end],:) = xiu([2 end-1],:);
-    xiu(:,[1 end]) = repmat(mean(xiu(:,[1 end]),2),1,2);
+    % random noise source amplitude
+    bndtaper = (1 - exp((-ZZ+h/2)/max(h,elle)) - closed.*exp(-(D-ZZ-h/2)/max(h,elle)));
+    sgs   = Xi * sqrt(chi.*ks./taus .* (ells./(ells+h)).^3) .* bndtaper; % segregation noise speed
+    sge   = Xi * sqrt(     ke./taue .* (elle./(elle+h)).^3) .* bndtaper; % eddy mixture noise speed
+    sgex  = Xi * sqrt(chi.*ke./taue .* (elle./(elle+h)).^3) .* bndtaper; % eddy crystal noise speed
 
-    xixw  = xiw;
-    xixu  = xiu;
-    ximw  = -xw(:,icx)./mw (:,icx).*xixw;
-    ximu  = -xu(icz,:)./muu(icz,:).*xixu;
+    sgsw  = (sgs(icz(1:end-1),icx) + sgs(icz(2:end),icx))./2;
+    sgsu  = (sgs(icz,icx(1:end-1)) + sgs(icz,icx(2:end)))./2; 
+
+    sgexw = (sgex(icz(1:end-1),icx) + sgex(icz(2:end),icx))./2;
+    sgexu = (sgex(icz,icx(1:end-1)) + sgex(icz,icx(2:end)))./2;
+
+    sgec  = (sge(icz(1:end-1),icx(1:end-1))+sge(icz(1:end-1),icx(2:end)))/4 ...
+          + (sge(icz(2:end  ),icx(1:end-1))+sge(icz(2:end  ),icx(2:end)))/4;
+
+    % Ornstein–Uhlenbeck time update
+    xisw  =  Fsw .* xiswo  + sqrt(1 - Fsw.^2) .* sgsw  .* rsw(:,icx);
+    xisu  =  Fsu .* xisuo  + sqrt(1 - Fsu.^2) .* sgsu  .* rsu(icz,:);
+    xiexw =  Few .* xiexwo + sqrt(1 - Few.^2) .* sgexw .* rew(:,icx);
+    xiexu =  Feu .* xiexuo + sqrt(1 - Feu.^2) .* sgexu .* reu(icz,:);  
+    psie  =  Fec .* psieo  + sqrt(1 - Fec.^2) .* sgec  .* pse;
+    xieu  =  ddz(psie,1); xieu = xieu(icz,:);
+    xiew  = -ddx(psie,1); xiew = xiew(:,icx);
+
+    % update phase noise speeds
+    xiwx  = xisw + xiexw;
+    xiux  = xisu + xiexu;
+    xiwm  = -xw(:,icx)./mw (:,icx).*xiwx;
+    xium  = -xu(icz,:)./muu(icz,:).*xiux;
 
     % update phase velocities
-    Wx  = W + wx + xixw;  % xtl z-velocity
-    Ux  = U + 0  + xixu;  % xtl x-velocity
-    Wm  = W + wm + ximw;  % mlt z-velocity
-    Um  = U + 0  + ximu;  % mlt x-velocity
+    Wx  = W + wx + xiwx + xiew;  % xtl z-velocity
+    Ux  = U + 0  + xiux + xieu;  % xtl x-velocity
+    Wm  = W + wm + xiwm + xiew;  % mlt z-velocity
+    Um  = U + 0  + xium + xieu;  % mlt x-velocity
 
 end
 

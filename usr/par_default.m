@@ -37,7 +37,7 @@ dx0       =  x0/10;               % background crystallinity random perturbation
 dxg       =  0;                   % background crystallinity gaussian perturbation [wt]
 xb        =  0.00;                % initial boundary layer crystallinity [wt]
 dxb       =  xb/10;               % boundary layer crystallinity perturbation [wt]
-seed      =  24;                  % random perturbation seed
+seed      =  15;                  % random perturbation seed
 smth      =  5;                   % random perturbation smoothness
 
 % set buoyancy parameters

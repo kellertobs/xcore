@@ -11,4 +11,12 @@
 [dMxdtoo   , dMxdto   ] = deal(dMxdto   , dMxdt   );
 [drhodtoo  , drhodto  ] = deal(drhodto  , drhodt  );
 
+xiswo  = xisw; 
+xisuo  = xisu;
+xiewo  = xiew; 
+xieuo  = xieu;
+xiexwo = xiexw; 
+xiexuo = xiexu;
+psieo  = psie;
+
 dto = dt;
