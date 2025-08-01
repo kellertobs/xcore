@@ -53,7 +53,7 @@ nclmp = length(colmap);
 lncls = colmap([5,135],:);
 
 % calculate and print characteristic scales
-D0      =  D/30;
+D0      =  D/20;
 d0      =  d0;
 L0      =  elle;
 l0      =  ells;
@@ -64,8 +64,17 @@ Drho0   =  rhox0-rhom0;
 Dchi0   =  xeq/10;
 eta0    =  etam0;
 
-W0      =  D0/(2*L0^2*rho0) * (sqrt(4*Dchi0*Drho0*g0*rho0*L0^2*D0 + eta0^2) - eta0);
-w0      =  1 /(2*l0  *rho0) * (sqrt(4*      Drho0*g0*rho0*l0*d0^2 + eta0^2) - eta0);
+W0      =  Dchi0*Drho0*g0*D0^2/eta0;
+w0      =        Drho0*g0*d0^2/eta0;
+
+ReD0    =  W0*L0/(eta0/rho0);
+Red0    =  w0*l0/(eta0/rho0);
+
+fRed    =  1-exp(-Red0);
+fReD    =  1-exp(-ReD0);
+
+W0      =  D0/(2*fReD*L0^2*rho0) * (sqrt(4*Dchi0*Drho0*g0*rho0*fReD*L0^2*D0 + eta0^2) - eta0);
+w0      =  1 /(2*fRed*l0  *rho0) * (sqrt(4*      Drho0*g0*rho0*fRed*l0*d0^2 + eta0^2) - eta0);
 tW0     =  D0/W0;
 tw0     =  D0/w0;
 t0      =  D0/(W0 + w0);
@@ -73,6 +82,7 @@ p0      =  W0*eta0/D0;
 
 ke0     =  W0/D0*L0^2;
 ks0     =  w0*l0;
+kx0     =  ks0 + fReD*ke0;
 dt0     =  min([(h0/2)^2/(ks0+ke0) , (h0/2)/(W0+w0)]);
 
 xie0    =  Xi*sqrt(      ke0/(L0/2/W0)*(L0./(L0+h0))^3);
@@ -83,14 +93,14 @@ xix0    =  xis0 + xiex0;
 tau0    =  h0./(W0 + w0 + eps) + dt0;
 G0      =  R*Dchi0*rho0/tau0;
 
-etae0   =  ke0*rho0;
-etas0   =  ks0*rho0;
+etae0   =  fReD*ke0*rho0;
+etas0   =  fRed*ks0*rho0;
 
 Da0     =  G0/(rho0/t0);
 Ne0     =  xie0/W0;
 Ns0     =  xix0/w0;
 Rs0     =  w0/W0;
-Ra0     =  W0*D0/(ks0 + ke0);
+Ra0     =  W0*D0/kx0;
 ReD0    =  W0*D0/((eta0+etae0)/rho0);
 Red0    =  w0*d0/((eta0+etas0)/rho0);
 
@@ -132,7 +142,8 @@ fprintf(1,'\n  Crystal Reynolds No Red0  = %1.2e [1]\n\n\n',Red0);
 
 BCA     =  {'closed','periodic'};  % boundary condition on advection (top/bot, sides)
 BCD     =  {'closed','periodic'};  % boundary condition on advection (top/bot, sides)
-open    = 1-closed;
+open    =  1-closed;
+dt      =  dt0/10;
 
 % get coordinate arrays
 Xc        = -h/2:h:L+h/2;
@@ -217,7 +228,8 @@ botshape = exp( (D-ZZ+h/2)/bnd_w);
 sds = -1;
 top =  1;
 bot = -1;
-if closed; bot = 1; end
+if closed; bot = 1; bot_sgr = 1; end
+if open_sgr; bot_sgr = -1; end
 
 % set ghosted index arrays
 icx = [Nx,1:Nx,1];

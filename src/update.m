@@ -87,14 +87,14 @@ xix = xis + xiex;
 ke   = eII.*elle.^2;                                                       % turbulent eddy diffusivity
 
 etae = ke.*rho;                                                            % eddy viscosity
-eta  = (eta + etamix + etae)/2;                                            % effective viscosity
+eta  = (eta + etamix + fReD.*etae)/2;                                      % effective viscosity
 etacnv = eta;
 
 ks   = vx.*ells;                                                           % segregation diffusivity
-kx   = (ks + ke);                                                          % regularised particle diffusivity 
+kx   = (ks + fReD.*ke);                                                    % regularised particle diffusivity 
 
 etat = ks.*rho;                                                            % turbulent drag viscosity
-etas = (etas + etax + etat)/2;                                             % effective drag viscosity   
+etas = (etas + etax + fRed.*etat)/2;                                       % effective drag viscosity   
 
 % limit total contrast in Cx
 etamax = geomean(etas(:)).*(etacntr/2);

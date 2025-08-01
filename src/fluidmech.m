@@ -355,7 +355,7 @@ if ~bnchm && step>=1
 
     % terminal xtal segregation speed for comparison
     wx0(2:end-1,2:end-1) = d0^2./etasw(2:end-1,:).*Drhox(2:end-1,:).*g0; % solid segregation speed
-    wx0([1,end],:) = min(1,1-[top;bot]).*wx0([2,end-1],:);
+    wx0([1,end],:) = min(1,1-[top;bot_sgr]).*wx0([2,end-1],:);
     wx0(:,[1 end]) = wx0(:,[end-1 2]);
 
     % % advection of crystal momentum
@@ -418,11 +418,11 @@ if ~bnchm && step>=1
         % rescale to unit RMS speed
         ss  = sqrt(mean(rsw(:).^2) + mean(rsu(:).^2));
         se  = sqrt(mean(rew(:).^2) + mean(reu(:).^2));
-        rsw = rsw / ss;
-        rsu = rsu / ss;
-        rew = rew / se;
-        reu = reu / se;
-        pse = pse / std(pse(:));
+        rsw = (rsw - mean(rsw(:))) / ss;
+        rsu = (rsu - mean(rsu(:))) / ss;
+        rew = (rew - mean(rew(:))) / se;
+        reu = (reu - mean(reu(:))) / se;
+        pse = (pse - mean(pse(:))) / std(pse(:));
 
     end
 
@@ -444,10 +444,12 @@ if ~bnchm && step>=1
     Fsu = (Fs(icz,icx(1:end-1))+Fs(icz,icx(2:end)))/2;
 
     % random noise source amplitude
-    bndtaper = (1 - exp((-ZZ+h/2)/max(h,elle)) - closed.*exp(-(D-ZZ-h/2)/max(h,elle)));
-    sgs   = Xi * sqrt(chi.*ks./taus .* (ells./(ells+h)).^3) .* bndtaper; % segregation noise speed
-    sge   = Xi * sqrt(     ke./taue .* (elle./(elle+h)).^3) .* bndtaper; % eddy mixture noise speed
-    sgex  = Xi * sqrt(chi.*ke./taue .* (elle./(elle+h)).^3) .* bndtaper; % eddy crystal noise speed
+    bndtapere = (1 - exp((-ZZ+h/2)/max(h,elle)) - (1-open    ).*exp(-(D-ZZ-h/2)/max(h,elle)));
+    bndtapers = (1 - exp((-ZZ+h/2)/max(h,ells)) - (1-open_sgr).*exp(-(D-ZZ-h/2)/max(h,ells)));
+
+    sgs   = Xi * sqrt(chi.*      ks./taus .* (ells./(ells+h)).^3) .* bndtapers; % segregation noise speed
+    sge   = Xi * sqrt(     fReD.*ke./taue .* (elle./(elle+h)).^3) .* bndtapere; % eddy mixture noise speed
+    sgex  = Xi * sqrt(chi.*fReD.*ke./taue .* (elle./(elle+h)).^3) .* bndtapere; % eddy crystal noise speed
 
     sgsw  = (sgs(icz(1:end-1),icx) + sgs(icz(2:end),icx))./2;
     sgsu  = (sgs(icz,icx(1:end-1)) + sgs(icz,icx(2:end)))./2; 

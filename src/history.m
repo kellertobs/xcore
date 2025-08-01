@@ -8,6 +8,7 @@ stp = max(1,step/nrh);
 
 % record model time
 HST.time(stp) = time;
+HST.dt(stp)   = dt;
 
 % record total mass, heat, component mass in model (assume hy = 1, unit length in third dimension)
 HST.sumB(stp  ) = sum(rho(:)*h*h*1)+eps;  % [kg]
@@ -145,7 +146,7 @@ HST.etat(stp,2) = geomean(etat(:));
 HST.etat(stp,3) = max(etat(:));
 
 % time-averaged diagnostics
-stp0 = round((1./stp.^10 + 1./(30 + (stp-30)/2).^10).^-(1/10));
+stp0 = round((1./stp.^10 + 1./(30 + (stp-30)*0.75).^10).^-(1/10));
 HST.x_tavg(stp,:)    = mean(HST.x(stp0:stp,:),1);
 
 HST.V_tavg(stp,:)    = mean(HST.V(stp0:stp,:),1);
@@ -161,13 +162,13 @@ HST.ReD_tavg(stp,:)  = mean(HST.ReD(stp0:stp,:),1);
 HST.Red_tavg(stp,:)  = mean(HST.Red(stp0:stp,:),1);
 
 if stp>1
-    HST.Dx_tavg(stp,:) = abs(mean(diff(HST.x(min(stp-1,stp0):stp,2))));
+    HST.Dx_tavg(stp,:) = abs(mean(diff(HST.x_tavg(min(stp-1,stp0*1.5):stp,2))./diff(HST.time(min(stp-1,stp0*1.5):stp).')));
 else
-    HST.Dx_tavg(stp,:) = 1e-3;
+    HST.Dx_tavg(stp,:) = 10*Dxend*(Dchi0/dt0);
 end
 
 if stp>1
-    HST.DV_tavg(stp,:) = abs(mean(diff(HST.V(min(stp-1,stp0):stp,3))));
+    HST.DV_tavg(stp,:) = abs(mean(diff(HST.V_tavg(min(stp-1,stp0*1.5):stp,2))./diff(HST.time(min(stp-1,stp0*1.5):stp).')));
 else
-    HST.DV_tavg(stp,:) = 1e-3;
+    HST.DV_tavg(stp,:) = 10*DVend*(W0/dt0);
 end
