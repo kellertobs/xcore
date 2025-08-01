@@ -12,10 +12,10 @@ plot_op   =  1;                   % switch on to live plot results
 save_op   =  0;                   % switch on to save output to file
 
 % set model domain parameters
-D         =  1e6;                 % chamber depth [m]
+D         =  1e2;                 % chamber depth [m]
 N         =  200;                 % number of grid points in z-direction
 h         =  D/N;                 % grid spacing (equal in both dimensions, do not set) [m]
-L         =  D/1.5;               % chamber width (equal to h for 1-D mode) [m]
+L         =  D*1.5;               % chamber width (equal to h for 1-D mode) [m]
 
 % set model timing parameters
 t0end     =  1e+3;                % stop when dimensionless time is reached
