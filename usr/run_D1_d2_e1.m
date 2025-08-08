@@ -11,7 +11,7 @@ nop       =  100;                 % output frame plotted/saved every 'nop' time 
 nrh       =  1;                   % record metrics history every 'nrh' time steps
 plot_op   =  1;                   % switch on to live plot results
 save_op   =  1;                   % switch on to save output to file
-ndm_op    =  1;
+ndm_op    =  0;                   % plot nondimensionalised output 
 
 % set model domain parameters
 D         =  1e1;                 % chamber depth [m]
