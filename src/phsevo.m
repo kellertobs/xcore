@@ -5,8 +5,8 @@ tic;
 %***  update phase fraction densities
 
 % phase advection rates
-advn_X   = - advect(X,Ux(2:end-1,:),Wx(:,2:end-1),h,{ADVN,''},[1,2],BCA);
-advn_M   = - advect(M,Um(2:end-1,:),Wm(:,2:end-1),h,{ADVN,''},[1,2],BCA);
+advn_X   = - advect(X,Ux(2:end-1,:),Wx(:,2:end-1),h,{ADVN,''},[1,2],{(  [xeq,x0]).*rhom0,'periodic'});
+advn_M   = - advect(M,Um(2:end-1,:),Wm(:,2:end-1),h,{ADVN,''},[1,2],{(1-[xeq,x0]).*rhom0,'periodic'});
 advn_rho = advn_X+advn_M;
 
 % xtal diffusion rate
@@ -15,7 +15,7 @@ dffn_X   = diffus(chi,X.*kx,h,[1,2],BCD);
 if ~bnchm
 % boundary phase change rate
 tau_x    = h./(W0 + w0) + dt;
-Gx       = max(0,R.*(xeq-x).*rho./tau_x.*topshape);
+Gx       = R.*max(0,xeq-x).*rho./tau_x.*bndshape;%[1;zeros(Nz-1,1)];
 end
 
 % total rates of change

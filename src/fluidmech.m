@@ -354,126 +354,15 @@ SOL = [W(:);U(:);P(:)];
 if ~bnchm && step>=1
 
     % terminal xtal segregation speed for comparison
-    wx0(2:end-1,2:end-1) = d0^2./etasw(2:end-1,:).*Drhox(2:end-1,:).*g0; % solid segregation speed
-    wx0([1,end],:) = min(1,1-[top;bot_sgr]).*wx0([2,end-1],:);
-    wx0(:,[1 end]) = wx0(:,[end-1 2]);
+    wx(:,2:end-1) = d0^2./etasw.*Drhox.*g0; % solid segregation speed
+    bndtaperw = (1 - (exp((-ZZw)/max(h,ells/2)) - exp(-(D-ZZw)/max(h,ells/2))).*(1-open_sgr));
+    wx = wx.*bndtaperw;
+    wx(:,[1 end]) = wx(:,[end-1 2]);
 
-    % % advection of crystal momentum
-    % % advn_Mx = - advect(Mx(2:end-1,:),(Ux(2:end-2,:)+Ux(3:end-1,:))/2,(Wx(1:end-1,2:end-1)+Wx(2:end,2:end-1))/2,h,{ADVN,''},[1,2],BCA);
-    % advn_Mx = - advect(Mx(2:end-1,:),(U(2:end-2,:)+U(3:end-1,:))/2,(W(1:end-1,2:end-1)+W(2:end,2:end-1))/2,h,{ADVN,''},[1,2],BCA);
-    % 
-    % % crystal momentum transfer from mixture
-    % Gvx     = - Cxw(2:end-1,:) .* wx(2:end-1,2:end-1);
-    % 
-    % % crystal momentum source
-    % Qvx     = + chiw(2:end-1,:) .* Drhox(2:end-1,:) .* g0;
-    % 
-    % % get total rate of change
-    % dMxdt(2:end-1,:) = advn_Mx + Gvx + Qvx;
-    % 
-    % % residual of xtal partial momentum deviation
-    % res_Mx = (a1*Mx-a2*Mxo-a3*Mxoo)/dt - (b1*dMxdt + b2*dMxdto + b3*dMxdtoo);
-    % 
-    % % semi-implicit update of xtal momentum
-    % upd_Mx = - alpha*res_Mx*dt/a1;
-    % 
-    % % update crystal momentum with dynamic under-relaxation
-    % tau_p  = chiw.*rhow./Cxw;
-    % relax  = dt ./ (dt + tau_p);
-    % upd_Mx = (1-relax).*upd_Mx;
-    % 
-    % Mx     = Mx + upd_Mx;
-    % 
-    % % update crystal settling speed
-    % wx(:,2:end-1) = Mx./Xw;
-    % wx([1,end],:) = min(1,1-[top;bot]).*wx([2,end-1],:);
-    % wx(:,[1 end]) = wx(:,[end-1 2]);
-
-    wx  = wx0;
     wm  = -xw(:,icx)./mw (:,icx).*wx;
 
-    % generate smooth random noise (once per timestep)
-    if iter==1
-
-        % Generate new white noise
-        rsw = randn(Nz+1, Nx+0);
-        rsu = randn(Nz+0, Nx+1);
-        rew = randn(Nz+1, Nx+0);
-        reu = randn(Nz+0, Nx+1);
-        pse = randn(Nz+1, Nx+1);
-
-        rsw = fft2(rsw);
-        rsu = fft2(rsu);
-        rew = fft2(rew);
-        reu = fft2(reu);
-        pse = fft2(pse);
-
-        % Filter white noise spatially to decorrelation length
-        rsw = real(ifft2(Gkws .* rsw));
-        rsu = real(ifft2(Gkus .* rsu));
-        rew = real(ifft2(Gkwe .* rew));
-        reu = real(ifft2(Gkue .* reu));
-        pse = real(ifft2(Gkps .* pse));
-
-        % rescale to unit RMS speed
-        ss  = sqrt(mean(rsw(:).^2) + mean(rsu(:).^2));
-        se  = sqrt(mean(rew(:).^2) + mean(reu(:).^2));
-        rsw = (rsw - mean(rsw(:))) / ss;
-        rsu = (rsu - mean(rsu(:))) / ss;
-        rew = (rew - mean(rew(:))) / se;
-        reu = (reu - mean(reu(:))) / se;
-        pse = (pse - mean(pse(:))) / std(pse(:));
-
-    end
-
-    % noise decorrelation time
-    taue = elle/2./(V +eps);
-    taus = ells/2./(vx+eps);
-
-    % temporal evolution factor
-    Fe   = exp(-dt./taue);
-    Fs   = exp(-dt./taus);
-
-    Few = (Fe(icz(1:end-1),icx)+Fe(icz(2:end),icx))/2;
-    Feu = (Fe(icz,icx(1:end-1))+Fe(icz,icx(2:end)))/2;
-
-    Fec = (Fe(icz(1:end-1),icx(1:end-1))+Fe(icz(1:end-1),icx(2:end)))/4 ...
-        + (Fe(icz(2:end  ),icx(1:end-1))+Fe(icz(2:end  ),icx(2:end)))/4;
-
-    Fsw = (Fs(icz(1:end-1),icx)+Fs(icz(2:end),icx))/2;
-    Fsu = (Fs(icz,icx(1:end-1))+Fs(icz,icx(2:end)))/2;
-
-    % random noise source amplitude
-    bndtapere = (1 - exp((-ZZ+h/2)/max(h,elle)) - (1-open    ).*exp(-(D-ZZ-h/2)/max(h,elle)));
-    bndtapers = (1 - exp((-ZZ+h/2)/max(h,ells)) - (1-open_sgr).*exp(-(D-ZZ-h/2)/max(h,ells)));
-
-    sgs   = Xi * sqrt(chi.*      ks./taus .* (ells./(ells+h)).^3) .* bndtapers; % segregation noise speed
-    sge   = Xi * sqrt(     fReD.*ke./taue .* (elle./(elle+h)).^3) .* bndtapere; % eddy mixture noise speed
-    sgex  = Xi * sqrt(chi.*fReD.*ke./taue .* (elle./(elle+h)).^3) .* bndtapere; % eddy crystal noise speed
-
-    sgsw  = (sgs(icz(1:end-1),icx) + sgs(icz(2:end),icx))./2;
-    sgsu  = (sgs(icz,icx(1:end-1)) + sgs(icz,icx(2:end)))./2; 
-
-    sgexw = (sgex(icz(1:end-1),icx) + sgex(icz(2:end),icx))./2;
-    sgexu = (sgex(icz,icx(1:end-1)) + sgex(icz,icx(2:end)))./2;
-
-    sgec  = (sge(icz(1:end-1),icx(1:end-1))+sge(icz(1:end-1),icx(2:end)))/4 ...
-          + (sge(icz(2:end  ),icx(1:end-1))+sge(icz(2:end  ),icx(2:end)))/4;
-
-    % Ornstein–Uhlenbeck time update
-    xisw  =  Fsw .* xiswo  + sqrt(1 - Fsw.^2) .* sgsw  .* rsw(:,icx);
-    xisu  =  Fsu .* xisuo  + sqrt(1 - Fsu.^2) .* sgsu  .* rsu(icz,:);
-    xiexw =  Few .* xiexwo + sqrt(1 - Few.^2) .* sgexw .* rew(:,icx);
-    xiexu =  Feu .* xiexuo + sqrt(1 - Feu.^2) .* sgexu .* reu(icz,:);  
-    psie  =  Fec .* psieo  + sqrt(1 - Fec.^2) .* sgec  .* pse;
-    xieu  =  ddz(psie,1); xieu = xieu(icz,:);
-    xiew  = -ddx(psie,1); xiew = xiew(:,icx);
-
-    % update phase noise speeds
-    xiwx  = xisw + xiexw;
-    xiux  = xisu + xiexu;
-    xiwm  = -xw(:,icx)./mw (:,icx).*xiwx;
-    xium  = -xu(icz,:)./muu(icz,:).*xiux;
+    % update stochastic noise speeds
+    noise;
 
     % update phase velocities
     Wx  = W + wx + xiwx + xiew;  % xtl z-velocity

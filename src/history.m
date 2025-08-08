@@ -68,6 +68,7 @@ HST.Pt(stp,3) = max(Pt(:));
 HST.x(stp,1) = min(x(:));
 HST.x(stp,2) = mean(x(:));
 HST.x(stp,3) = max(x(:));
+HST.x(stp,4) = std(x(:));
 
 HST.m(stp,1) = min(m(:));
 HST.m(stp,2) = mean(m(:));
@@ -97,13 +98,13 @@ HST.wm(stp,1) = min(abs(wm(:)));
 HST.wm(stp,2) = mean(abs(wm(:)));
 HST.wm(stp,3) = max(abs(wm(:)));
 
-HST.RaD(stp,1) = min(RaD(:));
-HST.RaD(stp,2) = geomean(RaD(:));
-HST.RaD(stp,3) = max(RaD(:));
+HST.Ra(stp,1) = min(Ra(:));
+HST.Ra(stp,2) = geomean(Ra(:));
+HST.Ra(stp,3) = max(Ra(:));
 
-HST.Rs(stp,1) = min(Rs(:));
-HST.Rs(stp,2) = geomean(Rs(:));
-HST.Rs(stp,3) = max(Rs(:));
+HST.Rc(stp,1) = min(Rc(:));
+HST.Rc(stp,2) = geomean(Rc(:));
+HST.Rc(stp,3) = max(Rc(:));
 
 HST.ReD(stp,1) = min(ReD(:));
 HST.ReD(stp,2) = geomean(ReD(:));
@@ -120,6 +121,10 @@ HST.ks(stp,3) = max(ks(:));
 HST.ke(stp,1) = min(ke(:));
 HST.ke(stp,2) = geomean(ke(:));
 HST.ke(stp,3) = max(ke(:));
+
+HST.kx(stp,1) = min(kx(:));
+HST.kx(stp,2) = geomean(kx(:));
+HST.kx(stp,3) = max(kx(:));
 
 HST.eta0(stp,1) = min(etamix(:));
 HST.eta0(stp,2) = geomean(etamix(:));
@@ -155,20 +160,8 @@ HST.vx_tavg(stp,:)   = mean(HST.vx(stp0:stp,:),1);
 HST.xie_tavg(stp,:)  = mean(HST.xie(stp0:stp,:),1);
 HST.xix_tavg(stp,:)  = mean(HST.xix(stp0:stp,:),1);
 
-HST.Rs_tavg(stp,:)   = mean(HST.Rs(stp0:stp,:),1);
-HST.RaD_tavg(stp,:)  = mean(HST.RaD(stp0:stp,:),1);
+HST.Rc_tavg(stp,:)   = mean(HST.Rc(stp0:stp,:),1);
+HST.Ra_tavg(stp,:)   = mean(HST.Ra(stp0:stp,:),1);
 
 HST.ReD_tavg(stp,:)  = mean(HST.ReD(stp0:stp,:),1);
 HST.Red_tavg(stp,:)  = mean(HST.Red(stp0:stp,:),1);
-
-if stp>1
-    HST.Dx_tavg(stp,:) = abs(mean(diff(HST.x_tavg(min(stp-1,stp0*1.5):stp,2))./diff(HST.time(min(stp-1,stp0*1.5):stp).')));
-else
-    HST.Dx_tavg(stp,:) = 10*Dxend*(Dchi0/dt0);
-end
-
-if stp>1
-    HST.DV_tavg(stp,:) = abs(mean(diff(HST.V_tavg(min(stp-1,stp0*1.5):stp,2))./diff(HST.time(min(stp-1,stp0*1.5):stp).')));
-else
-    HST.DV_tavg(stp,:) = 10*DVend*(W0/dt0);
-end

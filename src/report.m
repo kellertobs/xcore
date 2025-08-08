@@ -3,9 +3,9 @@ res_mass = norm(upd_X  (:))./(norm(rho   (:))+1) ...
          + norm(upd_MFS(:))./(norm(drhodt(:))+1);
 res_mmnt = norm(upd_W  (:))./(norm(V     (:))+1) ...
          + norm(upd_U  (:))./(norm(V     (:))+1) ...
-         + norm(upd_P  (:))./(norm(Pt    (:))+1);
+         + norm(upd_P  (:))./(norm(P     (:))+1);
 
-resnorm = res_mass + res_mmnt/1e3;
+resnorm = res_mass + res_mmnt;
 
 if iter==1 || resnorm>resnorm0; resnorm0 = resnorm + 1e-32; end  % reset reference residual
 

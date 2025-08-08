@@ -74,7 +74,7 @@ eII = (0.5.*(exx.^2 + ezz.^2 ...
 % update velocity magnitudes
 V   = sqrt(((W  (1:end-1,2:end-1)+W  (2:end,2:end-1))/2).^2 ...
          + ((U  (2:end-1,1:end-1)+U  (2:end-1,2:end))/2).^2);              % convection speed magnitude
-vx  = d0^2./etas.*(rhox0-rho).*g0;                                         % solid segregation speed magnitude
+vx  = sqrt(((wx (1:end-1,2:end-1)+wx (2:end,2:end-1))/2).^2);              % segregation speed magnitude
 xis = sqrt(((xisw (1:end-1,2:end-1)+xisw (2:end,2:end-1))/2).^2 ...
          + ((xisu (2:end-1,1:end-1)+xisu (2:end-1,2:end))/2).^2); 
 xiex= sqrt(((xiexw(1:end-1,2:end-1)+xiexw(2:end,2:end-1))/2).^2 ...
@@ -84,17 +84,17 @@ xie = sqrt(((xiew (1:end-1,2:end-1)+xiew (2:end,2:end-1))/2).^2 ...
 xix = xis + xiex;
 
 % update diffusion parameters
-ke   = eII.*elle.^2;                                                       % turbulent eddy diffusivity
+ke   = fReD*eII.*elle.^2;                                                  % turbulent eddy diffusivity
 
 etae = ke.*rho;                                                            % eddy viscosity
-eta  = (eta + etamix + fReD.*etae)/2;                                      % effective viscosity
+eta  = (eta + etamix + etae)/2;                                            % effective viscosity
 etacnv = eta;
 
 ks   = vx.*ells;                                                           % segregation diffusivity
-kx   = (ks + fReD.*ke);                                                    % regularised particle diffusivity 
+kx   = (ks + ke);                                                          % regularised particle diffusivity 
 
-etat = ks.*rho;                                                            % turbulent drag viscosity
-etas = (etas + etax + fRed.*etat)/2;                                       % effective drag viscosity   
+etat = fRed.*ks.*rho;                                                      % turbulent drag viscosity
+etas = (etas + etax + etat)/2;                                             % effective drag viscosity   
 
 % limit total contrast in Cx
 etamax = geomean(etas(:)).*(etacntr/2);
@@ -116,8 +116,8 @@ etaco  = (eta(icz(1:end-1),icx(1:end-1)).*eta(icz(2:end),icx(1:end-1)) ...
 % update dimensionless numbers
 ReD = V .*D0./(eta ./rho);                                                 % Reynolds number on scaled domain length
 Red = vx.*d0./(etas./rho);                                                 % particle Reynolds number
-RaD = V .*D0./kx;                                                          % Rayleigh number on scale domain length 
-Rs  = vx./V;                                                               % particle settling number
+Ra  = V .*D0./kx;                                                          % Rayleigh number on scale domain length 
+Rc  = V./vx;                                                               % particle settling number
 Ne  = xie./V;                                                              % eddy noise flux number
 Ns  = xix./vx;                                                             % settling noise flux number
 

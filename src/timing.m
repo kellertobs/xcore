@@ -1,4 +1,4 @@
-fprintf(1,'*****  step %d;  dt = %4.4e;  time = %4.4e [%s]\n\n',step,dt./TimeScale,time./TimeScale,TimeUnits);
+fprintf(1,'*****  step %d;  dt = %4.4e;  time = %4.4e [%s]\n\n',step,dt./tsc,time./tsc,tun);
 TTtime  = tic;
 EQtime  = 0;
 FMtime  = 0;

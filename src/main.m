@@ -5,8 +5,7 @@
 init;
 
 %*****  physical time stepping loop  **************************************
-while time <= tend && time/t0 <= t0end && step <= Nt && HST.x(end,2) <= xend ...
-   && HST.Dx_tavg(end)/(Dchi0/dt0) >= Dxend && HST.DV_tavg(end)/(W0/dt0) >= DVend ...
+while time <= tend && time/t0 <= t0end && step <= Nt && HST.x(end,2) <= xend
    
     
     %***  time step info
@@ -39,9 +38,6 @@ while time <= tend && time/t0 <= t0end && step <= Nt && HST.x(end,2) <= xend ...
         iter = iter+1;  % increment iteration count
 
     end % end non-linear iterations
-
-    %***  update correlation length for convective/turbulent regularisation
-    % corrl;
 
     %***  record model history
     if ~mod(step,nrh); history; end
