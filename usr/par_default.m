@@ -5,6 +5,7 @@ outdir    =  '../out';            % output directory
 restart   =  0;                   % restart from file (0: new run; <1: restart from last; >1: restart from specified frame)
 nrh       =  1;                   % record diagnostic history every 'nrh' time steps
 nop       =  100;                 % output frame plotted/saved every 'nop' time steps
+ndm_op    =  0;                   % plot nondimensionalised output
 plot_op   =  1;                   % switch on to live plot results
 save_op   =  0;                   % switch on to save output to file
 plot_cv   =  0;                   % switch on to live plot iterative convergence
@@ -59,7 +60,8 @@ bnd_w     =  2*h;                 % width of boundary layer [m]
 xeq       =  0.1;                 % equilibrium crystallinity of boundary layer [wt]
 Da        =  0.1;                 % Dahmköhler number of boundary layer rate [s]
 Ptop      =  1e5;                 % top boundary pressure [Pa]
-closed_bot = 1;                    % switch for closed bottom boundary to form cumulate pile
+closed_bot = 1;                   % switch for closed bottom boundary to form cumulate pile
+open_sgr  =  1;                   % switch for open bottom boundary for crystal segregation
 
 % set numerical model parameters
 TINT      =  'bd2im';             % time integration scheme ('be1im','bd2im','cn2si','bd2si')
