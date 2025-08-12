@@ -166,9 +166,7 @@ SOL = [W(:);U(:);P(:)];
 Wx  = W;  Ux = U;  wx = W;  xiw = W;
 Wm  = W;  Um = U;  ux = U;  xiu = U;
 
-Delta_cnv0 = Delta_cnv;
 Re     = eps + 0.*x;  
-Rex    = eps + 0.*x;
 Div_V  = 0.*x;  advn_rho = 0.*x;  advn_X = 0.*x; advn_M = 0.*x; drhodt = 0.*x;  drhodto = drhodt; 
 xis = 0.*x;  xie = 0.*x;
 exx    = 0.*x;  ezz = 0.*x;  exz = zeros(Nz-1,Nx-1);  eII = 0.*x;  
@@ -208,9 +206,6 @@ Mo   = M;
 Mxo  = Mx;
 rhoo = rho;
 dto  = dt; 
-
-% initialise correlation length for convective/turbulent regularisation
-corrl;
 
 % initialise auxiliary variables 
 dwxdt   = 0.*wx; dwxdto = dwxdt;  advn_Mx = 0.*wx;

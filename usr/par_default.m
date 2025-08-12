@@ -18,8 +18,8 @@ cm        =  0.01;                % conversion metre to centimetres
 km        =  1000;                % conversion metre to kilometres
 
 % set model domain parameters
-D         =  100;                 % chamber depth [m]
-N         =  100;                 % number of grid points in z-direction
+D         =  10;                  % chamber depth [m]
+N         =  200;                 % number of grid points in z-direction
 h         =  D/N;                 % grid spacing (equal in both dimensions, do not set) [m]
 L         =  D;                   % chamber width (equal to h for 1-D mode) [m]
 
@@ -30,12 +30,11 @@ xend      =  1.00;                % stop run when mean crystallinity reaches thr
 tend      =  10*yr;               % end time for simulation [s]
 
 % set initial phase fraction parameters
-x0        =  0.01;                % initial background crystallinity [wt]
-dx0       =  x0/10;               % background crystallinity random perturbation [wt]
-xb        =  0.00;                % initial boundary layer crystallinity [wt]
-dxb       =  xb/10;               % boundary layer crystallinity perturbation [wt]
+xeq       =  0.01;                % equilibrium crystallinity of boundary layer [wt]
+x0        =  xeq/10;              % initial background crystallinity [wt]
+dx0       =  x0/5;                % background crystallinity perturbation [wt]
+xb        =  xeq;                 % initial boundary layer crystallinity [wt]
 seed      =  15;                  % random perturbation seed
-smth      =  5;                   % random perturbation smoothness
 
 % set buoyancy parameters
 rhom0     =  2700;                % melt density constant [kg/m3]
@@ -44,7 +43,7 @@ d0        =  0.01;                % xtal size constant [m]
 g0        =  10.;                 % gravity constant [m/s2]
 
 % set rheological parameters
-etam0     =  1e2;                 % melt viscosity constant [kg/m3]
+etam0     =  1e1;                 % melt viscosity constant [kg/m3]
 etax0     =  1e18;                % xtal viscosity constant [kg/m3]
 AA        = [ 0.5989, 0.1772; ...    % permission slopes
               0.0397, 0.1182 ];      % increases permission slopes away from step function 
@@ -56,9 +55,8 @@ CC        = [[0.9826, 0.0174]*9.1697; ... % permission step widths
              [0.1695, 0.8305]*4.2773;];   % factor increases width of step functions
 
 % set boundary layer parameters
-bnd_w     =  2*h;                 % width of boundary layer [m]
-xeq       =  0.1;                 % equilibrium crystallinity of boundary layer [wt]
-Da        =  0.1;                 % Dahmköhler number of boundary layer rate [s]
+R         =  1.0;                 % relative amplitude of crystallisation rate [s]
+Xi        =  1.0;                 % relative amplitude of random noise flux
 Ptop      =  1e5;                 % top boundary pressure [Pa]
 closed_bot = 1;                   % switch for closed bottom boundary to form cumulate pile
 open_sgr  =  1;                   % switch for open bottom boundary for crystal segregation
@@ -72,16 +70,12 @@ atol      =  1e-9;                % outer its absolute tolerance
 maxit     =  20;                  % maximum outer its
 alpha     =  0.75;                % iterative step size parameter
 gamma     =  0e-3;                % artificial horizontal inertia parameter (only applies if periodic)
-lambda1   =  0e-7;                % pressure regularisation parameter
-lambda2   =  0e-7;                % pressure regularisation parameter
-Delta_cnv =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)
-Delta_sgr =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
+elle      =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)
+ells      =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
 kmin      =  1e-16;               % minimum diffusivity
 kmax      =  1e+16;               % maximum diffusivity
-xi        =  0.5;                 % relative amplitude of random noise flux
 dtmax     =  1e32;                % maximum time step [s]
 etacntr   =  1e+6;                % maximum viscosity contrast
-Cxcntr    =  1e+6;                % maximum drag coefficient contrast
 
 % set other options
 bnchm     =  0;                   % not a benchmark run

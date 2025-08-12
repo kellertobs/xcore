@@ -233,7 +233,8 @@ DM  = sparse(IIL,JJL,AAL,NP,NW+NU);
 
 %% assemble coefficients for matrix pressure diagonal and right-hand side
 
-% if ~exist('KP','var') || bnchm || lambda1+lambda2>0
+if ~exist('KP','var') || bnchm
+
     IIL = [];       % equation indeces into A
     JJL = [];       % variable indeces into A
     AAL = [];       % coefficients for A
@@ -254,19 +255,11 @@ DM  = sparse(IIL,JJL,AAL,NP,NW+NU);
     aa  = zeros(size(ii));
     IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL; aa(:)+1];
     IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL; aa(:)-1];
-    
-if ~exist('KP','var') || bnchm || lambda1+lambda2>0
 
-    % internal points
-    ii  = MapP(2:end-1,2:end-1);
-
-    % coefficients multiplying matrix pressure P
-    aa  = zeros(size(ii));
+    % assemble coefficient matrix
+    KP  = sparse(IIL,JJL,AAL,NP,NP);
     
 end
-
-% assemble coefficient matrix
-KP  = sparse(IIL,JJL,AAL,NP,NP);
 
 % RHS
 IIR = [];       % equation indeces into R
@@ -274,7 +267,7 @@ AAR = [];       % forcing entries for R
 
 ii  = MapP(2:end-1,2:end-1);
 
-rr  = MFS;       % add volume source term
+rr  = MFS;       % add mass flux source term
 if bnchm; rr = rr + src_P_mms(2:end-1,2:end-1); end
 
 IIR = [IIR; ii(:)]; AAR = [AAR; rr(:)];
