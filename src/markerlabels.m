@@ -1,4 +1,4 @@
-function markerlabels(y,lbl,FS)
+function markerlabels(y,lbl,FS,side)
 
 ax = gca;
 
@@ -13,16 +13,21 @@ end
 yNorm = (yVals - yLimVals(1)) / diff(yLimVals);
 
 %-- Parameters
-xNorm      = 1.02;      % just right of axis
-minSpacing = 0.13;     % minimum vertical gap in normalized units
+if strcmp(side,'right')
+    xNorm      = 1.02;     % just right of axis
+else
+    xNorm      = 0.98;     % just left of axis
+end
+minSpacing = 0.2;     % minimum vertical gap in normalized units
 
 %-- Sort and cluster
-[ys, order] = sort(yNorm);
+[ys, order] = sort(yNorm,'descend');
 clusters     = {};      % cell array of index vectors
 current      = order(1);
+dist         = abs(diff(ys));
 
 for k = 2:numel(ys)
-    if ys(k) - ys(k-1) < minSpacing
+    if dist(k-1) < minSpacing
         current(end+1) = order(k);
     else
         clusters{end+1} = current; 
@@ -38,17 +43,22 @@ for c = clusters
     if numel(idx) > 1
         center = mean(yNorm(idx));
         n      = numel(idx);
-        offsets = ((1:n) - (n+1)/2) * minSpacing;
+        offsets = ((1:n) - (n+1)/2) * (minSpacing-0.07);
         yAdj(idx) = center - offsets;
     end
     % singletons stay at yNorm(idx)
 end
 
 %-- Draw labels
+if strcmp(side,'right')
+    align = 'left';
+else
+    align = 'right';
+end
 for k = 1:numel(y)
     text(xNorm, yAdj(k), lbl{k}, FS{:}, ...
          'Units','normalized', ...
-         'HorizontalAlignment','left', ...
+         'HorizontalAlignment',align, ...
          'VerticalAlignment','middle', ...
          'Interpreter','latex');
 end

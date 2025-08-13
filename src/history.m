@@ -33,70 +33,39 @@ HST.EM(stp  ) = (HST.sumM(stp) - HST.DM(stp) - HST.sumM(1))./HST.sumB(1);  % [kg
 HST.EX(stp  ) = (HST.sumX(stp) - HST.DX(stp) - HST.sumX(1))./HST.sumB(1);  % [kg/kg]
 
 % record variable and coefficient diagnostics
-HST.V(stp,1) = min(V(:));
-HST.V(stp,2) = sqrt(mean(V(:).^2));
-HST.V(stp,3) = max(V(:));
-
-HST.vx(stp,1) = min(vx(:));
-HST.vx(stp,2) = sqrt(mean(vx(:).^2));
-HST.vx(stp,3) = max(vx(:));
-
-HST.xie(stp,1) = min(xie(:));
-HST.xie(stp,2) = sqrt(mean(xie(:).^2));
-HST.xie(stp,3) = max(xie(:));
-
-HST.xix(stp,1) = min(xix(:));
-HST.xix(stp,2) = sqrt(mean(xix(:).^2));
-HST.xix(stp,3) = max(xix(:));
-
-HST.W(stp,1) = min(-W(:));
-HST.W(stp,2) = mean(abs(W(:)));
-HST.W(stp,3) = max(-W(:));
-
-HST.U(stp,1) = min(U(:));
-HST.U(stp,2) = mean(abs(U(:)));
-HST.U(stp,3) = max(U(:));
-
-HST.P(stp,1) = min(P(:));
-HST.P(stp,2) = mean(P(:));
-HST.P(stp,3) = max(P(:));
-
-HST.Pt(stp,1) = min(Pt(:));
-HST.Pt(stp,2) = mean(abs(Pt(:)));
-HST.Pt(stp,3) = max(Pt(:));
-
 HST.x(stp,1) = min(x(:));
 HST.x(stp,2) = mean(x(:));
 HST.x(stp,3) = max(x(:));
 HST.x(stp,4) = std(x(:));
 
-HST.m(stp,1) = min(m(:));
-HST.m(stp,2) = mean(m(:));
-HST.m(stp,3) = max(m(:));
+HST.V(stp,1) = min(V(:));
+HST.V(stp,2) = geomean(V(:));
+HST.V(stp,3) = max(V(:));
+HST.V(stp,2) = rms(V(:));
 
-HST.chi(stp,1) = min(chi(:));
-HST.chi(stp,2) = mean(chi(:));
-HST.chi(stp,3) = max(chi(:));
+HST.vx(stp,1) = min(vx(:));
+HST.vx(stp,2) = geomean(vx(:));
+HST.vx(stp,3) = max(vx(:));
+HST.vx(stp,2) = rms(vx(:));
 
-HST.mu(stp,1) = min(mu(:));
-HST.mu(stp,2) = mean(mu(:));
-HST.mu(stp,3) = max(mu(:));
+HST.vm(stp,1) = min(vm(:));
+HST.vm(stp,2) = geomean(vm(:));
+HST.vm(stp,3) = max(vm(:));
+HST.vm(stp,2) = rms(vm(:));
 
-HST.Gx(stp,1) = min(Gx(:));
-HST.Gx(stp,2) = mean(Gx(:));
-HST.Gx(stp,3) = max(Gx(:));
+HST.xie(stp,1) = min(xie(:));
+HST.xie(stp,2) = geomean(xie(:));
+HST.xie(stp,3) = max(xie(:));
+HST.xie(stp,2) = rms(xie(:));
+
+HST.xix(stp,1) = min(xix(:));
+HST.xix(stp,2) = geomean(xix(:));
+HST.xix(stp,3) = max(xix(:));
+HST.xix(stp,2) = rms(xix(:));
 
 HST.rho(stp,1) = min(rho(:));
-HST.rho(stp,2) = mean(rho(:));
+HST.rho(stp,2) = geomean(rho(:));
 HST.rho(stp,3) = max(rho(:));
-
-HST.wx(stp,1) = min(abs(wx(:)));
-HST.wx(stp,2) = mean(abs(wx(:)));
-HST.wx(stp,3) = max(abs(wx(:)));
-
-HST.wm(stp,1) = min(abs(wm(:)));
-HST.wm(stp,2) = mean(abs(wm(:)));
-HST.wm(stp,3) = max(abs(wm(:)));
 
 HST.Ra(stp,1) = min(Ra(:));
 HST.Ra(stp,2) = geomean(Ra(:));

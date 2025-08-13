@@ -238,7 +238,7 @@ if restart
         name = [outdir,'/',runID,'/',runID,'_',num2str(restart),'.mat'];
     end
     if exist(name,'file')
-        fprintf('\n   restart from %s \n\n',name);
+        fprintf('\n  restart from %s \n\n',name);
         load(name,'U','W','P','x','m','chi','mu','X','M','dXdt','drhodt','Gx','rho','eta','etas','ke','ks','kx','Ra','ReD','Red','Rc','dt','time','step','MFS','wx','xisw','xisu','xiew','xieu','xiexw','xiexu');
         name = [outdir,'/',runID,'/',runID,'_HST'];
         load(name,'HST');
@@ -246,7 +246,6 @@ if restart
         SOL = [W(:);U(:);P(:)];
 
         update;
-        corrl;
         update;
         store;
         output;

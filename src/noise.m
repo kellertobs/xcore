@@ -28,15 +28,18 @@ if iter==1
     rew  = -ddx(pse,1);
 
     % rescale to unit RMS speed
-    ss   = sqrt(mean(rsw (:).^2) + mean(rsu (:).^2));
-    sex  = sqrt(mean(rexw(:).^2) + mean(rexu(:).^2));
-    se   = sqrt(mean(rew (:).^2) + mean(reu (:).^2));
-    rsw  = (rsw  - mean(rsw (:))) / ss;
-    rsu  = (rsu  - mean(rsu (:))) / ss;
-    rexw = (rexw - mean(rexw(:))) / sex;
-    rexu = (rexu - mean(rexu(:))) / sex;
-    rew  = (rew  - mean(rew (:))) / se;
-    reu  = (reu  - mean(reu (:))) / se;
+    rs   = sqrt(((rsw(1:end-1,:)+rsw(2:end,:))/2).^2 ...
+              + ((rsu(:,1:end-1)+rsu(:,2:end))/2).^2);
+    re   = sqrt(((rew(1:end-1,:)+rew(2:end,:))/2).^2 ...
+              + ((reu(:,1:end-1)+reu(:,2:end))/2).^2);
+    rex  = sqrt(((rexw(1:end-1,:)+rexw(2:end,:))/2).^2 ...
+              + ((rexu(:,1:end-1)+rexu(:,2:end))/2).^2);
+    rsw  = (rsw  - mean(rsw (:))) / geomean(rs(:));
+    rsu  = (rsu  - mean(rsu (:))) / geomean(rs(:));
+    rexw = (rexw - mean(rexw(:))) / geomean(rex(:));
+    rexu = (rexu - mean(rexu(:))) / geomean(rex(:));
+    rew  = (rew  - mean(rew (:))) / geomean(re(:));
+    reu  = (reu  - mean(reu (:))) / geomean(re(:));
 
 end
 
@@ -58,9 +61,9 @@ Fsu = (Fs(icz,icx(1:end-1))+Fs(icz,icx(2:end)))/2;
 bndtapere = (1 - exp((-ZZ+h/2)/max(h,elle/2)) - exp(-(D-ZZ-h/2)/max(h,elle/2)).*(1-open));
 bndtapers = (1 - exp((-ZZ+h/2)/max(h,ells/2)) - exp(-(D-ZZ-h/2)/max(h,ells/2)).*(1-open));
 
-sgs   = Xi * sqrt(chi.*ks./taus .* (ells./(ells+h)).^3) .* bndtapers; % segregation noise speed
-sge   = Xi * sqrt(     ke./taue .* (elle./(elle+h)).^3) .* bndtapere; % eddy mixture noise speed
-sgex  = Xi * sqrt(chi.*ke./taue .* (elle./(elle+h)).^3) .* bndtapere; % eddy crystal noise speed
+sgs   = Xi * sqrt(chi.*      ks./taus .* (ells./(ells+h)).^3) .* bndtapers; % segregation noise speed
+sgex  = Xi * sqrt(chi.*fReL.*ke./taue .* (elle./(elle+h)).^3) .* bndtapere; % eddy crystal noise speed
+sge   = Xi * sqrt(     fReL.*ke./taue .* (elle./(elle+h)).^3) .* bndtapere; % eddy mixture noise speed
 
 sgsw  = (sgs(icz(1:end-1),icx) + sgs(icz(2:end),icx))./2;
 sgsu  = (sgs(icz,icx(1:end-1)) + sgs(icz,icx(2:end)))./2;

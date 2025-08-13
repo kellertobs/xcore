@@ -346,13 +346,18 @@ SOL = [W(:);U(:);P(:)];
 %% Update phase segregation speeds
 if ~bnchm && step>=1
 
-    % terminal xtal segregation speed for comparison
-    wx(:,2:end-1) = d0^2./etasw.*Drhox.*g0; % solid segregation speed
+    % terminal xtal segregation speed
+    wx(:,2:end-1) = d0^2./etasw.*Drhox.*g0;
+
+    % taper towards boundaries if closed segregation top/bot boundaries
     bndtaperw = (1 - (exp((-ZZw)/max(h,ells/2)) - exp(-(D-ZZw)/max(h,ells/2))).*(1-open_sgr));
     wx = wx.*bndtaperw;
+
+    % periodic side boundaries
     wx(:,[1 end]) = wx(:,[end-1 2]);
 
-    wm  = -xw(:,icx)./mw (:,icx).*wx;
+    % melt segregation speed
+    wm  = -xw(:,icx)./mw(:,icx).*wx;
 
     % update stochastic noise speeds
     noise;

@@ -74,44 +74,42 @@ eII = (0.5.*(exx.^2 + ezz.^2 ...
 % update velocity magnitudes
 V   = sqrt(((W  (1:end-1,2:end-1)+W  (2:end,2:end-1))/2).^2 ...
          + ((U  (2:end-1,1:end-1)+U  (2:end-1,2:end))/2).^2);              % convection speed magnitude
-vx  = sqrt(((wx (1:end-1,2:end-1)+wx (2:end,2:end-1))/2).^2);              % segregation speed magnitude
+vx  = d0^2./etas.*(rhox0-rhom0).*g0;                                       % xtal segregation speed magnitude
+vm  = vx.*x./(1-x);                                                        % melt segregation speed magnitude
 xis = sqrt(((xisw (1:end-1,2:end-1)+xisw (2:end,2:end-1))/2).^2 ...
-         + ((xisu (2:end-1,1:end-1)+xisu (2:end-1,2:end))/2).^2); 
+         + ((xisu (2:end-1,1:end-1)+xisu (2:end-1,2:end))/2).^2);          % settling noise flux magnitude 
 xiex= sqrt(((xiexw(1:end-1,2:end-1)+xiexw(2:end,2:end-1))/2).^2 ...
-         + ((xiexu(2:end-1,1:end-1)+xiexu(2:end-1,2:end))/2).^2);
+         + ((xiexu(2:end-1,1:end-1)+xiexu(2:end-1,2:end))/2).^2);          % xtal eddy noise flux magnitude
 xie = sqrt(((xiew (1:end-1,2:end-1)+xiew (2:end,2:end-1))/2).^2 ...
-         + ((xieu (2:end-1,1:end-1)+xieu (2:end-1,2:end))/2).^2);          % noise flux magnitude
+         + ((xieu (2:end-1,1:end-1)+xieu (2:end-1,2:end))/2).^2);          % eddy noise flux magnitude
 xix = xis + xiex;
 
 % update diffusion parameters
-ke   = fReD*eII.*elle.^2;                                                  % turbulent eddy diffusivity
+ke   = eII.*elle.^2;                                                       % turbulent eddy diffusivity
+ks   = vx .*ells;                                                           % segregation diffusivity
+kx   = (ks + fReL*ke);                                                     % regularised particle diffusivity 
 
-etae = ke.*rho;                                                            % eddy viscosity
+% update viscosities
+etae = fReL*ke.*rho;                                                       % eddy viscosity
 eta  = (eta + etamix + etae)/2;                                            % effective viscosity
-etacnv = eta;
 
-ks   = vx.*ells;                                                           % segregation diffusivity
-kx   = (ks + ke);                                                          % regularised particle diffusivity 
-
-etat = fRed.*ks.*rho;                                                      % turbulent drag viscosity
+etat = fRel.*ks.*rho;                                                      % turbulent drag viscosity
 etas = (etas + etax + etat)/2;                                             % effective drag viscosity   
 
-% limit total contrast in Cx
+% limit total viscosity contrast
+etamax = geomean(eta(:)).*(etacntr/2);
+etamin = geomean(eta(:))./(etacntr/2);
+eta    = 1./(1./etamax + 1./eta) + etamin;
+
 etamax = geomean(etas(:)).*(etacntr/2);
 etamin = geomean(etas(:))./(etacntr/2);
 etas   = 1./(1./etamax + 1./etas) + etamin;
 
 % interpolate to staggered nodes
-etasw = (etas(icz(1:end-1),:).*etas(icz(2:end),:)).^0.5;
-
-% limit total contrast in eta
-etamax = geomean(eta(:)).*(etacntr/2);
-etamin = geomean(eta(:))./(etacntr/2);
-eta    = 1./(1./etamax + 1./eta) + etamin;
-
-% interpolate to staggered nodes
 etaco  = (eta(icz(1:end-1),icx(1:end-1)).*eta(icz(2:end),icx(1:end-1)) ...
        .* eta(icz(1:end-1),icx(2:end  )).*eta(icz(2:end),icx(2:end  ))).^0.25;
+
+etasw = (etas(icz(1:end-1),:).*etas(icz(2:end),:)).^0.5;
 
 % update dimensionless numbers
 ReD = V .*D0./(eta ./rho);                                                 % Reynolds number on scaled domain length

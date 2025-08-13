@@ -20,12 +20,12 @@ h         =  D/N;                 % grid spacing (equal in both dimensions, do n
 L         =  D*1.5;               % chamber width (equal to h for 1-D mode) [m]
 
 % set model timing parameters
-t0end     =  2;                   % stop when dimensionless time is reached
+t0end     =  1.5;                 % stop when dimensionless time is reached
 
 % set physical parameters
 xeq       =  0.01;                % equilibrium crystallinity of boundary layer [wt]
 x0        =  xeq/10;              % initial background crystallinity [wt]
-dx0       =  x0/5;                % background crystallinity perturbation [wt]
+dx0       =  x0/10;               % background crystallinity perturbation [wt]
 xb        =  xeq;                 % initial boundary layer crystallinity [wt]
 
 d0        =  1e-2;                % xtal size constant [m]
@@ -38,7 +38,7 @@ open_sgr  =  1;                   % switch for open bottom boundary for crystal 
 % set numerical model parameters
 CFL       =  0.50;                % (physical) time stepping courant number (multiplies stable step) [0,1]
 rtol      =  1e-5;                % outer its relative tolerance
-atol      =  1e-9;                % outer its absolute tolerance
+atol      =  1e-8;                % outer its absolute tolerance
 maxit     =  15;                  % maximum outer its
 alpha     =  0.9;                 % iterative step size parameter
 elle      =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)

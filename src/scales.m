@@ -1,5 +1,5 @@
 % calculate and print characteristic scales
-D0      =  D/25;
+D0      =  D/20;
 d0      =  d0;
 L0      =  elle;
 l0      =  ells;
@@ -14,38 +14,39 @@ eta0    =  etam0;
 W0      =  Dchi0*Drho0*g0*D0^2/eta0;
 w0      =        Drho0*g0*d0^2/eta0;
 
-ReD0    =  W0*L0/(eta0/rho0);
-Red0    =  w0*l0/(eta0/rho0);
+ReL0    =  W0*L0/(eta0/rho0);
+Rel0    =  w0*l0/(eta0/rho0);
 
-fRed    =  1-exp(-Red0);
-fReD    =  1-exp(-ReD0);
+fReL    =  1-exp(-ReL0);
+fRel    =  1-exp(-Rel0);
 
-if fReD>1e-4; W0  =  D0/(2*fReD*L0^2*rho0) * (sqrt(4*Dchi0*Drho0*g0*rho0*fReD*L0^2*D0 + eta0^2) - eta0); end
-if fRed>1e-4; w0  =  1 /(2*fRed*l0  *rho0) * (sqrt(4*      Drho0*g0*rho0*fRed*l0*d0^2 + eta0^2) - eta0); end
+if fReL>1e-4; W0  =  D0/(2*fReL*L0^2*rho0) * (sqrt(4*Dchi0*Drho0*g0*rho0*fReL*L0^2*D0 + eta0^2) - eta0); end
+if fRel>1e-4; w0  =  1 /(2*fRel*l0  *rho0) * (sqrt(4*      Drho0*g0*rho0*fRel*l0*d0^2 + eta0^2) - eta0); end
 
-ke0     =  fReD*W0/(5*D0)*L0^2;
+eII0    =  W0/D0;
+ke0     =  eII0*L0^2;
 ks0     =  w0*l0;
-kx0     =  ks0 + ke0;
+kx0     =  ks0 + fReL*ke0;
 
 tW0     =  D/W0;
 tw0     =  D/w0;
 tk0     =  D^2/kx0;
 tin0    =  W0/(Dchi0*Drho0/rho0*g0);
 t0      =  tin0 + min([tW0, tw0, tk0]);
-dt0     =  min([(h0/2)^2/(ks0+ke0) , (h0/2)/(W0+w0)]);
+dt0     =  min([(h0/2)^2/kx0 , (h0/2)/(W0+w0)]);
 
-xie0    =  Xi*sqrt(     ke0/(L0/2/W0)*(L0./(L0+h0))^3);
-xiex0   =  Xi*sqrt(chi0*ke0/(L0/2/W0)*(L0./(L0+h0))^3);
-xis0    =  Xi*sqrt(chi0*ks0/(l0/2/w0)*(l0./(l0+h0))^3);
+xie0    =  Xi*sqrt(     fReL*ke0/(L0/2/W0)*(L0./(L0+h0))^3);
+xiex0   =  Xi*sqrt(chi0*fReL*ke0/(L0/2/W0)*(L0./(L0+h0))^3);
+xis0    =  Xi*sqrt(chi0*     ks0/(l0/2/w0)*(l0./(l0+h0))^3);
 xix0    =  xis0 + xiex0;
 
 tau0    =  h0./(W0 + w0) + dt0;
 G0      =  R*Dchi0*rho0/tau0;
 
-etae0   =       ke0*rho0;
-etas0   =  fRed*ks0*rho0;
+etae0   =  fReL*ke0*rho0;
+etas0   =  fRel*ks0*rho0;
 
-p0      =  (eta0+etae0)*W0/(5*D0);
+p0      =  (eta0+etae0)*eII0;
 
 Da0     =  G0/(rho0/t0);
 Ne0     =  xie0/W0;
@@ -111,7 +112,7 @@ if ndm_op
     essc  = etas0;
     rsc   = rho0;  run   = '1';
     MFSsc = rho0/t0; MFSun = '1';
-    xsc   = Dchi0;  xun = '1';
+    xsc   = chi0;  xun = '1';
     Gsc   = rho0/t0;  Gun = '1';
     ssc   = D0;  sun = '1';
     Rasc  = Ra0;
@@ -122,7 +123,7 @@ else
     kssc = 1;  kun = 'm$^2$/s';
     kesc = 1;  
     kxsc = 1;  
-    esc   = 1;  eun   = 'Pas';
+    esc   = 0;  eun   = 'Pas';
     eesc  = 1;
     essc  = 1;
     rsc   = 1;  run   = 'kg/m$^3$';
