@@ -252,6 +252,7 @@ for eta0=10.^linspace(-1,5,4)
     subplot(2,2,4)
     p15 = loglog(D0(1,:),Ra0(indd,:),'--','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*prp); axis tight; box on; hold on
     p16 = loglog(D0(1,:),ReD0(indd,:),'--','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*grn);
+    p17 = loglog(D0(1,:),Rc0(indd,:),'--','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*red); axis tight; box on; hold on
 
     set(0,'CurrentFigure',fig2)
     subplot(2,3,1)
@@ -296,10 +297,11 @@ for eta0=10.^linspace(-1,5,4)
     p32 = loglog(D0(1,:),W0(indd,:),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
     subplot(2,2,3)
     p33 = loglog(d0(:,1),Rc0(:,indD),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*red); axis tight; box on; hold on
-    pindD = loglog(d0(:,1),Red0(:,indD),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blu);
+    p34 = loglog(d0(:,1),Red0(:,indD),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blu);
     subplot(2,2,4)
     p35 = loglog(D0(1,:),Ra0(indd,:),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*prp); axis tight; box on; hold on
     p36 = loglog(D0(1,:),ReD0(indd,:),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*grn);
+    p37 = loglog(D0(1,:),Rc0(indd,:),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*red); axis tight; box on; hold on
 
     set(0,'CurrentFigure',fig2)
     subplot(2,3,1)
@@ -307,13 +309,13 @@ for eta0=10.^linspace(-1,5,4)
     subplot(2,3,2)
     p42 = loglog(D0(1,:),ke0(indd,:),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
     subplot(2,3,3)
-    p42 = loglog(d0(:,1),kx0(:,indD),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
+    p43 = loglog(d0(:,1),kx0(:,indD),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
     subplot(2,3,4)
-    p43 = loglog(d0(:,1),xis0(:,indD),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
+    p44 = loglog(d0(:,1),xis0(:,indD),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
     subplot(2,3,5)
-    p44 = loglog(D0(1,:),xie0(indd,:),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
+    p45 = loglog(D0(1,:),xie0(indd,:),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
     subplot(2,3,6)
-    p44 = loglog(d0(:,1),xix0(:,indD),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
+    p46 = loglog(d0(:,1),xix0(:,indD),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
 
     % General case
 
@@ -344,28 +346,29 @@ for eta0=10.^linspace(-1,5,4)
     subplot(2,2,1)
     p51 = loglog(d0(:,1),double(w0(:,indD)),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
     subplot(2,2,2)
-    p(etait) = loglog(D0(1,:),double(W0(indd,:)),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
+    p1(etait) = loglog(D0(1,:),double(W0(indd,:)),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
     subplot(2,2,3)
     p53 = loglog(d0(:,1),double(Rc0(:,indD)),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*red); axis tight; box on; hold on
     p54 = loglog(d0(:,1),double(Red0(:,indD)),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blu);
     subplot(2,2,4)
     p55 = loglog(D0(1,:),double(Ra0(indd,:)),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*prp); axis tight; box on; hold on
     p56 = loglog(D0(1,:),double(ReD0(indd,:)),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*grn);
+    p57 = loglog(D0(1,:),double(Rc0(indd,:)),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*red); axis tight; box on; hold on
     drawnow;
 
     set(0,'CurrentFigure',fig2)
     subplot(2,3,1)
-    p41 = loglog(d0(:,1),ks0(:,indD),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
+    p61 = loglog(d0(:,1),ks0(:,indD),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
     subplot(2,3,2)
-    p42 = loglog(D0(1,:),ke0(indd,:),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
+    p2(etait) = loglog(D0(1,:),ke0(indd,:),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
     subplot(2,3,3)
-    p42 = loglog(d0(:,1),kx0(:,indD),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
+    p63 = loglog(d0(:,1),kx0(:,indD),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
     subplot(2,3,4)
-    p43 = loglog(d0(:,1),xis0(:,indD),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
+    p64 = loglog(d0(:,1),xis0(:,indD),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
     subplot(2,3,5)
-    p44 = loglog(D0(1,:),xie0(indd,:),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
+    p65 = loglog(D0(1,:),xie0(indd,:),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
     subplot(2,3,6)
-    p44 = loglog(d0(:,1),xix0(:,indD),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
+    p66 = loglog(d0(:,1),xix0(:,indD),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
 
 
     if eta0==etaref
@@ -464,7 +467,7 @@ set(gca,'TickLabelInterpreter','latex','FontSize',11)
 % xlabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
 ylabel('Settling speed $w_0$ [m/s]','Interpreter','latex','FontSize',13);
 text(0.02,0.91,'\textbf{(a)}','Interpreter','latex','FontSize',13,'Units','normalized')
-legend([p11,p21,p31],{'laminar','turbulent','general'},'Interpreter','latex','FontSize',11,'Location','southeast');
+legend([p11,p31,p51],{'laminar','turbulent','general'},'Interpreter','latex','FontSize',11,'Location','southeast');
 
 subplot(2,2,2)
 line([1e1,1e1],[1e-6,1e4],'Color','k','LineStyle',':','LineWidth',1);
@@ -473,7 +476,7 @@ set(gca,'TickLabelInterpreter','latex','FontSize',11)
 % xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
 ylabel('Convective speed $W_0$ [m/s]','Interpreter','latex','FontSize',13);
 text(0.02,0.91,'\textbf{(b)}','Interpreter','latex','FontSize',13,'Units','normalized')
-legend([p(1),p(2),p(3),p(4)],{'$\eta_0=10^{-1}$','$\eta_0=10^{1}$','$\eta_0=10^{3}$','$\eta_0=10^{5}$'},'Interpreter','latex','FontSize',11,'Location','southeast');
+legend([p1(1),p1(2),p1(3),p1(4)],{'$\eta_0=10^{-1}$ Pas','$\eta_0=10^{1}$ Pas','$\eta_0=10^{3}$ Pas','$\eta_0=10^{5}$ Pas'},'Interpreter','latex','FontSize',11,'Location','southeast');
 
 subplot(2,2,3)
 line([1e-2,1e-2],[1e-9,1e6],'Color','k','LineStyle',':','LineWidth',1);
@@ -485,8 +488,8 @@ text(0.02,0.91,'\textbf{(c)}','Interpreter','latex','FontSize',13,'Units','norma
 legend([p53,p54],{'Rc','Re$_d$'},'Interpreter','latex','FontSize',11,'Location','southeast');
 
 subplot(2,2,4)
-line([1e1,1e1],[1e-4,1e6],'Color','k','LineStyle',':','LineWidth',1);
-xlim([1e0,1e6]); ylim([1e-4,1e6]); yticks([1e-4 1e-2 1e0 1e2 1e4 1e6])
+line([1e1,1e1],[1e-2,1e8],'Color','k','LineStyle',':','LineWidth',1);
+xlim([1e0,1e6]); ylim([1e-2,1e8]); yticks([1e-4 1e-2 1e0 1e2 1e4 1e6 1e8])
 set(gca,'TickLabelInterpreter','latex','FontSize',11)
 xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
 ylabel('Dimensionless numbers [1]','Interpreter','latex','FontSize',13);
@@ -495,43 +498,57 @@ legend([p55,p56],{'Ra','Re$_D$'},'Interpreter','latex','FontSize',11,'Location',
 
 
 figure(2)
-subplot(2,2,1)
+subplot(2,3,1)
 line([1e-2,1e-2],[1e-10,1e2],'Color','k','LineStyle',':','LineWidth',1);
-xlim([1e-3,1e-1]); ylim([1e-10,1e2]); yticks([1e-10 1e-8 1e-6 1e-4 1e-2 1e0 1e2])
+xlim([1e-4,1e-1]); ylim([1e-10,1e2]); yticks([1e-10 1e-8 1e-6 1e-4 1e-2 1e0 1e2])
 set(gca,'TickLabelInterpreter','latex','FontSize',11)
 % xlabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
-ylabel('Particle diffusivity $\kappa_0$ [m/s]','Interpreter','latex','FontSize',13);
+ylabel('Settling diff. $\kappa_{s,0}$ [m$^2$/s]','Interpreter','latex','FontSize',13);
 text(0.02,0.91,'\textbf{(a)}','Interpreter','latex','FontSize',13,'Units','normalized')
-legend([p21,p31,p51],{'laminar','turbulent','general'},'Interpreter','latex','FontSize',11,'Location','southeast');
+legend([p21,p41,p61],{'laminar','turbulent','general'},'Interpreter','latex','FontSize',11,'Location','southeast');
 
-subplot(2,2,2)
+subplot(2,3,2)
 line([1e1,1e1],[1e-8,1e4],'Color','k','LineStyle',':','LineWidth',1);
 xlim([1e0,1e6]); ylim([1e-8,1e4]); yticks([1e-8 1e-6 1e-4 1e-2 1e0 1e2 1e4])
 set(gca,'TickLabelInterpreter','latex','FontSize',11)
 % xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
-ylabel('Eddy diffusivity $\kappa_e$ [m/s]','Interpreter','latex','FontSize',13);
+ylabel('Eddy diff. $\kappa_{e,0}$ [m$^2$/s]','Interpreter','latex','FontSize',13);
 text(0.02,0.91,'\textbf{(b)}','Interpreter','latex','FontSize',13,'Units','normalized')
-legend([p(1),p(2),p(3),p(4)],{'$\eta_0=10^{-1}$','$\eta_0=10^{1}$','$\eta_0=10^{3}$','$\eta_0=10^{5}$'},'Interpreter','latex','FontSize',11,'Location','southeast');
+legend([p2(1),p2(2),p2(3),p2(4)],{'$\eta_0=10^{-1}$ Pas','$\eta_0=10^{1}$ Pas','$\eta_0=10^{3}$ Pas','$\eta_0=10^{5}$ Pas'},'Interpreter','latex','FontSize',11,'Location','southeast');
 
-subplot(2,2,3)
-line([1e-2,1e-2],[1e-12,1e-2],'Color','k','LineStyle',':','LineWidth',1);
-xlim([1e-3,1e-1]); ylim([1e-8,1e4]); yticks([1e-12 1e-10 1e-8,1e-6,1e-4,1e-2]);
+subplot(2,3,3)
+line([1e-2,1e-2],[1e-10,1e2],'Color','k','LineStyle',':','LineWidth',1);
+xlim([1e-4,1e-1]); ylim([1e-10,1e2]); yticks([1e-12 1e-10 1e-8,1e-6,1e-4,1e-2,1e0,1e2]);
 set(gca,'TickLabelInterpreter','latex','FontSize',11)
-xlabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
-ylabel('Particle noise [m/s]','Interpreter','latex','FontSize',13);
+ylabel('Particle diff. $\kappa_{x,0}$ [m$^2$/s]','Interpreter','latex','FontSize',13);
 text(0.02,0.91,'\textbf{(c)}','Interpreter','latex','FontSize',13,'Units','normalized')
-% legend([p43,p44],{'Rc','Re$_d$'},'Interpreter','latex','FontSize',11,'Location','southeast');
 
-subplot(2,2,4)
+subplot(2,3,4)
+line([1e-2,1e-2],[1e-10,1e2],'Color','k','LineStyle',':','LineWidth',1);
+xlim([1e-4,1e-1]); ylim([1e-10,1e2]); yticks([1e-10 1e-8 1e-6 1e-4 1e-2 1e0 1e2])
+set(gca,'TickLabelInterpreter','latex','FontSize',11)
+% xlabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
+ylabel('Settling noise. $\xi_{s,0}$ [m$^2$/s]','Interpreter','latex','FontSize',13);
+text(0.02,0.91,'\textbf{(d)}','Interpreter','latex','FontSize',13,'Units','normalized')
+
+subplot(2,3,5)
 line([1e1,1e1],[1e-10,1e2],'Color','k','LineStyle',':','LineWidth',1);
 xlim([1e0,1e6]); ylim([1e-10,1e2]); yticks([1e-10 1e-8 1e-6 1e-4 1e-2 1e0 1e2])
 set(gca,'TickLabelInterpreter','latex','FontSize',11)
-xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
-ylabel('Eddy noise [1]','Interpreter','latex','FontSize',13);
-text(0.02,0.91,'\textbf{(d)}','Interpreter','latex','FontSize',13,'Units','normalized')
-% legend([p65,p66],{'Ra','Re$_D$'},'Interpreter','latex','FontSize',11,'Location','southeast');
+xlabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
+ylabel('Eddy noise $\xi_{e,0}$ [m/s]','Interpreter','latex','FontSize',13);
+text(0.02,0.91,'\textbf{(e)}','Interpreter','latex','FontSize',13,'Units','normalized')
 
-name = './scaling_line';
+subplot(2,3,6)
+line([1e-2,1e-2],[1e-10,1e2],'Color','k','LineStyle',':','LineWidth',1);
+xlim([1e-4,1e-1]); ylim([1e-10,1e2]); yticks([1e-12 1e-10 1e-8,1e-6,1e-4,1e-2,1e0,1e2]);
+set(gca,'TickLabelInterpreter','latex','FontSize',11)
+ylabel('Particle noise $\xi_{x,0}$ [m/s]','Interpreter','latex','FontSize',13);
+text(0.02,0.91,'\textbf{(f)}','Interpreter','latex','FontSize',13,'Units','normalized')
+
+name = './scaling_lines1';
 print(fig1,name,'-dpng','-r300','-image');
-name = './scaling_maps';
+name = './scaling_lines2';
 print(fig2,name,'-dpng','-r300','-image');
+name = './scaling_maps';
+print(fig3,name,'-dpng','-r300','-image');
