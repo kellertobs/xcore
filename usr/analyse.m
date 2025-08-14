@@ -181,7 +181,7 @@ fprintf(1,'       Red0  = %s \n\n',simplify(Red0));
 clear; close all;
 
 fig1 = figure(1); clf; set(gcf,'Units','centimeters','Position',[10,10,20,15]);
-fig2 = figure(2); clf; set(gcf,'Units','centimeters','Position',[12,12,30,15]);
+fig2 = figure(2); clf; set(gcf,'Units','centimeters','Position',[12,12,28,15]);
 fig3 = figure(3); clf; set(gcf,'Units','centimeters','Position',[14,14,20,15]);
 load ../src/colmap/lapaz.mat
 
@@ -527,7 +527,7 @@ subplot(2,3,4)
 line([1e-2,1e-2],[1e-10,1e2],'Color','k','LineStyle',':','LineWidth',1);
 xlim([1e-4,1e-1]); ylim([1e-10,1e2]); yticks([1e-10 1e-8 1e-6 1e-4 1e-2 1e0 1e2])
 set(gca,'TickLabelInterpreter','latex','FontSize',11)
-% xlabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
+xlabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
 ylabel('Settling noise. $\xi_{s,0}$ [m$^2$/s]','Interpreter','latex','FontSize',13);
 text(0.02,0.91,'\textbf{(d)}','Interpreter','latex','FontSize',13,'Units','normalized')
 
@@ -535,7 +535,7 @@ subplot(2,3,5)
 line([1e1,1e1],[1e-10,1e2],'Color','k','LineStyle',':','LineWidth',1);
 xlim([1e0,1e6]); ylim([1e-10,1e2]); yticks([1e-10 1e-8 1e-6 1e-4 1e-2 1e0 1e2])
 set(gca,'TickLabelInterpreter','latex','FontSize',11)
-xlabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
+xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
 ylabel('Eddy noise $\xi_{e,0}$ [m/s]','Interpreter','latex','FontSize',13);
 text(0.02,0.91,'\textbf{(e)}','Interpreter','latex','FontSize',13,'Units','normalized')
 
@@ -543,6 +543,7 @@ subplot(2,3,6)
 line([1e-2,1e-2],[1e-10,1e2],'Color','k','LineStyle',':','LineWidth',1);
 xlim([1e-4,1e-1]); ylim([1e-10,1e2]); yticks([1e-12 1e-10 1e-8,1e-6,1e-4,1e-2,1e0,1e2]);
 set(gca,'TickLabelInterpreter','latex','FontSize',11)
+xlabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
 ylabel('Particle noise $\xi_{x,0}$ [m/s]','Interpreter','latex','FontSize',13);
 text(0.02,0.91,'\textbf{(f)}','Interpreter','latex','FontSize',13,'Units','normalized')
 
