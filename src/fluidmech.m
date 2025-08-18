@@ -1,5 +1,6 @@
 %*****  FLUID MECHANICS SOLVER  *******************************************
 
+tic;
 
 %% update mass flux divergence source term
 
@@ -50,7 +51,7 @@ IIR = [IIR; ii(:)]; AAR = [AAR; aa(:)];
 ii  = MapW(1,2:end-1); jj = ii;
 aa  = zeros(size(ii));
 IIL = [IIL; ii(:)]; JJL = [JJL; jj(:)];   AAL = [AAL; aa(:)+1];
-aa  = zeros(size(ii)) + WBG(1,2:end-1);
+aa  = zeros(size(ii));
 IIR = [IIR; ii(:)]; AAR = [AAR; aa(:)];
 
 % bottom boundary
@@ -60,10 +61,10 @@ rho2 = rhow(end-1,:    );
 rho3 = rhou(end,2:end  );
 rho4 = rhou(end,1:end-1);
 IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL;+     rho1(:)/h];
-IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL;-open*rho2(:)/h];
-IIL = [IIL; ii(:)]; JJL = [JJL; jj3(:)];   AAL = [AAL;+open*rho3(:)/h];
-IIL = [IIL; ii(:)]; JJL = [JJL; jj4(:)];   AAL = [AAL;-open*rho4(:)/h];
-aa  = open.*MFS(end,:) + closed.*MFBG(end,2:end-1)/h;
+IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL;-open_cnv*rho2(:)/h];
+IIL = [IIL; ii(:)]; JJL = [JJL; jj3(:)];   AAL = [AAL;+open_cnv*rho3(:)/h];
+IIL = [IIL; ii(:)]; JJL = [JJL; jj4(:)];   AAL = [AAL;-open_cnv*rho4(:)/h];
+aa  = open_cnv.*MFS(end,:) + (1-open_cnv).*MFBG(end,2:end-1)/h;
 IIR = [IIR; ii(:)]; AAR = [AAR; aa(:)];
 
 % internal points
@@ -115,14 +116,14 @@ IIR = [IIR; ii(:)];  AAR = [AAR; rr(:)];
 ii  = MapU(1,:); jj1 = ii; jj2 = MapU(2,:);
 aa  = zeros(size(ii));
 IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL; aa(:)+1];
-IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL; aa(:)+top];
+IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL; aa(:)+top_cnv];
 IIR = [IIR; ii(:)]; AAR = [AAR; aa(:)];
 
 % bottom boundary
 ii  = MapU(end,:); jj1 = ii; jj2 = MapU(end-1,:);
 aa  = zeros(size(ii));
 IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL; aa(:)+1];
-IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL; aa(:)+bot];
+IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL; aa(:)+bot_cnv];
 IIR = [IIR; ii(:)]; AAR = [AAR; aa(:)];
 
 % internal points
@@ -250,7 +251,7 @@ if ~exist('KP','var') || bnchm
     
     ii  = [MapP(2:end-1,1    ); MapP(2:end-1,end)]; % left & right
     jj1 = ii;
-    jj2 = [MapP(2:end-1,end-1); MapP(2:end-1,2    )];
+    jj2 = [MapP(2:end-1,end-1); MapP(2:end-1,2  )];
     
     aa  = zeros(size(ii));
     IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL; aa(:)+1];
@@ -295,7 +296,7 @@ if bnchm
     RV(nu0    ) = U_mms(nzu,nxu);
 else
     % set P = 0 in fixed point
-    if open
+    if open_cnv
         nzp = Nz+1;
         nxp = 1:Nx+2;
     else
@@ -325,7 +326,7 @@ LL  = SCL*LL*SCL;
 
 %% Solve linear system of equations for vx, vz, P
 
-if ~exist('pcol','var'); pcol = colamd(LL); end % get column permutation for sparsity pattern once per run
+if ~exist('pcol','var') || bnchm; pcol = colamd(LL); end % get column permutation for sparsity pattern once per run
 dLL         = decomposition(LL(:,pcol), 'lu');  % get LU-decomposition for consistent performance of LL \ RR
 UPD(pcol,1) = dLL \ FF;                         % solve permuted decomposed system
 UPD         = SCL*UPD;
@@ -334,7 +335,6 @@ UPD         = SCL*UPD;
 upd_W = -full(reshape(UPD(MapW(:))        ,Nz+1,Nx+2));  % matrix z-velocity
 upd_U = -full(reshape(UPD(MapU(:))        ,Nz+2,Nx+1));  % matrix x-velocity
 upd_P = -full(reshape(UPD(MapP(:)+(NW+NU)),Nz+2,Nx+2));  % matrix dynamic pressure
-upd_P = upd_P - mean(mean(upd_P(2:end-1,2:end-1)));           % reduce pressure by mean
 
 % update solution
 W = W + upd_W;
@@ -350,7 +350,7 @@ if ~bnchm && step>=1
     wx(:,2:end-1) = d0^2./etasw.*Drhox.*g0;
 
     % taper towards boundaries if closed segregation top/bot boundaries
-    bndtaperw = (1 - (exp((-ZZw)/max(h,ells/2)) - exp(-(D-ZZw)/max(h,ells/2))).*(1-open_sgr));
+    bndtaperw = (1 - (exp((-ZZw)/l0) + exp(-(D-ZZw)/l0)).*(1-open_sgr));
     wx = wx.*bndtaperw;
 
     % periodic side boundaries

@@ -54,7 +54,6 @@ lncls = colmap([5,135],:);
 
 BCA     =  {'closed','periodic'};  % boundary condition on advection (top/bot, sides)
 BCD     =  {'closed','periodic'};  % boundary condition on advection (top/bot, sides)
-open    =  1-closed;
 
 % get coordinate arrays
 Xc        = -h/2:h:L+h/2;
@@ -101,12 +100,12 @@ kp2 = kpx.^2 + kpz.^2;
 kc2 = kcx.^2 + kcz.^2;
 
 % Gaussian spatial filter in Fourier space
-Gkwe = exp(-0.5 * ((elle/2+h)^2) * kw2);
-Gkue = exp(-0.5 * ((elle/2+h)^2) * ku2);
-Gkws = exp(-0.5 * ((ells/2+h)^2) * kw2);
-Gkus = exp(-0.5 * ((ells/2+h)^2) * ku2);
-Gkps = exp(-0.5 * ((elle  +h)^2) * kc2);
-Gkrp = exp(-0.5 * ((elle/2+ells/2+h)^2) * kp2);
+Gkwe = exp(-0.5 * ((L0/2+h)^2) * kw2);
+Gkue = exp(-0.5 * ((L0/2+h)^2) * ku2);
+Gkws = exp(-0.5 * ((l0/2+h)^2) * kw2);
+Gkus = exp(-0.5 * ((l0/2+h)^2) * ku2);
+Gkps = exp(-0.5 * ((L0  +h)^2) * kc2);
+Gkrp = exp(-0.5 * ((L0/2+l0/2+h)^2) * kp2);
 
 % Generate new white noise
 rp  = randn(Nz  , Nx  );
@@ -135,16 +134,15 @@ MapW = reshape(1:NW,Nz+1,Nx+2);
 MapU = reshape(1:NU,Nz+2,Nx+1) + NW;
 
 % set up shape functions for transient boundary layers
-bnd_w     =  max(ells,2*h);         % width of boundary layer [m]
-initshape = exp((-ZZ+h/2)/bnd_w);%1./(1+exp((ZZ-1.5*bnd_w-h/2)/bnd_w*6));
+bnd_w     =  max(l0,2*h);         % width of boundary layer [m]
+initshape = exp((-ZZ+h/2)/bnd_w);
 bndshape  = exp((-ZZ+h/2)/h);
 
 % set specified boundaries to no slip, else to free slip
-sds = -1;
-top =  1;
-bot = -1;
-if closed; bot = 1; bot_sgr = 1; end
-if open_sgr; bot_sgr = -1; end
+sds        = -1;
+top_cnv    =  1;
+bot_cnv    =  1;
+if open_cnv; bot_cnv = -1; end
 
 % set ghosted index arrays
 icx = [Nx,1:Nx,1];
@@ -153,8 +151,9 @@ ifx = [Nx,1:Nx+1,2];
 ifz = [2,1:Nz+1,Nz];
 
 % initialise crystallinity field
-xin  = initshape.*xeq + (1-initshape).*x0;
-x   =  xin .* (1+1/10.*rp);
+gp  =  exp(-((XX-L/2)./(L/6)).^2) .* exp(-((ZZ-D/2)./(D/6)).^2);
+xin =  initshape.*xeq + (1-initshape).*x0;
+x   =  xin .* (1+rp./10+dxg.*gp);
 m   =  1-x;
 
 U   =  zeros(Nz+2,Nx+1);  UBG = U; upd_U = 0*U; 
@@ -220,7 +219,6 @@ tau_p   = 1;
 relax   = 0;
 
 % initialise timing and iterative parameters
-frst    = 1;
 step    = 0;
 time    = 0;
 iter    = 0;

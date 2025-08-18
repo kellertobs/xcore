@@ -1,8 +1,8 @@
 % calculate and print characteristic scales
 D0      =  D/20;
 d0      =  d0;
-L0      =  elle;
-l0      =  ells;
+L0      =  L0;
+l0      =  l0;
 h0      =  h;
 
 rho0    =  rhom0;
@@ -110,7 +110,7 @@ if ndm_op
     esc   = eta0;  eun   = '1';
     eesc  = etae0; 
     essc  = etas0;
-    rsc   = rho0;  run   = '1';
+    rsc   = rho0;  dun   = '1';
     MFSsc = rho0/t0; MFSun = '1';
     xsc   = chi0;  xun = '1';
     Gsc   = rho0/t0;  Gun = '1';
@@ -126,7 +126,7 @@ else
     esc   = 0;  eun   = 'Pas';
     eesc  = 1;
     essc  = 1;
-    rsc   = 1;  run   = 'kg/m$^3$';
+    rsc   = 1;  dun   = 'kg/m$^3$';
     MFSsc = 1; MFSun = 'kg/m$^3$/s';
     xsc   = 1/100;  xun = 'wt \%';
     Gsc   = 1;  Gun = 'kg/m$^3$/s';

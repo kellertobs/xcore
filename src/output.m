@@ -99,7 +99,7 @@ imagesc(Xsc,Zsc, P(2:end-1,2:end-1)/psc); axis ij equal tight; box on; cb = colo
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$P$ [',pun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 set(fh1,'CurrentAxes',ax(14));
 imagesc(Xsc,Zsc,rho/rsc); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\bar{\rho}$ [',run,']'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:}); xlabel(['Width [',sun,']'],TX{:},FS{:});
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\bar{\rho}$ [',dun,']'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:}); xlabel(['Width [',sun,']'],TX{:},FS{:});
 set(fh1,'CurrentAxes',ax(15));
 imagesc(Xsc,Zsc,log10(eta/(esc+eesc))); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\eta$ [',eun,']'],TX{:},FS{:}); xlabel(['Width [',sun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]);
@@ -110,7 +110,7 @@ set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\nabla \cdot \bar{\rho} \mat
 % plot density, rheology, and segregation speeds in Fig. 2
 set(0,'CurrentFigure',fh2)
 set(fh2,'CurrentAxes',ax(21));
-imagesc(Xsc,Zsc,min(2*xeq,x)/xsc); axis ij equal tight; box on; cb = colorbar;
+imagesc(Xsc,Zsc,x/xsc); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$x$ [',xun,']'],TX{:},FS{:});  ylabel(['Depth [',sun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[]);
 set(fh2,'CurrentAxes',ax(22));
 imagesc(Xsc,Zsc,Gx./Gsc); axis ij equal tight; box on; cb = colorbar;

@@ -5,28 +5,32 @@ clear; close all;
 run('../usr/par_default')
 
 % test decreasing time step
-ATOL = [1e-6,1e-9,1e-12];
+ATOL = [1e-1,1e-2,1e-3];
 
 for atol = ATOL
 
     % set run parameters
     runID    =  'bnchm_cnsv';        % run identifier
     restart  =  0;                   % restart from file (0: new run; <1: restart from last; >1: restart from specified frame)
-    nop      =  10;                  % output frame plotted/saved every 'nop' time steps
+    nop      =  5;                  % output frame plotted/saved every 'nop' time steps
     plot_op  =  1;                   % switch on to live plot of results
     plot_cv  =  1;                   % switch on to live plot iterative convergence
 
     % set model domain parameters
-    N        =  100;                 % number of grid points in z-direction (incl. 2 ghosts)
+    N        =  50;                 % number of grid points in z-direction (incl. 2 ghosts)
 
     % set model timing parameters
-    Nt       =  2*nop;               % number of time steps to take
-    dt       =  0.1;                 % set initial time step
+    Nt       =  2*nop;                % number of time steps to take
 
     % set initial crystallinity parameters
-    x0       =  0.01;                % background crystallinity initial value [wt]
-    dx0      =  0.00;                % background crystallinity random perturbation [wt]
-    dxg      =  0.10;                % background crystallinity gaussian perturbation [wt]
+    xeq       =  0.001;
+    x0        =  0.001;
+    dxg       =  10;                   % background crystallinity perturbation [wt]
+
+    L0        =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)
+    l0        =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
+    R         =  0;
+    Xi        =  0;
 
     % set numerical model parameters
     TINT      =  'bd2im';             % time integration scheme ('be1im','bd2im','cn2si','bd2si')
@@ -35,8 +39,7 @@ for atol = ATOL
     rtol      =  atol/1e6;            % outer its absolute tolerance
     maxit     =  100;                 % maximum outer its
     alpha     =  0.9;                 % iterative step size parameter
-    Delta_cnv =  h;                   % correlation length for eddy diffusivity (multiple of h, 0.5-1)
-    Delta_sgr =  d0*20;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
+
 
     % create output directory
     if ~isfolder([outdir,'/',runID])
@@ -47,9 +50,9 @@ for atol = ATOL
     run('../src/main')
 
     % plot convergence
-    EB = norm(diff(hist.EB(Nt/2:Nt  ))./diff(hist.time(Nt/2:Nt)),'fro')./sqrt(length(diff(hist.EB(Nt/2:Nt))         ));
-    EM = norm(diff(hist.EM(Nt/2:Nt  ))./diff(hist.time(Nt/2:Nt)),'fro')./sqrt(length(diff(hist.EM(Nt/2:Nt))         ));
-    EX = norm(diff(hist.EX(Nt/2:Nt  ))./diff(hist.time(Nt/2:Nt)),'fro')./sqrt(length(diff(hist.EX(Nt/2:Nt))         ));
+    EB = rms(diff(HST.EB(Nt/2:Nt))./diff(HST.time(Nt/2:Nt)));
+    EM = rms(diff(HST.EM(Nt/2:Nt))./diff(HST.time(Nt/2:Nt)));
+    EX = rms(diff(HST.EX(Nt/2:Nt))./diff(HST.time(Nt/2:Nt)));
 
     clist = [colororder;[0 0 0]];
 

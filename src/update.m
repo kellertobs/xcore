@@ -74,7 +74,8 @@ eII = (0.5.*(exx.^2 + ezz.^2 ...
 % update velocity magnitudes
 V   = sqrt(((W  (1:end-1,2:end-1)+W  (2:end,2:end-1))/2).^2 ...
          + ((U  (2:end-1,1:end-1)+U  (2:end-1,2:end))/2).^2);              % convection speed magnitude
-vx  = d0^2./etas.*(rhox0-rhom0).*g0;                                       % xtal segregation speed magnitude
+bndtapers = (1 - (exp((-ZZ)/l0) + exp(-(D-ZZ)/l0)).*(1-open_sgr));
+vx  = d0^2./etas.*(rhox0-rhom0).*g0.*bndtapers;                            % xtal segregation speed magnitude
 vm  = vx.*x./(1-x);                                                        % melt segregation speed magnitude
 xis = sqrt(((xisw (1:end-1,2:end-1)+xisw (2:end,2:end-1))/2).^2 ...
          + ((xisu (2:end-1,1:end-1)+xisu (2:end-1,2:end))/2).^2);          % settling noise flux magnitude 
@@ -85,8 +86,9 @@ xie = sqrt(((xiew (1:end-1,2:end-1)+xiew (2:end,2:end-1))/2).^2 ...
 xix = xis + xiex;
 
 % update diffusion parameters
-ke   = eII.*elle.^2;                                                       % turbulent eddy diffusivity
-ks   = vx .*ells;                                                           % segregation diffusivity
+bndtapere = (1 - (exp((-ZZ)/L0) + exp(-(D-ZZ)/L0).*(1-open_cnv)));
+ke   = eII.*L0.^2 .* bndtapere;                                            % turbulent eddy diffusivity
+ks   = vx .*l0;                                                            % segregation diffusivity
 kx   = (ks + fReL*ke);                                                     % regularised particle diffusivity 
 
 % update viscosities

@@ -44,8 +44,8 @@ if iter==1
 end
 
 % noise decorrelation time
-taue = elle/2./(V +eps);
-taus = ells/2./(vx+eps);
+taue = L0/2./(V +eps);
+taus = l0/2./(vx+eps);
 
 % temporal evolution factor
 Fe   = exp(-dt./taue);
@@ -58,12 +58,9 @@ Fsw = (Fs(icz(1:end-1),icx)+Fs(icz(2:end),icx))/2;
 Fsu = (Fs(icz,icx(1:end-1))+Fs(icz,icx(2:end)))/2;
 
 % random noise source amplitude
-bndtapere = (1 - exp((-ZZ+h/2)/max(h,elle/2)) - exp(-(D-ZZ-h/2)/max(h,elle/2)).*(1-open));
-bndtapers = (1 - exp((-ZZ+h/2)/max(h,ells/2)) - exp(-(D-ZZ-h/2)/max(h,ells/2)).*(1-open));
-
-sgs   = Xi * sqrt(chi.*      ks./taus .* (ells./(ells+h)).^3) .* bndtapers; % segregation noise speed
-sgex  = Xi * sqrt(chi.*fReL.*ke./taue .* (elle./(elle+h)).^3) .* bndtapere; % eddy crystal noise speed
-sge   = Xi * sqrt(     fReL.*ke./taue .* (elle./(elle+h)).^3) .* bndtapere; % eddy mixture noise speed
+sgs   = Xi * sqrt(chi.*      ks./taus .* (l0./(l0+h)).^3);  % segregation noise speed
+sgex  = Xi * sqrt(chi.*fReL.*ke./taue .* (L0./(L0+h)).^3);  % eddy crystal noise speed
+sge   = Xi * sqrt(     fReL.*ke./taue .* (L0./(L0+h)).^3);  % eddy mixture noise speed
 
 sgsw  = (sgs(icz(1:end-1),icx) + sgs(icz(2:end),icx))./2;
 sgsu  = (sgs(icz,icx(1:end-1)) + sgs(icz,icx(2:end)))./2;
@@ -82,8 +79,15 @@ xiexu =  Feu .* xiexuo + sqrt(1 - Feu.^2) .* sgexu .* rexu(icz,:);
 xiew  =  Few .* xiewo  + sqrt(1 - Few.^2) .* sgew  .* rew(:,icx);
 xieu  =  Feu .* xieuo  + sqrt(1 - Feu.^2) .* sgeu  .* reu(icz,:);
 
+% enforce closed boundary conditions
+if ~open_sgr; xisw ([1 end],:) = 0; end
+if ~open_cnv; xiew ([1 end],:) = 0; else; xiew (1,:) = 0; end
+if ~open_cnv; xiexw([1 end],:) = 0; else; xiexw(1,:) = 0; end
+
 % update phase noise speeds
 xiwx  = xisw + xiexw;
 xiux  = xisu + xiexu;
 xiwm  = -xw(:,icx)./mw (:,icx).*xiwx;
 xium  = -xu(icz,:)./muu(icz,:).*xiux;
+
+

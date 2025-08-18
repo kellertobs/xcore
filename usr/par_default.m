@@ -19,7 +19,7 @@ km        =  1000;                % conversion metre to kilometres
 
 % set model domain parameters
 D         =  10;                  % chamber depth [m]
-N         =  200;                 % number of grid points in z-direction
+N         =  100;                 % number of grid points in z-direction
 h         =  D/N;                 % grid spacing (equal in both dimensions, do not set) [m]
 L         =  D;                   % chamber width (equal to h for 1-D mode) [m]
 
@@ -32,8 +32,7 @@ tend      =  10*yr;               % end time for simulation [s]
 % set initial phase fraction parameters
 xeq       =  0.01;                % equilibrium crystallinity of boundary layer [wt]
 x0        =  xeq/10;              % initial background crystallinity [wt]
-dx0       =  x0/5;                % background crystallinity perturbation [wt]
-xb        =  xeq;                 % initial boundary layer crystallinity [wt]
+dxg       =  0;                   % initial gaussian perturbation [wt] (for benchmarking)
 seed      =  15;                  % random perturbation seed
 
 % set buoyancy parameters
@@ -54,11 +53,13 @@ BB        = [ 0.6870, 0.3130; ...    % permission step locations
 CC        = [[0.9826, 0.0174]*9.1697; ... % permission step widths
              [0.1695, 0.8305]*4.2773;];   % factor increases width of step functions
 
-% set boundary layer parameters
+% set physical control parameters
+L0        =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)
+l0        =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
 R         =  1.0;                 % relative amplitude of crystallisation rate [s]
 Xi        =  1.0;                 % relative amplitude of random noise flux
 Ptop      =  1e5;                 % top boundary pressure [Pa]
-closed_bot = 1;                   % switch for closed bottom boundary to form cumulate pile
+open_cnv  =  0;                   % switch for open bottom boundary for crystal-driven convection
 open_sgr  =  1;                   % switch for open bottom boundary for crystal segregation
 
 % set numerical model parameters
@@ -70,8 +71,6 @@ atol      =  1e-9;                % outer its absolute tolerance
 maxit     =  20;                  % maximum outer its
 alpha     =  0.75;                % iterative step size parameter
 gamma     =  0e-3;                % artificial horizontal inertia parameter (only applies if periodic)
-elle      =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)
-ells      =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
 kmin      =  1e-16;               % minimum diffusivity
 kmax      =  1e+16;               % maximum diffusivity
 dtmax     =  1e32;                % maximum time step [s]
