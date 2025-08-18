@@ -178,7 +178,7 @@ wmsc = wxsc;
 if p0 < 1e2
     psc = 1;
     pun = 'Pa';
-elseif p0 >= 1e3 && max(abs(P(:))) < 1e6
+elseif p0 >= 1e3 && p0 < 1e6
     psc = 1e3;
     pun = 'kPa';
 elseif p0 >= 1e6 && p0 < 1e9
