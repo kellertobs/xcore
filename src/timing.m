@@ -1,8 +1,9 @@
 fprintf(1,'*****  step %d;  dt = %4.4e;  time = %4.4e [%s]\n\n',step,dt./tsc,time./tsc,tun);
+
 TTtime  = tic;
 EQtime  = 0;
 FMtime  = 0;
-TCtime  = 0;
+XEtime  = 0;
 UDtime  = 0;
 
 if strcmp(TINT(end-1:end),'im')            % implicit schemes

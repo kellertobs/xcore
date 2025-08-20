@@ -1,33 +1,42 @@
-% calculate and print characteristic scales
+%*****  calculate and print characteristic scales  ************************
+
+% length scales
 D0      =  D/20;
 d0      =  d0;
-L0      =  L0;
-l0      =  l0;
+L0      =  L0;  L0h = (L0+h)/2;
+l0      =  l0;  l0h = (l0+h)/2;
 h0      =  h;
 
+% material parameter scales
 rho0    =  rhom0;
 Drho0   =  rhox0-rhom0;
 Dchi0   =  xeq/10;
 chi0    =  xeq;
 eta0    =  etam0;
 
-W0      =  Dchi0*Drho0*g0*D0^2/eta0;
-w0      =        Drho0*g0*d0^2/eta0;
+% speed scales
+W0      =  Dchi0*Drho0*g0*D0^2/eta0;  % laminar convection speed
+w0      =        Drho0*g0*d0^2/eta0;  % laminar settling speed
 
-ReL0    =  W0*L0/(eta0/rho0);
-Rel0    =  w0*l0/(eta0/rho0);
+ReL0    =  W0*L0/(eta0/rho0);         % laminar convective Reynolds No at L0
+Rel0    =  w0*l0/(eta0/rho0);         % laminar settling Reynolds No at L0
 
-fReL    =  1-exp(-ReL0);
-fRel    =  1-exp(-Rel0);
+fReL    =  1-exp(-ReL0);              % Re-dependent ramp factor
+fRel    =  1-exp(-Rel0);              % Re-dependent ramp factor
 
+% general convective speed
 if fReL>1e-4; W0  =  D0/(2*fReL*L0^2*rho0) * (sqrt(4*Dchi0*Drho0*g0*rho0*fReL*L0^2*D0 + eta0^2) - eta0); end
+
+% general settling speed
 if fRel>1e-4; w0  =  1 /(2*fRel*l0  *rho0) * (sqrt(4*      Drho0*g0*rho0*fRel*l0*d0^2 + eta0^2) - eta0); end
 
+% diffusivities
 eII0    =  W0/D0;
 ke0     =  eII0*L0^2;
 ks0     =  w0*l0;
 kx0     =  ks0 + fReL*ke0;
 
+% times
 tW0     =  D/W0;
 tw0     =  D/w0;
 tk0     =  D^2/kx0;
@@ -35,27 +44,31 @@ tin0    =  W0/(Dchi0*Drho0/rho0*g0);
 t0      =  tin0 + min([tW0, tw0, tk0]);
 dt0     =  min([(h0/2)^2/kx0 , (h0/2)/(W0+w0)]);
 
-xie0    =  Xi*sqrt(     fReL*ke0/(L0/2/W0)*(L0./(L0+h0))^3);
-xiex0   =  Xi*sqrt(chi0*fReL*ke0/(L0/2/W0)*(L0./(L0+h0))^3);
-xis0    =  Xi*sqrt(chi0*     ks0/(l0/2/w0)*(l0./(l0+h0))^3);
+% noise flux amplitudes
+xie0    =  Xi*sqrt(     fReL*ke0/(L0h/W0)*(L0h./(L0h+h0))^3);
+xiex0   =  Xi*sqrt(chi0*fReL*ke0/(L0h/W0)*(L0h./(L0h+h0))^3);
+xis0    =  Xi*sqrt(chi0*     ks0/(l0h/w0)*(l0h./(l0h+h0))^3);
 xix0    =  xis0 + xiex0;
 
+% phase change rate
 tau0    =  h0./(W0 + w0) + dt0;
 G0      =  R*Dchi0*rho0/tau0;
 
+% viscosities, stress/pressure
 etae0   =  fReL*ke0*rho0;
 etas0   =  fRel*ks0*rho0;
-
 p0      =  (eta0+etae0)*eII0;
 
-Da0     =  G0/(rho0/t0);
-Ne0     =  xie0/W0;
-Ns0     =  xix0/w0;
-Rc0     =  W0/w0;
-Ra0     =  W0*D0/kx0;
-ReD0    =  W0*D0/((eta0+etae0)/rho0);
-Red0    =  w0*d0/((eta0+etas0)/rho0);
+% general dimensionless numbers
+Da0     =  G0/(rho0/t0);                % Dahmköhler number
+Ne0     =  xie0/W0;                     % Eddy noise number
+Ns0     =  xix0/w0;                     % Particle noise number
+Rc0     =  W0/w0;                       % Convection number
+Ra0     =  W0*D0/kx0;                   % Rayleigh number
+ReD0    =  W0*D0/((eta0+etae0)/rho0);   % Convection Reynolds number
+Red0    =  w0*d0/((eta0+etas0)/rho0);   % Particle Reynolds number
 
+% print scaling analysis to standard output
 fprintf(1,'\n  Scaled domain depth D0    = %1.0e [m]',D0);
 fprintf(1,'\n  Crystal size        d0    = %1.0e [m]',d0);
 fprintf(1,'\n  Eddy  corrl. length L0    = %1.0e [m]',L0);

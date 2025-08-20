@@ -32,6 +32,7 @@ tend      =  10*yr;               % end time for simulation [s]
 % set initial phase fraction parameters
 xeq       =  0.01;                % equilibrium crystallinity of boundary layer [wt]
 x0        =  xeq/10;              % initial background crystallinity [wt]
+dxr       =  x0/10;               % initial random perturbation [wt]
 dxg       =  0;                   % initial gaussian perturbation [wt] (for benchmarking)
 seed      =  15;                  % random perturbation seed
 

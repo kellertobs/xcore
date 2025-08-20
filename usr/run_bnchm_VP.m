@@ -40,9 +40,9 @@ for nn = NN
     drawnow;
 
     % get solution error
-    EW = norm(W-W_mms,'fro')./norm(W_mms,'fro');
-    EU = norm(U-U_mms,'fro')./norm(U_mms,'fro');
-    EP = norm(P-P_mms,'fro')./norm(P_mms,'fro');
+    EW = norm(W-W_mms)./norm(W_mms);
+    EU = norm(U-U_mms)./norm(U_mms);
+    EP = norm(P-P_mms)./norm(P_mms);
 
     clist = [colororder;[0 0 0]];
 

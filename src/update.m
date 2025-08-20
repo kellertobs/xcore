@@ -133,7 +133,7 @@ tII = (0.5.*(txx.^2 + tzz.^2 ...
 % update time step
 dtk = (h/2)^2/max(kx(:)); % diffusive time step size
 dta =  h/2   /max(abs([Um(:);Wm(:);Ux(:);Wx(:)]+eps));  % advective time step size
-dt  = (dt + min([1.5*dto,min([dtk,CFL*dta]),dtmax]))/2; % time step size
+dt  =  min([1.5*dto,min([dtk,CFL*dta]),dtmax]); % time step size
 
 % record timing
 UDtime = UDtime + toc;

@@ -1,4 +1,4 @@
-function [adv, advscl] = advect (f, u, w, h, scheme, dim, BC)
+function [adv, qz, qx] = advect (f, u, w, h, scheme, dim, BC)
 %
 % [adv, advscl] = advect(f, u, w, h, scheme, dim, BC)
 %
@@ -121,10 +121,16 @@ switch scheme{1}
         [fzppos, fzpneg, fzmpos, fzmneg] = tvd(fcc, wmpos, wmneg, wppos, wpneg, zdim, zBC);
 end
 
+% get fluxes on p/m stencil positions
+qxp = uppos.*fxppos + upneg.*fxpneg;
+qxm = umpos.*fxmpos + umneg.*fxmneg;
+
+qzp = wppos.*fzppos + wpneg.*fzpneg;
+qzm = wmpos.*fzmpos + wmneg.*fzmneg;
 
 % now calculate div(f v)
-adv = (uppos.*fxppos + upneg.*fxpneg - umpos.*fxmpos - umneg.*fxmneg)./h + ...
-      (wppos.*fzppos + wpneg.*fzpneg - wmpos.*fzmpos - wmneg.*fzmneg)./h;
+adv =   (qxp - qxm)./h  ...
+      + (qzp - qzm)./h;
 
 % if you only want the advection term, remove f x div(v)
 if strcmp(scheme{2}, 'vdf')
@@ -136,8 +142,23 @@ if strcmp(scheme{2}, 'vdf')
 end
 
 if nargout>1
-    % return advection scale for calculating time step
-    advscl = max(abs([f.*(uppos+upneg); f.*(wppos+wpneg)]), [], 'all');
+    % return advective fluxes on grid faces
+    qz = zeros(size(f,dim(1))+1,size(f,dim(2))+2);
+    qx = zeros(size(f,dim(1))+2,size(f,dim(2))+1);
+    qz(1:end-1,2:end-1) = qzm;
+    qz(end    ,2:end-1) = qzp(end,:);
+    if strcmp(xBC,'periodic') && size(f,xdim)>1
+        qz(:      ,[1,end]) = qz(:,[end-1,2]);
+    else
+        qz(:      ,[1,end]) = qz(:,[2,end-1]);
+    end
+    qx(2:end-1,1:end-1) = qxm;
+    qx(2:end-1,end    ) = qxp(:,end);
+    if strcmp(zBC,'periodic') && size(f,zdim)>1
+        qx([1,end],:      ) = qx([end-1,2],:);
+    else
+        qx([1,end],:      ) = qx([2,end-1],:);
+    end
 end
 end
 

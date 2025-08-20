@@ -7,7 +7,6 @@ init;
 %*****  physical time stepping loop  **************************************
 while time <= tend && time/t0 <= t0end && step <= Nt && HST.x(end,2) <= xend
    
-    
     %***  time step info
     timing;
 
@@ -20,7 +19,7 @@ while time <= tend && time/t0 <= t0end && step <= Nt && HST.x(end,2) <= xend
     iter     = 1;
 
     %***  non-linear iteration loop
-    while resnorm/resnorm0 >= rtol && resnorm >= atol && iter <= maxit
+    while resnorm/resnorm0 >= rtol && resnorm >= atol && iter <= maxit || iter <= 3
         
         %***  solve phase evolution equations
         phsevo;

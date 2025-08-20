@@ -72,52 +72,39 @@ Nz = length(Zc);
 
 % get characteristic scales
 scales;
-dt = dt0/10;
+if ~exist('dt','var'); dt = dt0/10; end
 
-% initialise smooth random noise generation
-rng(seed);
 
 % Wavenumber grid
-[kwx, kwz] = ndgrid( ...
-    2*pi*ifftshift((0:Nz+0) - floor((Nz+1)/2)) / ((Nz+1)*h), ...
-    2*pi*ifftshift((0:Nx-1) - floor((Nx+0)/2)) / ((Nx+0)*h)  );
-
-[kux, kuz] = ndgrid( ...
-    2*pi*ifftshift((0:Nz-1) - floor((Nz+0)/2)) / ((Nz+0)*h), ...
-    2*pi*ifftshift((0:Nx+0) - floor((Nx+1)/2)) / ((Nx+1)*h)  );
-
 [kpx, kpz] = ndgrid( ...
     2*pi*ifftshift((0:Nz-1) - floor(Nz/2)) / (Nz*h), ...
     2*pi*ifftshift((0:Nx-1) - floor(Nx/2)) / (Nx*h)  );
 
-[kcx, kcz] = ndgrid( ...
-    2*pi*ifftshift((0:Nz-0) - floor((Nz+1)/2)) / ((Nz+1)*h), ...
-    2*pi*ifftshift((0:Nx-0) - floor((Nx+1)/2)) / ((Nx+1)*h)  );
-
-kw2 = kwx.^2 + kwz.^2;
-ku2 = kux.^2 + kuz.^2;
 kp2 = kpx.^2 + kpz.^2;
-kc2 = kcx.^2 + kcz.^2;
 
-% Gaussian spatial filter in Fourier space
-Gkwe = exp(-0.5 * ((L0/2+h)^2) * kw2);
-Gkue = exp(-0.5 * ((L0/2+h)^2) * ku2);
-Gkws = exp(-0.5 * ((l0/2+h)^2) * kw2);
-Gkus = exp(-0.5 * ((l0/2+h)^2) * ku2);
-Gkps = exp(-0.5 * ((L0  +h)^2) * kc2);
-Gkrp = exp(-0.5 * ((L0/2+l0/2+h)^2) * kp2);
+% Gaussian spatial filter kernels in Fourier space
+Gkps = exp(-0.5 * ((l0h*sqrt(2))^2) * kp2);
+Gkpe = exp(-0.5 * ((L0h*sqrt(2))^2) * kp2);
+Gkrp = exp(-0.5 * ((L0h+l0h    )^2) * kp2);
+
+% initialise smooth random noise generation
+rng(seed);
 
 % Generate new white noise
-rp  = randn(Nz  , Nx  );
-rp  = fft2(rp );
+rp  = randn(Nz, Nx);
 
 % Filter white noise spatially
-rp  = real(ifft2(Gkrp  .* rp ));
+rp  = real(ifft2(Gkrp .* fft2(rp)));
 
 % Rescale to unit standard deviation
-rp  = (rp  - mean(rp (:))) / std(rp (:));
+rp  = (rp - mean(rp(:))) ./ std(rp(:));
 
-% initialise noise flux variables
+% initialise noise flux potentials
+psie  = zeros(Nz+0, Nx+0);
+psiex = zeros(Nz+0, Nx+0);
+psis  = zeros(Nz+0, Nx+0);
+
+% initialise noise flux components
 xisw  = zeros(Nz+1, Nx+2);
 xisu  = zeros(Nz+2, Nx+1);
 xiew  = zeros(Nz+1, Nx+2);
@@ -133,10 +120,9 @@ MapP = reshape(1:NP,Nz+2,Nx+2);
 MapW = reshape(1:NW,Nz+1,Nx+2);
 MapU = reshape(1:NU,Nz+2,Nx+1) + NW;
 
-% set up shape functions for transient boundary layers
-bnd_w     =  max(l0,2*h);         % width of boundary layer [m]
-initshape = exp((-ZZ+h/2)/bnd_w);
-bndshape  = exp((-ZZ+h/2)/h);
+% set up shape functions for initial and transient boundary layers
+initshape = exp((-ZZ+h/2)/(L0h+l0h)); % width of initial boundary layer [m]
+bndshape  = exp((-ZZ+h/2)/h);         % width of crystal replenishing layer [m]
 
 % set specified boundaries to no slip, else to free slip
 sds        = -1;
@@ -153,7 +139,7 @@ ifz = [2,1:Nz+1,Nz];
 % initialise crystallinity field
 gp  =  exp(-((XX-L/2)./(L/6)).^2) .* exp(-((ZZ-D/2)./(D/6)).^2);
 xin =  initshape.*xeq + (1-initshape).*x0;
-x   =  xin .* (1+rp./10+dxg.*gp);
+x   =  xin .* (1+dxr/x0.*rp+dxg/x0.*gp);
 m   =  1-x;
 
 U   =  zeros(Nz+2,Nx+1);  UBG = U; upd_U = 0*U; 
@@ -162,8 +148,8 @@ P   =  zeros(Nz+2,Nx+2);  V   = 0.*x; vx = V; vxo = vx; upd_P = 0*P;
 SOL = [W(:);U(:);P(:)];
 
 % initialise auxiliary fields
-Wx  = W;  Ux = U;  wx = W;  xiw = W;
-Wm  = W;  Um = U;  ux = U;  xiu = U;
+Wx  = W;  Ux = U;  wx = W;  xiw = W;  qz_advn_X = W;  qz_advn_M = W;  qz_dffn_X = W;  qz_dffn_M = W;
+Wm  = W;  Um = U;  ux = U;  xiu = U;  qx_advn_X = W;  qx_advn_M = W;  qx_dffn_X = W;  qx_dffn_M = W;
 
 Re     = eps + 0.*x;  
 Div_V  = 0.*x;  advn_rho = 0.*x;  advn_X = 0.*x; advn_M = 0.*x; drhodt = 0.*x;  drhodto = drhodt; 
@@ -179,8 +165,8 @@ rho    = (x./rhox0 + m./rhom0).^-1;
 Pt     = Ptop + rho.*g0.*ZZ;  Pl = Pt;  Pto = Pt; Ptoo = Pt;
 rhow   = (rho(icz(1:end-1),:)+rho(icz(2:end),:))/2;
 rhou   = (rho(:,icx(1:end-1))+rho(:,icx(2:end)))/2;
-rhoWo  = rhow.*W(:,2:end-1); rhoWoo = rhoWo; advn_mz = 0.*rhoWo(2:end-1,:);
-rhoUo  = rhou.*U(2:end-1,:); rhoUoo = rhoUo; advn_mx = 0.*rhoUo;
+rhoWo  = rhow.*W(:,2:end-1); advn_mz = 0.*rhoWo(2:end-1,:);
+rhoUo  = rhou.*U(2:end-1,:); advn_mx = 0.*rhoUo;
 
 % get volume fractions and bulk density
 step    = 0;
@@ -190,8 +176,8 @@ UDtime  = 0;
 dto     = dt;
 a1      = 1; a2 = 0; a3 = 0; b1 = 1; b2 = 0; b3 = 0;
 
-X    = rho.*x;  Xo = X;  res_X = 0.*X;
-M    = rho.*m;  Mo = M;  res_M = 0.*M;
+X = rho.*x;  Xo = X;  res_X = 0.*X;
+M = rho.*m;  Mo = M;  res_M = 0.*M;
 
 update;
 
@@ -207,16 +193,11 @@ rhoo = rho;
 dto  = dt; 
 
 % initialise auxiliary variables 
-dwxdt   = 0.*wx; dwxdto = dwxdt;  advn_Mx = 0.*wx;
-dXdt    = 0.*x;  dXdto  = dXdt;
-dMdt    = 0.*m;  dMdto  = dMdt;
-dMxdt   = 0.*Mx; dMxdto = dMxdt;
+dXdt    = 0.*x;   dXdto  = dXdt;
+dMdt    = 0.*m;   dMdto  = dMdt;
+drhodt  = 0.*rho; drhodto = drhodt;
 upd_X   = 0.*X;
-upd_M   = 0.*M;
-upd_Mx  = 0.*Mx;
-upd_rho = 0.*rho;
-tau_p   = 1;
-relax   = 0;
+upd_MFS = 0.*MFS;
 
 % initialise timing and iterative parameters
 step    = 0;
@@ -243,7 +224,6 @@ if restart
 
         SOL = [W(:);U(:);P(:)];
 
-        update;
         update;
         store;
         output;

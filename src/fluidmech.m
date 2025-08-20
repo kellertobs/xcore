@@ -7,7 +7,7 @@ tic;
 if ~bnchm && step>0 && ~restart
 
 %***  update mixture mass density
-drhodt  = advn_rho;
+drhodt  = - advn_rho;
 
 % residual of mixture mass evolution
 res_rho = (a1*rho-a2*rhoo-a3*rhooo)/dt - (b1*drhodt + b2*drhodto + b3*drhodtoo);
@@ -278,7 +278,7 @@ RP  = sparse(IIR,ones(size(IIR)),AAR,NP,1);
 
 if bnchm
     % fix P = P_mms in middle of domain
-    nzp = round((Nz+2)/2);
+    nzp = round((Nz+2)*3/8);
     nxp = round((Nx+2)/2);
     np0 = MapP(nzp,nxp);
     KP(np0,:  ) = 0;
@@ -324,7 +324,7 @@ FF  = SCL*(LL*SOL - RR);
 LL  = SCL*LL*SCL;
 
 
-%% Solve linear system of equations for vx, vz, P
+%% Solve linear system of equations for W, U, P
 
 if ~exist('pcol','var') || bnchm; pcol = colamd(LL); end % get column permutation for sparsity pattern once per run
 dLL         = decomposition(LL(:,pcol), 'lu');  % get LU-decomposition for consistent performance of LL \ RR

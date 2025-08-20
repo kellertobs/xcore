@@ -1,7 +1,7 @@
 % print diagnostics
 fprintf(1,'\n         total time to solution = %3.3f sec\n\n',toc(TTtime));
 fprintf(1,'         fluid-mechanics solve  = %1.3e sec\n'  ,FMtime/(iter-1));
-fprintf(1,'         phase evolution solve  = %1.3e sec\n'  ,TCtime/(iter-1));
+fprintf(1,'         phase evolution solve  = %1.3e sec\n'  ,XEtime/(iter-1));
 fprintf(1,'         coefficients update    = %1.3e sec\n\n',UDtime/(iter-1));
 
 fprintf(1,'         min x   = %1.6f;  mean x   = %1.6f;  max x   = %1.6f;   [%s]\n'   ,min(x(:))/xsc,mean(x(:))/xsc,max(x(:))/xsc,xun(xun~='\'&xun~=' '));

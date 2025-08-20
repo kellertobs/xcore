@@ -7,11 +7,8 @@
 [dXdtoo    , dXdto    ] = deal(dXdto    , dXdt    );
 [drhodtoo  , drhodto  ] = deal(drhodto  , drhodt  );
 
-xiswo  = xisw; 
-xisuo  = xisu;
-xiewo  = xiew; 
-xieuo  = xieu;
-xiexwo = xiexw; 
-xiexuo = xiexu;
+psieo  = psie;
+psiexo = psiex;
+psiso  = psis;
 
 dto = dt;
