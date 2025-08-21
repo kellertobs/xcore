@@ -1,5 +1,5 @@
 % crustal magmatism parameter variations  (28 simulations, PA)
-D     = [1e-1; 1e+1 (ref); 1e+3;];  % [m]
+D     = [1e0; 1e1 (ref); 1e2;];  % [m]
 d0    = [1e-4; 1e-3; 1e-2 (ref);];  % [m]
 etam0 = [1e-1; 1e+1 (ref); 1e+3];   % [Pas]
 d0    = 3e-2; D = 3e0; etam0 = 1e1; % (settling regime D30_d32_e1)
