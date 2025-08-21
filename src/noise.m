@@ -33,8 +33,8 @@ sgex  = Xi * sqrt(chi.*fReL.*ke./taue .* (L0h./(L0h+h)).^3);  % eddy crystal noi
 sge   = Xi * sqrt(     fReL.*ke./taue .* (L0h./(L0h+h)).^3);  % eddy mixture noise speed
 
 % Ornstein–Uhlenbeck time update
-fL   =  h./sqrt(2 * (1 - exp(-(h./(L0h+h)).^2)));  % scaling factor for potential field to noise component variance
-fl   =  h./sqrt(2 * (1 - exp(-(h./(l0h+h)).^2)));  % scaling factor for potential field to noise component variance
+fL    =  h/sqrt(2 * (1 - exp(-h^2/(2*L0h^2))));  % scaling factor for potential field to noise component variance
+fl    =  h/sqrt(2 * (1 - exp(-h^2/(2*l0h^2))));  % scaling factor for potential field to noise component variance
 
 psie  =  Fe .* psieo  + sqrt(1 - Fe .^2) .* sge .*fL .* re;    % update eddy noise stream function
 psiex =  Fe .* psiexo + sqrt(1 - Fe .^2) .* sgex.*fL .* rex;   % update particle eddy noise potential
