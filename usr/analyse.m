@@ -11,7 +11,7 @@ fRel = 0;
 
 % turbulent eddy viscosity
 clear W0; syms W0
-ke0   = 2*W0/D0*L0^2;
+ke0   = W0/D0/4*L0^2;
 etae0 = eta0 + fReL*ke0*rho0;
 
 % turbulent settling viscosity
@@ -28,7 +28,7 @@ eq2w = w0 - Drho0*g0*d0^2/etas0 == 0;
 w0   = solve(eq2w,w0);
 
 % update diffusivities
-ke0  = 2*W0/D0*L0^2;
+ke0  = W0/D0/4*L0^2;
 ks0  = w0*l0;
 kx0  = ks0 + fReL*ke0;
 
@@ -65,7 +65,7 @@ fRel = 1;
 
 % turbulent eddy viscosity
 clear W0; syms W0
-ke0   = 2*W0/D0*L0^2;
+ke0   = W0/D0/4*L0^2;
 etae0 = 0 + fReL*ke0*rho0;
 
 % turbulent settling viscosity
@@ -87,7 +87,7 @@ w00  = w0(1);
 clear W0 w0 kx0 ks0 ke0 etas0 etae0; syms W0 w0;
 
 % update diffusivities
-ke0  = 2*W0/D0*L0^2;
+ke0  = W0/D0/4*L0^2;
 ks0  = w0*l0;
 kx0  = ks0 + fReL*ke0;
 
@@ -125,7 +125,7 @@ syms chi0 Dchi0 Drho0 rho0 g0 D0 d0 eta0 L0 l0 fReL fRel
 
 % turbulent eddy viscosity
 clear W0; syms W0
-ke0   = 2*W0/D0*L0^2;
+ke0   = W0/D0/4*L0^2;
 etae0 = eta0 + fReL*ke0*rho0;
 
 % turbulent settling viscosity
@@ -146,7 +146,7 @@ w00  = w0(2);
 clear W0 w0 kx0 ks0 ke0 etas0 etae0; syms W0 w0;
 
 % update diffusivities
-ke0  = 2*W0/D0*L0^2;
+ke0  = W0/D0/4*L0^2;
 ks0  = w0*l0;
 kx0  = ks0 + fReL*ke0;
 
@@ -280,7 +280,7 @@ for eta0=10.^linspace(-1,5,4)
     % Navier-Stokes speed scale for crystal-driven convection
     w0    = sqrt(       Drho0.*g0.*d0 .^2./(l0   .*rho0));
     W0    = sqrt(Dchi0.*Drho0.*g0.*Ds0.^3./(L0.^2.*rho0));
-    ke0   = W0./Ds0.*L0.^2;
+    ke0   = W0./D0./4.*L0.^2;
     etae0 = 0 + rho0.*ke0;
 
     kx0   = ks0 + ke0;
@@ -333,7 +333,7 @@ for eta0=10.^linspace(-1,5,4)
 
     % Navier-Stokes speed scale for crystal-driven convection
     W0    = Ds0.*(sqrt(4.*Dchi0.*Drho0.*g0.*rho0.*fReL.*L0.^2.*Ds0  + eta0.^2) - eta0)./(2.*fReL.*L0.^2.*rho0);
-    ke0   = W0./Ds0.*L0.^2;
+    ke0   = W0./D0./4.*L0.^2;
     etae0 = eta0 + fReL.*rho0.*ke0;
 
     kx0   = ks0 + fReL.*ke0;
