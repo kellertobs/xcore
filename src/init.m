@@ -121,7 +121,7 @@ MapW = reshape(1:NW,Nz+1,Nx+2);
 MapU = reshape(1:NU,Nz+2,Nx+1) + NW;
 
 % set up shape functions for initial and transient boundary layers
-initshape = exp((-ZZ+h/2)/(L0h+l0h)); % width of initial boundary layer [m]
+initshape = exp((-ZZ+h/2)/(L0h+l0h)/2); % width of initial boundary layer [m]
 bndshape  = exp((-ZZ+h/2)/h);         % width of crystal replenishing layer [m]
 
 % set specified boundaries to no slip, else to free slip

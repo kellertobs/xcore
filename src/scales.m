@@ -25,10 +25,10 @@ fReL    =  1-exp(-ReL0);              % Re-dependent ramp factor
 fRel    =  1-exp(-Rel0);              % Re-dependent ramp factor
 
 % general convective speed
-if fReL>1e-4; W0  =  D0/(1/2*fReL*L0^2*rho0) * (sqrt(1*Dchi0*Drho0*g0*rho0*fReL*L0^2*D0 + eta0^2) - eta0); end
+if fReL>1e-4; W0  =  D0/(1/2*fReL*L0^2*rho0) * (sqrt(Dchi0*Drho0*fReL*g0*rho0*L0^2*D0 + eta0^2) - eta0); end
 
 % general settling speed
-if fRel>1e-4; w0  =  1 /(2*fRel*l0  *rho0) * (sqrt(4*      Drho0*g0*rho0*fRel*l0*d0^2 + eta0^2) - eta0); end
+if fRel>1e-4; w0  =  1 /(2  *fRel*l0  *rho0) * (sqrt(4*    Drho0*g0*rho0*fRel*l0*d0^2 + eta0^2) - eta0); end
 
 % diffusivities
 eII0    =  W0/D0/4;
