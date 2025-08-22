@@ -5,7 +5,11 @@ clear; close all;
 run('../usr/par_default')
 
 % test decreasing time step
+<<<<<<< Updated upstream
 ATOL = [1e-3,1e-6,1e-9];
+=======
+ATOL = [1e-2,1e-4,1e-6];
+>>>>>>> Stashed changes
 
 for atol = ATOL
 
@@ -36,6 +40,7 @@ for atol = ATOL
     etam0     =  1e+1;                % melt viscosity constant [kg/m3]
     L0        =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)
     l0        =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
+<<<<<<< Updated upstream
     R         =  1.0;                 % relative amplitude of crystallisation rate [s]
     Xi        =  1.0;                 % relative amplitude of random noise flux
     open_sgr  =  1;
@@ -44,6 +49,16 @@ for atol = ATOL
     % set numerical model parameters
     CFL       =  0.50;                % (physical) time stepping courant number (multiplies stable step) [0,1]
     rtol      =  atol/1e6;            % outer its relative tolerance
+=======
+    R         =  1;
+    Xi        =  1;
+
+    % set numerical model parameters
+    TINT      =  'bd2im';             % time integration scheme ('be1im','bd2im','cn2si','bd2si')
+    ADVN      =  'weno5';             % advection scheme ('centr','upw1','quick','fromm','weno3','weno5','tvdim')
+    CFL       =  1/2;                 % (physical) time stepping courant number (multiplies stable step) [0,1]
+    rtol      =  atol/1e6;            % outer its absolute tolerance
+>>>>>>> Stashed changes
     maxit     =  100;                 % maximum outer its
     alpha     =  0.8;                 % iterative step size parameter
     gamma     =  1e-3;                % artificial horizontal inertia parameter (only applies if periodic)
