@@ -31,7 +31,7 @@ if fReL>1e-4; W0  =  D0/(1/2*fReL*L0^2*rho0) * (sqrt(Dchi0*Drho0*fReL*g0*rho0*L0
 if fRel>1e-4; w0  =  1 /(2  *fRel*l0  *rho0) * (sqrt(4*    Drho0*g0*rho0*fRel*l0*d0^2 + eta0^2) - eta0); end
 
 % diffusivities
-eII0    =  W0/D0/4;
+eII0    =  W0/D0/2;
 ke0     =  eII0*L0^2;
 ks0     =  w0*l0;
 kx0     =  ks0 + fReL*ke0;
