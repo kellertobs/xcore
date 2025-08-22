@@ -3,8 +3,8 @@
 tic;
 
 % update phase indicators
-hasx = x >= eps^0.5;
-hasm = m >= eps^0.5;
+hasx   = x >= eps^0.5;
+hasm   = m >= eps^0.5;
 
 rho    = 1./(m./rhom0  + x./rhox0);
 

@@ -45,27 +45,27 @@ HST.x(stp,4) = std(x(:));
 HST.V(stp,1) = min(V(:));
 HST.V(stp,2) = geomean(V(:));
 HST.V(stp,3) = max(V(:));
-HST.V(stp,2) = rms(V(:));
+HST.V(stp,4) = rms(V(:));
 
 HST.vx(stp,1) = min(vx(:));
 HST.vx(stp,2) = geomean(vx(:));
 HST.vx(stp,3) = max(vx(:));
-HST.vx(stp,2) = rms(vx(:));
+HST.vx(stp,4) = rms(vx(:));
 
 HST.vm(stp,1) = min(vm(:));
 HST.vm(stp,2) = geomean(vm(:));
 HST.vm(stp,3) = max(vm(:));
-HST.vm(stp,2) = rms(vm(:));
+HST.vm(stp,4) = rms(vm(:));
 
 HST.xie(stp,1) = min(xie(:));
 HST.xie(stp,2) = geomean(xie(:));
 HST.xie(stp,3) = max(xie(:));
-HST.xie(stp,2) = rms(xie(:));
+HST.xie(stp,4) = rms(xie(:));
 
 HST.xix(stp,1) = min(xix(:));
 HST.xix(stp,2) = geomean(xix(:));
 HST.xix(stp,3) = max(xix(:));
-HST.xix(stp,2) = rms(xix(:));
+HST.xix(stp,4) = rms(xix(:));
 
 HST.rho(stp,1) = min(rho(:));
 HST.rho(stp,2) = geomean(rho(:));

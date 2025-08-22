@@ -91,7 +91,7 @@ set(fh1,'CurrentAxes',ax(11));
 imagesc(Xsc,Zsc,-W(:,2:end-1)/Wsc); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$W$ [',Wun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[]); ylabel(['Depth [',sun,']'],TX{:},FS{:});
 set(fh1,'CurrentAxes',ax(12));
-imagesc(Xsc,Zsc, U(2:end-1,:)./Wsc); axis ij equal tight; box on; cb = colorbar;
+imagesc(Xsc,Zsc, V./Wsc); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$U$ [',Wun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 text(0.5,1.05+Nx/Nz/10,['time = ',num2str(time/tsc,3),' [',tun,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
 set(fh1,'CurrentAxes',ax(13));
@@ -315,9 +315,9 @@ if save_op && ~restart
     print(fh15,name,'-dpng','-r300','-image');
 
     name = [outdir,'/',runID,'/',runID,'_',num2str(floor(step/nop))];
-    save(name,'U','W','P','x','m','chi','mu','X','M','dXdt','drhodt','Gx','rho','eta','etas','ke','ks','kx','Ra','ReD','Red','Rc','dt','time','step','MFS','wx','xisw','xisu','xiew','xieu','xiexw','xiexu');
+    save(name,'U','W','P','x','m','chi','mu','X','M','dXdt','drhodt','Gx','rho','eta','etas','ke','ks','kx','Ra','ReD','Red','Rc','dt','time','step','MFS','wx','wm','psie','psiex','psis','xisw','xisu','xiew','xieu','xiexw','xiexu');
     name = [outdir,'/',runID,'/',runID,'_cont'];
-    save(name,'U','W','P','x','m','chi','mu','X','M','dXdt','drhodt','Gx','rho','eta','etas','ke','ks','kx','Ra','ReD','Red','Rc','dt','time','step','MFS','wx','xisw','xisu','xiew','xieu','xiexw','xiexu');
+    save(name,'U','W','P','x','m','chi','mu','X','M','dXdt','drhodt','Gx','rho','eta','etas','ke','ks','kx','Ra','ReD','Red','Rc','dt','time','step','MFS','wx','wm','psie','psiex','psis','xisw','xisu','xiew','xieu','xiexw','xiexu');
     name = [outdir,'/',runID,'/',runID,'_HST'];
     save(name,'HST');
 

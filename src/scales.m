@@ -25,13 +25,13 @@ fReL    =  1-exp(-ReL0);              % Re-dependent ramp factor
 fRel    =  1-exp(-Rel0);              % Re-dependent ramp factor
 
 % general convective speed
-if fReL>1e-4; W0  =  D0/(2*fReL*L0^2*rho0) * (sqrt(4*Dchi0*Drho0*g0*rho0*fReL*L0^2*D0 + eta0^2) - eta0); end
+if fReL>1e-4; W0  =  D0/(1/2*fReL*L0^2*rho0) * (sqrt(1*Dchi0*Drho0*g0*rho0*fReL*L0^2*D0 + eta0^2) - eta0); end
 
 % general settling speed
 if fRel>1e-4; w0  =  1 /(2*fRel*l0  *rho0) * (sqrt(4*      Drho0*g0*rho0*fRel*l0*d0^2 + eta0^2) - eta0); end
 
 % diffusivities
-eII0    =  W0/D0;
+eII0    =  W0/D0/4;
 ke0     =  eII0*L0^2;
 ks0     =  w0*l0;
 kx0     =  ks0 + fReL*ke0;
@@ -40,8 +40,8 @@ kx0     =  ks0 + fReL*ke0;
 tW0     =  D/W0;
 tw0     =  D/w0;
 tk0     =  D^2/kx0;
-tin0    =  W0/(Dchi0*Drho0/rho0*g0);
-t0      =  tin0 + min([tW0, tw0, tk0]);
+tin0    =  rho0*W0/(Dchi0*Drho0*g0);
+t0      =  tin0/2 + min([tW0, tw0, tk0]);
 dt0     =  min([(h0/2)^2/kx0 , (h0/2)/(W0+w0)]);
 
 % noise flux amplitudes
@@ -52,7 +52,7 @@ xix0    =  xis0 + xiex0;
 
 % phase change rate
 tau0    =  h0./(W0 + w0) + dt0;
-G0      =  R*Dchi0*rho0/tau0;
+G0      =  R*chi0*rho0/tau0;
 
 % viscosities, stress/pressure
 etae0   =  fReL*ke0*rho0;

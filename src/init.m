@@ -199,7 +199,7 @@ drhodt  = 0.*rho; drhodto = drhodt;
 upd_X   = 0.*X;
 upd_MFS = 0.*MFS;
 
-% initialise timing and iterative parameters
+% initialise timing, history, and iterative parameters
 step    = 0;
 time    = 0;
 iter    = 0;
@@ -218,7 +218,7 @@ if restart
     end
     if exist(name,'file')
         fprintf('\n  restart from %s \n\n',name);
-        load(name,'U','W','P','x','m','chi','mu','X','M','dXdt','drhodt','Gx','rho','eta','etas','ke','ks','kx','Ra','ReD','Red','Rc','dt','time','step','MFS','wx','xisw','xisu','xiew','xieu','xiexw','xiexu');
+        load(name,'U','W','P','x','m','chi','mu','X','M','dXdt','drhodt','Gx','rho','eta','etas','ke','ks','kx','Ra','ReD','Red','Rc','dt','time','step','MFS','wx','wm','psie','psiex','psis','xisw','xisu','xiew','xieu','xiexw','xiexu');
         name = [outdir,'/',runID,'/',runID,'_HST'];
         load(name,'HST');
 
