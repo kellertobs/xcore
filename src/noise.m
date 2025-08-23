@@ -32,8 +32,8 @@ sgs  = Xi * sqrt(chi.*      ks./taus .* (l0h./(l0h+h)).^3);    % segregation noi
 Fte   = exp(-dt./taue);                                        % eddy noise time evolution factor
 Fts   = exp(-dt./taus);                                        % settling noise time evolution factor
 
-fL    =  1/sqrt(1 - exp(-h^2/(2*L0h^2)));                      % scaling factor for potential field to noise component variance
-fl    =  1/sqrt(1 - exp(-h^2/(2*l0h^2)));                      % scaling factor for potential field to noise component variance
+fL    =  2/sqrt(1 - exp(-h^2/(2*L0h^2)));                      % scaling factor for potential field to noise component variance
+fl    =  2/sqrt(1 - exp(-h^2/(2*l0h^2)));                      % scaling factor for potential field to noise component variance
 
 psie  =  Fte .* psieo  + sqrt(1 - Fte.^2) .* sge .*fL .* re;   % update eddy noise stream function
 psiex =  Fte .* psiexo + sqrt(1 - Fte.^2) .* sgex.*fL .* rex;  % update particle eddy noise potential

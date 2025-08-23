@@ -31,8 +31,8 @@ d0        =  1e-2;                % xtal size constant [m]
 etam0     =  1e+1;                % melt viscosity constant [kg/m3]
 L0        =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)
 l0        =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
-R         =  1.0;                 % relative amplitude of crystallisation rate [s]
-Xi        =  1.0;                 % relative amplitude of random noise flux
+R         =  0.5;                 % relative amplitude of crystallisation rate [s]
+Xi        =  0.5;                 % relative amplitude of random noise flux
 
 % set numerical model parameters
 CFL       =  0.50;                % (physical) time stepping courant number (multiplies stable step) [0,1]
@@ -43,7 +43,7 @@ alpha     =  0.9;                 % iterative step size parameter
 gamma     =  1e-3;                % artificial horizontal inertia parameter (only applies if periodic)
 
 
-%*****  RUN NAKHLA MODEL  *************************************************
+%*****  RUN XCORE MODEL  **************************************************
 run('../src/main')
 %**************************************************************************
 
