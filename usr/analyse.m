@@ -273,14 +273,13 @@ for eta0=10.^linspace(-1,5,4)
     % Turbulent case
 
     % Navier-Stokes speed scale for crystal settling
-    w0    = sqrt(       Drho0.*g0.*d0 .^2./(l0   .*rho0));
+    w0    = sqrt(          Drho0.*g0.*d0 .^2./(l0   .*rho0));
     ks0   = w0.*l0;
     etas0 = 0 + rho0.*ks0;
 
     % Navier-Stokes speed scale for crystal-driven convection
-    w0    = sqrt(       Drho0.*g0.*d0 .^2./(l0   .*rho0));
-    W0    = sqrt(Dchi0.*Drho0.*g0.*Ds0.^3./(L0.^2.*rho0));
-    ke0   = W0./D0./4.*L0.^2;
+    W0    = sqrt(4.*Dchi0.*Drho0.*g0.*Ds0.^3./(L0.^2.*rho0));
+    ke0   = W0./Ds0./4.*L0.^2;
     etae0 = 0 + rho0.*ke0;
 
     kx0   = ks0 + ke0;
@@ -327,13 +326,13 @@ for eta0=10.^linspace(-1,5,4)
     % General case
 
     % Navier-Stokes speed scale for crystal settling
-    w0    =      (sqrt(4.*       Drho0.*g0.*rho0.*fRel.*l0  .*d0.^2 + eta0.^2) - eta0)./(2.*fRel.*l0   .*rho0);
+    w0    =         (sqrt(4     .*Drho0.*g0.*rho0.*fRel.*l0  .*d0.^2 + eta0.^2) - eta0)./(2.*fRel.*l0   .*rho0);
     ks0   = w0.*l0;
     etas0 = eta0 + fRel.*rho0.*ks0;
 
     % Navier-Stokes speed scale for crystal-driven convection
-    W0    = Ds0.*(sqrt(4.*Dchi0.*Drho0.*g0.*rho0.*fReL.*L0.^2.*Ds0  + eta0.^2) - eta0)./(2.*fReL.*L0.^2.*rho0);
-    ke0   = W0./D0./4.*L0.^2;
+    W0    = 2.*Ds0.*(sqrt(Dchi0.*Drho0.*g0.*rho0.*fReL.*L0.^2.*Ds0  + eta0.^2) - eta0)./(    fReL.*L0.^2.*rho0);
+    ke0   = W0./Ds0./4.*L0.^2;
     etae0 = eta0 + fReL.*rho0.*ke0;
 
     kx0   = ks0 + fReL.*ke0;
