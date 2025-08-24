@@ -49,12 +49,12 @@ xieu  =  ddz(psiec,1); xieu = xieu(icz,:);
 xiew  = -ddx(psiec,1); xiew = xiew(:,icx);
 
 % particle eddy noise components
-xiexu =  ddx(psiex(icz,icx),1);
-xiexw =  ddz(psiex(icz,icx),1);
+xiexu = -ddx(psiex(icz,icx),1);
+xiexw = -ddz(psiex(icz,icx),1);
 
 % particle settling noise components
-xisu  =  ddx(psis (icz,icx),1);
-xisw  =  ddz(psis (icz,icx),1);
+xisu  = -ddx(psis (icz,icx),1);
+xisw  = -ddz(psis (icz,icx),1);
 
 % combine particle noise
 xiwx  = (xisw + xiexw);
