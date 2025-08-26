@@ -88,10 +88,10 @@ ax(44) = axes(UN{:},'position',[axl+1*axw+1*ahs axb+0*axh+0*avs axw axh]);
 % plot velocity-pressure solution in Fig. 1
 set(0,'CurrentFigure',fh1)
 set(fh1,'CurrentAxes',ax(11));
-imagesc(Xsc,Zsc,-W(:,2:end-1)/Wsc); axis ij equal tight; box on; cb = colorbar;
+imagesc(Xsc,Zsc,-W(:,2:end-1)./Wsc); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$W$ [',Wun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[]); ylabel(['Depth [',sun,']'],TX{:},FS{:});
 set(fh1,'CurrentAxes',ax(12));
-imagesc(Xsc,Zsc, V./Wsc); axis ij equal tight; box on; cb = colorbar;
+imagesc(Xsc,Zsc,U(2:end-1,:)./Wsc); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$U$ [',Wun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 text(0.5,1.05+Nx/Nz/10,['time = ',num2str(time/tsc,3),' [',tun,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
 set(fh1,'CurrentAxes',ax(13));

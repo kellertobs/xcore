@@ -10,7 +10,7 @@ h0      =  h;
 % material parameter scales
 rho0    =  rhom0;
 Drho0   =  rhox0-rhom0;
-Dchi0   =  xeq/10;
+Dchi0   =  xeq/20;
 chi0    =  xeq;
 eta0    =  etam0;
 

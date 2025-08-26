@@ -72,8 +72,10 @@ eII = (0.5.*(exx.^2 + ezz.^2 ...
        +     exz(1:end-1,2:end  ).^2+exz(2:end,2:end  ).^2)/4)).^0.5 + eps;
 
 % update velocity magnitudes
-V   = sqrt(((W  (1:end-1,2:end-1)+W  (2:end,2:end-1))/2).^2 ...
-         + ((U  (2:end-1,1:end-1)+U  (2:end-1,2:end))/2).^2);              % convection speed magnitude
+V   = sqrt(((W (1:end-1,2:end-1)+W (2:end,2:end-1))/2).^2 ...
+         + ((U (2:end-1,1:end-1)+U (2:end-1,2:end))/2).^2);              % convection speed magnitude
+Vx  = sqrt(((Wx(1:end-1,2:end-1)+Wx(2:end,2:end-1))/2).^2 ...
+         + ((Ux(2:end-1,1:end-1)+Ux(2:end-1,2:end))/2).^2);              % convection speed magnitude
 bndtapers = (1 - (exp((-ZZ)/l0) + exp(-(D-ZZ)/l0)).*(1-open_sgr));
 vx  = d0^2./etas.*(rhox0-rhom0).*g0.*bndtapers;                            % xtal segregation speed magnitude
 vm  = vx.*x./(1-x);                                                        % melt segregation speed magnitude
@@ -130,10 +132,12 @@ tII = (0.5.*(txx.^2 + tzz.^2 ...
        + 2.*(txz(1:end-1,1:end-1).^2+txz(2:end,1:end-1).^2 ...
        +     txz(1:end-1,2:end  ).^2+txz(2:end,2:end  ).^2)/4)).^0.5 + eps;
 
+if step>0
 % update time step
 dtk = (h/2)^2/max(kx(:)); % diffusive time step size
 dta =  h/2   /max(abs([Um(:);Wm(:);Ux(:);Wx(:)]+eps));  % advective time step size
-dt  =  min([1.5*dto,min([dtk,CFL*dta]),dtmax]); % time step size
+dt  =  min([1.5*dto,min(CFL*[dtk,dta]),dtmax]); % time step size
+end
 
 % record timing
 UDtime = UDtime + toc;
