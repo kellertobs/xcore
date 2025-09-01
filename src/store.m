@@ -7,8 +7,8 @@
 [dXdtoo    , dXdto    ] = deal(dXdto    , dXdt    );
 [drhodtoo  , drhodto  ] = deal(drhodto  , drhodt  );
 
-psieo  = psie;
-psiexo = psiex;
-psiso  = psis;
+psieo = psie;
+psixo = psix;
+psiso = psis;
 
 dto = dt;

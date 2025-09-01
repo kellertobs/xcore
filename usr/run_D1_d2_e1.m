@@ -20,7 +20,7 @@ h         =  D/N;                 % grid spacing (equal in both dimensions, do n
 L         =  D*1.5;               % chamber width (equal to h for 1-D mode) [m]
 
 % set model timing parameters
-t0end     =  1.5;                 % stop when dimensionless time is reached
+t0end     =  2.0;                 % stop when dimensionless time is reached
 
 % set crystallinity initial condition
 xeq       =  0.01;                % equilibrium crystallinity of boundary layer [wt]
@@ -32,7 +32,7 @@ etam0     =  1e+1;                % melt viscosity constant [kg/m3]
 L0        =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)
 l0        =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
 R         =  0.5;                 % relative amplitude of crystallisation rate [s]
-Xi        =  0.25;                % relative amplitude of random noise flux
+Xi        =  0.5;                 % relative amplitude of random noise flux
 
 % set numerical model parameters
 CFL       =  0.50;                % (physical) time stepping courant number (multiplies stable step) [0,1]

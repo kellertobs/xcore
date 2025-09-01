@@ -25,10 +25,15 @@ fReL    =  1-exp(-ReL0);              % Re-dependent ramp factor
 fRel    =  1-exp(-Rel0);              % Re-dependent ramp factor
 
 % general convective speed
-if fReL>1e-4; W0  =  D0/(  fReL*L0^2*rho0) * (sqrt(2*Dchi0*Drho0*fReL*g0*rho0*L0^2*D0 + eta0^2) - eta0); end
+% W0   =  D0/(  fReL*L0^2*rho0) * (sqrt(2*Dchi0*Drho0*fReL*g0*rho0*L0^2*D0 + eta0^2) - eta0);
+W0t  =  sqrt(D/(rho0/(Dchi0*Drho0*g0)));
+W0   =  1/(1/W0 + 1/W0t);
 
 % general settling speed
-if fRel>1e-4; w0  =  1 /(2*fRel*l0  *rho0) * (sqrt(4*      Drho0*g0*rho0*fRel*l0*d0^2 + eta0^2) - eta0); end
+% w0 =  1 /(2*fRel*l0  *rho0) * (sqrt(4*      Drho0*g0*rho0*fRel*l0*d0^2 + eta0^2) - eta0);
+w0t = sqrt(Drho0.*g0.*d0.^2./(l0.*rho0));
+w0  = 1/(1/w0 + 1/w0t);
+
 
 % diffusivities
 eII0    =  W0/D0/2;
@@ -127,7 +132,7 @@ if ndm_op
     MFSsc = rho0/t0; MFSun = '1';
     xsc   = chi0;  xun = '1';
     Gsc   = rho0/t0;  Gun = '1';
-    ssc   = D0;  sun = '1';
+    ssc   = D;  sun = '1';
     Rasc  = Ra0;
     ReDsc = ReD0;
     Redsc = Red0;

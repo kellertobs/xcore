@@ -80,11 +80,26 @@ if ~exist('dt','var'); dt = dt0/10; end
     2*pi*ifftshift((0:Nz-1) - floor(Nz/2)) / (Nz*h), ...
     2*pi*ifftshift((0:Nx-1) - floor(Nx/2)) / (Nx*h)  );
 
+padL0 = 4*ceil(L0/h);
+padl0 = 4*ceil(l0/h);
+
+[kpx_padL0, kpz_padL0] = ndgrid( ...
+    2*pi*ifftshift((0:Nz-1+padL0) - floor((Nz+padL0)/2)) / ((Nz+padL0)*h), ...
+    2*pi*ifftshift((0:Nx-1      ) - floor( Nx       /2)) / ( Nx       *h)  );
+
+[kpx_padl0, kpz_padl0] = ndgrid( ...
+    2*pi*ifftshift((0:Nz-1+padl0) - floor((Nz+padl0)/2)) / ((Nz+padl0)*h), ...
+    2*pi*ifftshift((0:Nx-1      ) - floor( Nx       /2)) / ( Nx       *h)  );
+
 kp2 = kpx.^2 + kpz.^2;
+kp2_padL0 = kpx_padL0.^2 + kpz_padL0.^2;
+kp2_padl0 = kpx_padl0.^2 + kpz_padl0.^2;
 
 % Gaussian spatial filter kernels in Fourier space
 Gkps = exp(-0.5 * ((l0h*sqrt(2))^2) * kp2);
 Gkpe = exp(-0.5 * ((L0h*sqrt(2))^2) * kp2);
+Gkps_padl0 = exp(-0.5 * ((l0h*sqrt(2))^2) * kp2_padl0);
+Gkpe_padL0 = exp(-0.5 * ((L0h*sqrt(2))^2) * kp2_padL0);
 Gkrp = exp(-0.5 * ((L0h+l0h    )^2) * kp2);
 
 % initialise smooth random noise generation
@@ -100,17 +115,17 @@ rp  = real(ifft2(Gkrp .* fft2(rp)));
 rp  = (rp - mean(rp(:))) ./ std(rp(:));
 
 % initialise noise flux potentials
-psie  = zeros(Nz+0, Nx+0);
-psiex = zeros(Nz+0, Nx+0);
-psis  = zeros(Nz+0, Nx+0);
+psie = zeros(Nz+0, Nx+0);
+psix = zeros(Nz+0, Nx+0);
+psis = zeros(Nz+0, Nx+0);
 
 % initialise noise flux components
-xisw  = zeros(Nz+1, Nx+2);
-xisu  = zeros(Nz+2, Nx+1);
-xiew  = zeros(Nz+1, Nx+2);
-xieu  = zeros(Nz+2, Nx+1);
-xiexw = zeros(Nz+1, Nx+2);
-xiexu = zeros(Nz+2, Nx+1);
+xisw = zeros(Nz+1, Nx+2);
+xisu = zeros(Nz+2, Nx+1);
+xiew = zeros(Nz+1, Nx+2);
+xieu = zeros(Nz+2, Nx+1);
+xixw = zeros(Nz+1, Nx+2);
+xixu = zeros(Nz+2, Nx+1);
 
 % get mapping arrays
 NP = (Nz+2) * (Nx+2);
@@ -122,7 +137,7 @@ MapU = reshape(1:NU,Nz+2,Nx+1) + NW;
 
 % set up shape functions for initial and transient boundary layers
 initshape = exp((-ZZ+h/2)/(L0h+l0h)/2); % width of initial boundary layer [m]
-bndshape  = exp((-ZZ+h/2)/h);         % width of crystal replenishing layer [m]
+bndshape  = exp((-ZZ+h/2)/(L0h+l0h)/1); % width of crystal replenishing layer [m]
 
 % set specified boundaries to no slip, else to free slip
 sds        = -1;
@@ -218,7 +233,7 @@ if restart
     end
     if exist(name,'file')
         fprintf('\n  restart from %s \n\n',name);
-        load(name,'U','W','P','x','m','chi','mu','X','M','dXdt','drhodt','Gx','rho','eta','etas','ke','ks','kx','Ra','ReD','Red','Rc','dt','time','step','MFS','wx','wm','psie','psiex','psis','xisw','xisu','xiew','xieu','xiexw','xiexu');
+        load(name,'U','W','P','x','m','chi','mu','X','M','dXdt','drhodt','Gx','rho','eta','etas','ke','ks','kx','Ra','ReD','Red','Rc','dt','time','step','MFS','wx','wm','psie','psix','psis','xisw','xisu','xiew','xieu','xixw','xixu');
         name = [outdir,'/',runID,'/',runID,'_HST'];
         load(name,'HST');
 
