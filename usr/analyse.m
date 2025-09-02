@@ -407,14 +407,14 @@ for eta0=10.^linspace(-1,5,4)
         line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
         line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
         for iD=0:1:2
-            for id=-3:1:-2
+            for id=-4:1:-2
                 plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w')
             end
         end
         % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot(6,-2,'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot(6,-1,'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot(log10(1e1),log10(1e-2),'ko','LineWidth',1,'MarkerFaceColor','k')
+        plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w')
+        plot(6,-2,'wo','LineWidth',1,'MarkerFaceColor','k')
+        plot(log10(1e1),log10(1e-2),'wo','LineWidth',1,'MarkerFaceColor','k')
 
         set(gca,'TickLabelInterpreter','latex','FontSize',11)
         % xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
@@ -428,14 +428,14 @@ for eta0=10.^linspace(-1,5,4)
         line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
         line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
         for iD=0:1:2
-            for id=-3:1:-2
+            for id=-4:1:-2
                 plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w')
             end
         end
         % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot(6,-2,'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot(6,-1,'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot(log10(1e1),log10(1e-2),'ko','LineWidth',1,'MarkerFaceColor','k')
+        plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w')
+        plot(6,-2,'wo','LineWidth',1,'MarkerFaceColor','k')
+        plot(log10(1e1),log10(1e-2),'wo','LineWidth',1,'MarkerFaceColor','k')
 
         set(gca,'TickLabelInterpreter','latex','FontSize',11)
         % xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
@@ -449,14 +449,14 @@ for eta0=10.^linspace(-1,5,4)
         line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
         line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
         for iD=0:1:2
-            for id=-3:1:-2
+            for id=-4:1:-2
                 plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w')
             end
         end
         % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot(6,-2,'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot(6,-1,'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot(log10(1e1),log10(1e-2),'ko','LineWidth',1,'MarkerFaceColor','k')
+        plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w')
+        plot(6,-2,'wo','LineWidth',1,'MarkerFaceColor','k')
+        plot(log10(1e1),log10(1e-2),'wo','LineWidth',1,'MarkerFaceColor','k')
 
         set(gca,'TickLabelInterpreter','latex','FontSize',11)
         xlabel('log$_{10}$ Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
@@ -470,14 +470,14 @@ for eta0=10.^linspace(-1,5,4)
         line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
         line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
         for iD=0:1:2
-            for id=-3:1:-2
+            for id=-4:1:-2
                 plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w')
             end
         end
         % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot(6,-2,'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot(6,-1,'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot(log10(1e1),log10(1e-2),'ko','LineWidth',1,'MarkerFaceColor','k')
+        plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w')
+        plot(6,-2,'wo','LineWidth',1,'MarkerFaceColor','k')
+        plot(log10(1e1),log10(1e-2),'wo','LineWidth',1,'MarkerFaceColor','k')
 
         set(gca,'TickLabelInterpreter','latex','FontSize',11)
         xlabel('log$_{10}$ Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);

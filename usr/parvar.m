@@ -1,28 +1,27 @@
-% crustal magmatism parameter variations  (28 simulations, PA)
+% crustal magmatism parameter variations  (18 simulations, PA)
 D     = [1e0; 1e1 (ref); 1e2;];  % [m]
 d0    = [1e-4; 1e-3; 1e-2 (ref);];  % [m]
-etam0 = [1e-1; 1e+1 (ref); 1e+3];   % [Pas]
-d0    = 3e-2; D = 3e0; etam0 = 1e1; % (settling regime D30_d32_e1)
+etam0 = [1e+1; (ref); 1e+3];   % [Pas]
 
-% additional parameter variations on reference run (11 simulations, TK)
+% additional parameter variations on reference run (13 simulations, TK)
 N          = 200;    % [100; 300];
 CFL        = 0.5;    % [0.25; 1]
-elle       = h/2;    % [1/4; 2]*h
-ells       = d0*10;  % [5; 20]*d0
-Da         = 1.0;    % [0.1]
-Xi         = 1.0;    % [0.1]
+L0         = h/2;    % [1/4; 2]*h
+l0         = d0*10;  % [5; 20]*d0
+R          = 0.5;    % [1,0.1]
+Xi         = 0.5;    % [1,0.1]
 xeq        = 0.01;   % [0.1]
 
-% magma ocean parameter variations  (4 simulations, TK)
+% magma ocean parameter variations  (6 simulations, TK)
 D     =  1e6;          % [m]
-d0    = [1e-2 (ref); 1e-1];  % [m]
+d0    = [1e-3; 1e-2 (ref); 1e-1];  % [m]
 etam0 = [1e-1; 1e+1 (ref)];  % [Pas]
 
 % additional parameter variations on magma ocean ref run (5 simulations, TK)
 gamma      = 1e-3;   % [0,1e-2];
-elle       = h/2;    % [h/4,2*h,4*h];
+L0         = h/2;    % [h/4,2*h,4*h];
 
-% total # simulations: 28+11+4+5 = 48
+% total # simulations: 18+13+6+5 = 42
 
 % naming convention for RunIDs
 D = 1e1; d = 1e-2; etam0 = 1e+1;  % => D1_d2_e1 reference run
