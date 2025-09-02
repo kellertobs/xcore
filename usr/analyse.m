@@ -204,7 +204,7 @@ for eta0=10.^linspace(-1,5,4)
 
     Drho0 = 500;
     chi0  = 0.01;
-    Dchi0 = chi0/20;
+    Dchi0 = chi0/10;
     rho0  = 2700;
     g0    = 10;
 
@@ -408,11 +408,11 @@ for eta0=10.^linspace(-1,5,4)
         line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
         line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
         for iD=0:1:2
-            for id=-4:1:-2
+            for id=-3:1:-2
                 plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w')
             end
         end
-        plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
+        % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
         plot(6,-2,'ko','LineWidth',1,'MarkerFaceColor','w')
         plot(6,-1,'ko','LineWidth',1,'MarkerFaceColor','w')
         plot(log10(1e1),log10(1e-2),'ko','LineWidth',1,'MarkerFaceColor','k')
@@ -429,11 +429,11 @@ for eta0=10.^linspace(-1,5,4)
         line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
         line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
         for iD=0:1:2
-            for id=-4:1:-2
+            for id=-3:1:-2
                 plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w')
             end
         end
-        plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
+        % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
         plot(6,-2,'ko','LineWidth',1,'MarkerFaceColor','w')
         plot(6,-1,'ko','LineWidth',1,'MarkerFaceColor','w')
         plot(log10(1e1),log10(1e-2),'ko','LineWidth',1,'MarkerFaceColor','k')
@@ -450,11 +450,11 @@ for eta0=10.^linspace(-1,5,4)
         line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
         line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
         for iD=0:1:2
-            for id=-4:1:-2
+            for id=-3:1:-2
                 plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w')
             end
         end
-        plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
+        % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
         plot(6,-2,'ko','LineWidth',1,'MarkerFaceColor','w')
         plot(6,-1,'ko','LineWidth',1,'MarkerFaceColor','w')
         plot(log10(1e1),log10(1e-2),'ko','LineWidth',1,'MarkerFaceColor','k')
@@ -471,11 +471,11 @@ for eta0=10.^linspace(-1,5,4)
         line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
         line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
         for iD=0:1:2
-            for id=-4:1:-2
+            for id=-3:1:-2
                 plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w')
             end
         end
-        plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
+        % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
         plot(6,-2,'ko','LineWidth',1,'MarkerFaceColor','w')
         plot(6,-1,'ko','LineWidth',1,'MarkerFaceColor','w')
         plot(log10(1e1),log10(1e-2),'ko','LineWidth',1,'MarkerFaceColor','k')
@@ -484,7 +484,7 @@ for eta0=10.^linspace(-1,5,4)
         xlabel('log$_{10}$ Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
         % ylabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
         title('log$_{10}$ Convect. Reynolds No. Re$_D$','Interpreter','latex','FontSize',13);
-        text(0.84,0.91,'\textbf{(d)}','Interpreter','latex','FontSize',13,'Units','normalized')
+        text(0.84,0.91,'\textbf{(d)}','Interpreter','latex','FontSize',13,'Units','normalized','Color','w')
 
     end
 
