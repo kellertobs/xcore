@@ -10,29 +10,31 @@ h0      =  h;
 % material parameter scales
 rho0    =  rhom0;
 Drho0   =  rhox0-rhom0;
-Dchi0   =  xeq/20;
+Dchi0   =  xeq/10;
 chi0    =  xeq;
 eta0    =  etam0;
 
 % speed scales
-W0      =  Dchi0*Drho0*g0*D0^2/eta0;  % laminar convection speed
-w0      =        Drho0*g0*d0^2/eta0;  % laminar settling speed
+W0l     =  Dchi0*Drho0*g0*D0^2/eta0;  % laminar convection speed
+w0l     =        Drho0*g0*d0^2/eta0;  % laminar settling speed
 
-ReL0    =  W0*L0/(eta0/rho0);         % laminar convective Reynolds No at L0
-Rel0    =  w0*l0/(eta0/rho0);         % laminar settling Reynolds No at L0
+ReL0    =  W0l*L0/(eta0/rho0);        % laminar convective Reynolds No at L0
+Rel0    =  w0l*l0/(eta0/rho0);        % laminar settling Reynolds No at L0
 
 fReL    =  1-exp(-ReL0);              % Re-dependent ramp factor
 fRel    =  1-exp(-Rel0);              % Re-dependent ramp factor
 
 % general convective speed
-% W0   =  D0/(  fReL*L0^2*rho0) * (sqrt(2*Dchi0*Drho0*fReL*g0*rho0*L0^2*D0 + eta0^2) - eta0);
-W0t  =  sqrt(D/(rho0/(Dchi0*Drho0*g0)));
-W0   =  1/(1/W0 + 1/W0t);
+if open_cnv
+    W0t  =  sqrt(2*Dchi0*Drho0*g0*Ds0^3/(L0^2*rho0));  % terminal turbulent convective speed
+else
+    W0t  =  sqrt(D/(rho0/(Dchi0*Drho0*g0)));           % inertially limited convective speed
+end
+W0   =  1/(1/W0l + 1/W0t);
 
 % general settling speed
-% w0 =  1 /(2*fRel*l0  *rho0) * (sqrt(4*      Drho0*g0*rho0*fRel*l0*d0^2 + eta0^2) - eta0);
 w0t = sqrt(Drho0.*g0.*d0.^2./(l0.*rho0));
-w0  = 1/(1/w0 + 1/w0t);
+w0  = 1/(1/w0l + 1/w0t);
 
 
 % diffusivities

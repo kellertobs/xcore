@@ -14,7 +14,11 @@ advn_rho = advn_X+advn_M;
 [dffn_M,qz_dffn_M,qx_dffn_M] = diffus( mu,X.*kx,h,[1,2],BCD);
 
 % boundary phase change rate
-tau_x    = h./(W0 + w0) + dt;
+if open_sgr
+    tau_x = h./(W0 + w0) + dt;
+else
+    tau_x = (L0h+l0h)^2/(1e-6 + fReL.*mean(ke(1,:)));
+end
 Gx       = R.*max(0,xeq-x).*rho./tau_x.*bndshape;
 
 % total rates of change
