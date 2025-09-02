@@ -122,7 +122,7 @@ fprintf(1,'       Red0  = %s \n\n',simplify(Red0));
 
 %% general case
 
-syms chi0 Dchi0 Drho0 rho0 g0 Ds0 d0 eta0 L0 l0 fReL fRel
+syms chi0 Dchi0 Drho0 rho0 g0 Ds0 d0 eta0 L0 l0 fReL fRel etae
 
 % turbulent eddy viscosity
 clear W0; syms W0
@@ -135,10 +135,10 @@ ks0   = w0*l0;
 etas0 = eta0 + fRel*ks0*rho0;
 
 % Speed scale for crystal-driven convection
-% eq2W = W0 - Dchi0*Drho0*g0*Ds0^2/etae0 == 0;
-% W0   = solve(eq2W,W0);
+eq2W = W0 - Dchi0*Drho0*g0*Ds0^2/etae0 == 0;
+W0   = solve(eq2W,W0);
 % W00  = W0(2);
-W0g = 1/(1/W0l + 1/W0t);
+% W0g = 1/(1/W0l + 1/W0t);
 
 % Speed scale for crystal settling
 % eq2w = w0 - Drho0*g0*d0^2/etas0 == 0;
@@ -204,7 +204,7 @@ for eta0=10.^linspace(-1,5,4)
 
     Drho0 = 500;
     chi0  = 0.01;
-    Dchi0 = chi0/10;
+    Dchi0 = chi0/20;
     rho0  = 2700;
     g0    = 10;
 
@@ -281,29 +281,29 @@ for eta0=10.^linspace(-1,5,4)
     etas0 = 0 + rho0.*ks0;
 
     % Navier-Stokes speed scale for crystal-driven convection
-    % W0t   = sqrt(2.*Dchi0.*Drho0.*g0.*Ds0.^3./(L0.^2.*rho0));
-    W0t   = sqrt(Dchi0.*Drho0.*g0.*D0./rho0);
-    ke0   = W0t./Ds0./2.*L0.^2;
+    W0t   = sqrt(2.*Dchi0.*Drho0.*g0.*Ds0.^3./(L0.^2.*rho0));
+    W0i   = sqrt(   Dchi0.*Drho0.*g0.*D0            ./rho0);
+    ke0   = W0i./Ds0./2.*L0.^2;
     etae0 = 0 + rho0.*ke0;
 
     kx0   = ks0 + ke0;
 
-    xie0  =  sqrt(      ke0./(L0./2./W0t).*(L0./(L0+h0)).^3);
-    xiex0 =  sqrt(chi0.*ke0./(L0./2./W0t).*(L0./(L0+h0)).^3);
+    xie0  =  sqrt(      ke0./(L0./2./W0i).*(L0./(L0+h0)).^3);
+    xiex0 =  sqrt(chi0.*ke0./(L0./2./W0i).*(L0./(L0+h0)).^3);
     xis0  =  sqrt(chi0.*ks0./(l0./2./w0t).*(l0./(l0+h0)).^3);
     xix0  =  xis0 + xiex0;
 
     % dimensionless numbers for non-turbulent case
-    Rc0   = W0t./w0t;                 % Turbulent Convection number
-    Ra0   = W0t.*Ds0./kx0;            % Turbulent Rayleigh number
-    ReD0  = W0t.*Ds0./(etae0./rho0);  % Turbulent Domain Reynolds number
+    Rc0   = W0i./w0t;                 % Turbulent Convection number
+    Ra0   = W0i.*Ds0./kx0;            % Turbulent Rayleigh number
+    ReD0  = W0i.*Ds0./(etae0./rho0);  % Turbulent Domain Reynolds number
     Red0  = w0t.*d0 ./(etas0./rho0);  % Turbulent Particle Reynolds number
 
     set(0,'CurrentFigure',fig1)
     subplot(2,2,1)
     p31 = loglog(d0(:,1),w0t(:,indD),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
     subplot(2,2,2)
-    p32 = loglog(D0(1,:),W0t(indd,:),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
+    p32 = loglog(D0(1,:),W0i(indd,:),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*blk); axis tight; box on; hold on
     subplot(2,2,3)
     p38 = loglog(d0(:,1),Ra0(:,indD),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*prp); axis tight; box on; hold on
     p33 = loglog(d0(:,1),Rc0(:,indD),'-.','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*red); axis tight; box on; hold on
@@ -330,14 +330,13 @@ for eta0=10.^linspace(-1,5,4)
     % General case
 
     % Navier-Stokes speed scale for crystal settling
-    % w0    =      (sqrt(4        .*Drho0.*g0.*rho0.*fRel.*l0  .*d0.^2 + eta0.^2) - eta0)./(2.*fRel.*l0   .*rho0);
-    w0    = 1./(1./w0l + 1./w0t);
+    w0    =      (sqrt(4        .*Drho0.*g0.*rho0.*fRel.*l0  .*d0.^2 + eta0.^2) - eta0)./(2.*fRel.*l0   .*rho0);
     ks0   = w0.*l0;
     etas0 = eta0 + fRel.*rho0.*ks0;
 
     % Navier-Stokes speed scale for crystal-driven convection
-    % W0    = Ds0.*(sqrt(2.*Dchi0.*Drho0.*g0.*rho0.*fReL.*L0.^2.*Ds0  + eta0.^2) - eta0)./(    fReL.*L0.^2.*rho0);
-    W0    = 1./(1./W0l + 1./W0t);
+    C     = W0t./W0i;
+    W0    = Ds0.*(sqrt(C.^2.*2.*Dchi0.*Drho0.*g0.*rho0.*fReL.*L0.^2.*Ds0  + eta0.^2) - eta0)./(C.^2.*fReL.*L0.^2.*rho0);
     ke0   = W0./Ds0./2.*L0.^2;
     etae0 = eta0 + fReL.*rho0.*ke0;
 
@@ -501,8 +500,8 @@ text(0.02,0.91,'\textbf{(a)}','Interpreter','latex','FontSize',13,'Units','norma
 legend([p11,p31,p51],{'laminar','turbulent','general'},'Interpreter','latex','FontSize',11,'Location','southeast');
 
 subplot(2,2,2)
-line([1e1,1e1],[1e-6,1e4],'Color','k','LineStyle',':','LineWidth',1);
-xlim([1e0,1e6]); ylim([1e-6,1e4]); yticks([1e-6 1e-4,1e-2,1e0,1e2,1e4]);
+line([1e1,1e1],[1e-8,1e2],'Color','k','LineStyle',':','LineWidth',1);
+xlim([1e0,1e6]); ylim([1e-8,1e2]); yticks([1e-8,1e-6,1e-4,1e-2,1e0,1e2]);
 set(gca,'TickLabelInterpreter','latex','FontSize',11)
 xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
 ylabel('Convective speed $W_0$ [m/s]','Interpreter','latex','FontSize',13);
