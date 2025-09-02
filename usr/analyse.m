@@ -183,9 +183,10 @@ fprintf(1,'       Red0  = %s \n\n',simplify(Red0));
 %% numerical evaluation
 clear; close all;
 
-fig1 = figure(1); clf; set(gcf,'Units','centimeters','Position',[10,10,20,15]);
-fig2 = figure(2); clf; set(gcf,'Units','centimeters','Position',[12,12,20,15]);
-fig3 = figure(3); clf; set(gcf,'Units','centimeters','Position',[14,14,20,15]);
+fig1 = figure(1); clf; set(gcf,'Units','centimeters','Position',[6,6,20,15]);
+fig2 = figure(2); clf; set(gcf,'Units','centimeters','Position',[8,8,20,15]);
+fig3 = figure(3); clf; set(gcf,'Units','centimeters','Position',[10,10,20,15]);
+fig4 = figure(4); clf; set(gcf,'Units','centimeters','Position',[12,12,18,15]);
 load ../src/colmap/vik.mat; colmap = vik;
 
 etait = 0;
@@ -381,7 +382,7 @@ for eta0=10.^linspace(-1,5,4)
     subplot(2,2,4)
     p67 = loglog(D0(1,:),xie0(indd,:),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*red); axis tight; box on; hold on
     p68 = loglog(D0(1,:),xix0(indd,:),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*grn); axis tight; box on; hold on
-
+    drawnow;
 
     if eta0==etaref
 
@@ -484,6 +485,36 @@ for eta0=10.^linspace(-1,5,4)
         % ylabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
         title('log$_{10}$ Convect. Reynolds No. Re$_D$','Interpreter','latex','FontSize',13);
         text(0.84,0.91,'\textbf{(d)}','Interpreter','latex','FontSize',13,'Units','normalized','Color','w')
+        drawnow;
+
+
+        % use clustering to identify regimes
+        X = log10(double([Rc0(:),Ra0(:),ReD0(:),Red0(:)]));
+        [PC_C, PC_A, PC_V] = pca(X,'Algorithm','svd','Centered','on','VariableWeights','variance');
+        idx = kmeans(PC_A,4,'Replicates',10,'Display','final');
+
+        set(0,'CurrentFigure',fig4)
+        imagesc(log10(D0(1,:)),log10(d0(:,1)),reshape(idx,length(D0(1,:)),length(d0(:,1)))); axis xy tight; box on; hold on; colormap(colmap);
+
+        line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','w','LineStyle','-','LineWidth',1);
+        line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','k','LineStyle',':','LineWidth',1);
+        line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
+        line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
+        for iD=0:1:2
+            for id=-4:1:-2
+                plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w','MarkerSize',10)
+            end
+        end
+        % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
+        plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w','MarkerSize',10)
+        plot(6,-2,'wo','LineWidth',1,'MarkerFaceColor','k','MarkerSize',10)
+        plot(log10(1e1),log10(1e-2),'wo','LineWidth',1,'MarkerFaceColor','k','MarkerSize',10)
+
+        set(gca,'TickLabelInterpreter','latex','FontSize',13)
+        xlabel('log$_{10}$ Layer depth $D_0$ [m]','Interpreter','latex','FontSize',15);
+        ylabel('log$_{10}$ Crystal size $d_0$ [m]','Interpreter','latex','FontSize',15);
+        title('Flow regimes','Interpreter','latex','FontSize',15);
+        drawnow;
 
     end
 
@@ -569,4 +600,6 @@ print(fig1,name,'-dpng','-r300','-image');
 name = './scaling_lines2';
 print(fig2,name,'-dpng','-r300','-image');
 name = './scaling_maps';
+print(fig3,name,'-dpng','-r300','-image');
+name = './scaling_regimes';
 print(fig3,name,'-dpng','-r300','-image');

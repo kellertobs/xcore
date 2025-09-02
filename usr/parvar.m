@@ -17,11 +17,12 @@ D     =  1e6;          % [m]
 d0    = [1e-3; 1e-2 (ref); 1e-1];  % [m]
 etam0 = [1e-1; 1e+1 (ref)];  % [Pas]
 
-% additional parameter variations on magma ocean ref run (5 simulations, TK)
+% additional parameter variations on magma ocean ref run (7 simulations, TK)
 gamma      = 1e-3;   % [0,1e-2];
 L0         = h/2;    % [h/4,2*h,4*h];
+Xi         = 0.5;    % [[1,0.1]]
 
-% total # simulations: 18+13+6+5 = 42
+% total # simulations: 18+13+6+7 = 44
 
 % naming convention for RunIDs
 D = 1e1; d = 1e-2; etam0 = 1e+1;  % => D1_d2_e1 reference run
