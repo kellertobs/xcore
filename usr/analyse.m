@@ -188,6 +188,7 @@ fig2 = figure(2); clf; set(gcf,'Units','centimeters','Position',[8,8,20,15]);
 fig3 = figure(3); clf; set(gcf,'Units','centimeters','Position',[10,10,20,15]);
 fig4 = figure(4); clf; set(gcf,'Units','centimeters','Position',[12,12,18,15]);
 load ../src/colmap/vik.mat; colmap = vik;
+if ~isfolder('./scaling'); mkdir('./scaling'); end
 
 etait = 0;
 for eta0=10.^linspace(-1,5,4)
@@ -199,8 +200,8 @@ for eta0=10.^linspace(-1,5,4)
     prp   = [0.5 0.1 0.5]; grn = [0.2 0.6 0.3];
 
     % parameter range
-    d0   = 10.^linspace(-4,-1,61);
-    D0   = 10.^linspace(0,6,61);
+    d0   = 10.^linspace(-4,-1,121);
+    D0   = 10.^linspace(0,6,121);
     [D0,d0] = meshgrid(D0,d0);
 
     Drho0 = 500;
@@ -384,139 +385,144 @@ for eta0=10.^linspace(-1,5,4)
     p68 = loglog(D0(1,:),xix0(indd,:),'-','LineWidth',1.5,'Color',lnshd.*wht + (1-lnshd).*grn); axis tight; box on; hold on
     drawnow;
 
-    if eta0==etaref
+    set(0,'CurrentFigure',fig3); clf;
+    subplot(2,2,1);
+    imagesc(log10(D0(1,:)),log10(d0(:,1)),log10(double(Rc0))); axis xy tight; box on; hold on; colorbar('Ticklabelinterpreter','latex','FontSize',11); colormap(colmap);
+    clim([-1,1].*max(abs(log10(double(Rc0(:))))));
+    subplot(2,2,2);
+    imagesc(log10(D0(1,:)),log10(d0(:,1)),log10(double(Red0))); axis xy tight; box on; hold on; colorbar('Ticklabelinterpreter','latex','FontSize',11); colormap(colmap);
+    clim([-1,1].*max(abs(log10(double(Red0(:))))));
+    subplot(2,2,3);
+    imagesc(log10(D0(1,:)),log10(d0(:,1)),log10(double(Ra0))); axis xy tight; box on; hold on; colorbar('Ticklabelinterpreter','latex','FontSize',11); colormap(colmap);
+    clim([-1,1].*max(abs(log10(double(Ra0(:))))));
+    subplot(2,2,4);
+    imagesc(log10(D0(1,:)),log10(d0(:,1)),log10(double(ReD0))); axis xy tight; box on; hold on; colorbar('Ticklabelinterpreter','latex','FontSize',11); colormap(colmap);
+    clim([-1,1].*max(abs(log10(double(ReD0(:))))));
 
-        col = [0.5 0.5 0.5];
-
-        set(0,'CurrentFigure',fig3)
-        subplot(2,2,1);
-        imagesc(log10(D0(1,:)),log10(d0(:,1)),log10(double(Rc0))); axis xy tight; box on; hold on; colorbar('Ticklabelinterpreter','latex','FontSize',11); colormap(colmap); 
-        clim([-1,1].*max(abs(log10(double(Rc0(:))))));
-        subplot(2,2,2);
-        imagesc(log10(D0(1,:)),log10(d0(:,1)),log10(double(Red0))); axis xy tight; box on; hold on; colorbar('Ticklabelinterpreter','latex','FontSize',11); colormap(colmap);
-        clim([-1,1].*max(abs(log10(double(Red0(:))))));
-        subplot(2,2,3);
-        imagesc(log10(D0(1,:)),log10(d0(:,1)),log10(double(Ra0))); axis xy tight; box on; hold on; colorbar('Ticklabelinterpreter','latex','FontSize',11); colormap(colmap);
-        clim([-1,1].*max(abs(log10(double(Ra0(:))))));
-        subplot(2,2,4);
-        imagesc(log10(D0(1,:)),log10(d0(:,1)),log10(double(ReD0))); axis xy tight; box on; hold on; colorbar('Ticklabelinterpreter','latex','FontSize',11); colormap(colmap);
-        clim([-1,1].*max(abs(log10(double(ReD0(:))))));
-
-        subplot(2,2,1)
-        line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','w','LineStyle','-','LineWidth',1);
-        line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','k','LineStyle',':','LineWidth',1);
-        line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
-        line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
-        for iD=0:1:2
-            for id=-4:1:-2
-                plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w')
-            end
+    subplot(2,2,1)
+    line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','w','LineStyle','-','LineWidth',1);
+    line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','k','LineStyle',':','LineWidth',1);
+    line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
+    line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
+    for iD=0:1:2
+        for id=-4:1:-2
+            plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w')
         end
-        % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot(6,-2,'wo','LineWidth',1,'MarkerFaceColor','k')
-        plot(log10(1e1),log10(1e-2),'wo','LineWidth',1,'MarkerFaceColor','k')
-
-        set(gca,'TickLabelInterpreter','latex','FontSize',11)
-        % xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
-        ylabel('log$_{10}$ Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
-        title('log$_{10}$ Convection No. Rc','Interpreter','latex','FontSize',13);
-        text(0.84,0.91,'\textbf{(a)}','Interpreter','latex','FontSize',13,'Units','normalized')
-
-        subplot(2,2,2)
-        line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','w','LineStyle','-','LineWidth',1);
-        line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','k','LineStyle',':','LineWidth',1);
-        line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
-        line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
-        for iD=0:1:2
-            for id=-4:1:-2
-                plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w')
-            end
-        end
-        % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot(6,-2,'wo','LineWidth',1,'MarkerFaceColor','k')
-        plot(log10(1e1),log10(1e-2),'wo','LineWidth',1,'MarkerFaceColor','k')
-
-        set(gca,'TickLabelInterpreter','latex','FontSize',11)
-        % xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
-        % ylabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
-        title('log$_{10}$ Settling Reynolds No. Re$_d$','Interpreter','latex','FontSize',13);
-        text(0.84,0.91,'\textbf{(b)}','Interpreter','latex','FontSize',13,'Units','normalized')
-
-        subplot(2,2,3)
-        line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','w','LineStyle','-','LineWidth',1);
-        line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','k','LineStyle',':','LineWidth',1);
-        line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
-        line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
-        for iD=0:1:2
-            for id=-4:1:-2
-                plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w')
-            end
-        end
-        % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot(6,-2,'wo','LineWidth',1,'MarkerFaceColor','k')
-        plot(log10(1e1),log10(1e-2),'wo','LineWidth',1,'MarkerFaceColor','k')
-
-        set(gca,'TickLabelInterpreter','latex','FontSize',11)
-        xlabel('log$_{10}$ Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
-        ylabel('log$_{10}$ Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
-        title('log$_{10}$ Convect. Rayleigh No. Ra','Interpreter','latex','FontSize',13);
-        text(0.84,0.91,'\textbf{(c)}','Interpreter','latex','FontSize',13,'Units','normalized')
-
-        subplot(2,2,4)
-        line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','w','LineStyle','-','LineWidth',1);
-        line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','k','LineStyle',':','LineWidth',1);
-        line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
-        line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
-        for iD=0:1:2
-            for id=-4:1:-2
-                plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w')
-            end
-        end
-        % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot(6,-2,'wo','LineWidth',1,'MarkerFaceColor','k')
-        plot(log10(1e1),log10(1e-2),'wo','LineWidth',1,'MarkerFaceColor','k')
-
-        set(gca,'TickLabelInterpreter','latex','FontSize',11)
-        xlabel('log$_{10}$ Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
-        % ylabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
-        title('log$_{10}$ Convect. Reynolds No. Re$_D$','Interpreter','latex','FontSize',13);
-        text(0.84,0.91,'\textbf{(d)}','Interpreter','latex','FontSize',13,'Units','normalized','Color','w')
-        drawnow;
-
-
-        % use clustering to identify regimes
-        X = log10(double([Rc0(:),Ra0(:),ReD0(:),Red0(:)]));
-        [PC_C, PC_A, PC_V] = pca(X,'Algorithm','svd','Centered','on','VariableWeights','variance');
-        idx = kmeans(PC_A,4,'Replicates',10,'Display','final');
-
-        set(0,'CurrentFigure',fig4)
-        imagesc(log10(D0(1,:)),log10(d0(:,1)),reshape(idx,length(D0(1,:)),length(d0(:,1)))); axis xy tight; box on; hold on; colormap(colmap);
-
-        line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','w','LineStyle','-','LineWidth',1);
-        line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','k','LineStyle',':','LineWidth',1);
-        line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
-        line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
-        for iD=0:1:2
-            for id=-4:1:-2
-                plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w','MarkerSize',10)
-            end
-        end
-        % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
-        plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w','MarkerSize',10)
-        plot(6,-2,'wo','LineWidth',1,'MarkerFaceColor','k','MarkerSize',10)
-        plot(log10(1e1),log10(1e-2),'wo','LineWidth',1,'MarkerFaceColor','k','MarkerSize',10)
-
-        set(gca,'TickLabelInterpreter','latex','FontSize',13)
-        xlabel('log$_{10}$ Layer depth $D_0$ [m]','Interpreter','latex','FontSize',15);
-        ylabel('log$_{10}$ Crystal size $d_0$ [m]','Interpreter','latex','FontSize',15);
-        title('Flow regimes','Interpreter','latex','FontSize',15);
-        drawnow;
-
     end
+    % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
+    plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w')
+    plot(6,-2,'wo','LineWidth',1,'MarkerFaceColor','k')
+    plot(log10(1e1),log10(1e-2),'wo','LineWidth',1,'MarkerFaceColor','k')
+
+    set(gca,'TickLabelInterpreter','latex','FontSize',11)
+    % xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
+    ylabel('log$_{10}$ Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
+    title('log$_{10}$ Convection No. Rc','Interpreter','latex','FontSize',13);
+    text(0.84,0.91,'\textbf{(a)}','Interpreter','latex','FontSize',13,'Units','normalized')
+
+    subplot(2,2,2)
+    line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','w','LineStyle','-','LineWidth',1);
+    line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','k','LineStyle',':','LineWidth',1);
+    line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
+    line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
+    for iD=0:1:2
+        for id=-4:1:-2
+            plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w')
+        end
+    end
+    % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
+    plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w')
+    plot(6,-2,'wo','LineWidth',1,'MarkerFaceColor','k')
+    plot(log10(1e1),log10(1e-2),'wo','LineWidth',1,'MarkerFaceColor','k')
+
+    set(gca,'TickLabelInterpreter','latex','FontSize',11)
+    % xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
+    % ylabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
+    title('log$_{10}$ Settling Reynolds No. Re$_d$','Interpreter','latex','FontSize',13);
+    text(0.84,0.91,'\textbf{(b)}','Interpreter','latex','FontSize',13,'Units','normalized')
+
+    subplot(2,2,3)
+    line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','w','LineStyle','-','LineWidth',1);
+    line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','k','LineStyle',':','LineWidth',1);
+    line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
+    line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
+    for iD=0:1:2
+        for id=-4:1:-2
+            plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w')
+        end
+    end
+    % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
+    plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w')
+    plot(6,-2,'wo','LineWidth',1,'MarkerFaceColor','k')
+    plot(log10(1e1),log10(1e-2),'wo','LineWidth',1,'MarkerFaceColor','k')
+
+    set(gca,'TickLabelInterpreter','latex','FontSize',11)
+    xlabel('log$_{10}$ Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
+    ylabel('log$_{10}$ Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
+    title('log$_{10}$ Convect. Rayleigh No. Ra','Interpreter','latex','FontSize',13);
+    text(0.84,0.91,'\textbf{(c)}','Interpreter','latex','FontSize',13,'Units','normalized')
+
+    subplot(2,2,4)
+    line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','w','LineStyle','-','LineWidth',1);
+    line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','k','LineStyle',':','LineWidth',1);
+    line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',1);
+    line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',1);
+    for iD=0:1:2
+        for id=-4:1:-2
+            plot(iD,id,'ko','LineWidth',1,'MarkerFaceColor','w')
+        end
+    end
+    % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
+    plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w')
+    plot(6,-2,'wo','LineWidth',1,'MarkerFaceColor','k')
+    plot(log10(1e1),log10(1e-2),'wo','LineWidth',1,'MarkerFaceColor','k')
+
+    set(gca,'TickLabelInterpreter','latex','FontSize',11)
+    xlabel('log$_{10}$ Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
+    % ylabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
+    title('log$_{10}$ Convect. Reynolds No. Re$_D$','Interpreter','latex','FontSize',13);
+    text(0.84,0.91,'\textbf{(d)}','Interpreter','latex','FontSize',13,'Units','normalized','Color','w')
+    drawnow;
+
+
+    % use clustering to identify regimes
+    X = log10(double([Rc0(:),Ra0(:),ReD0(:),Red0(:)]));
+    [PC_C, PC_A, PC_V] = pca(X,'Algorithm','svd','Centered','on','VariableWeights','variance');
+    [Ic,Fc]  = kmeans(PC_A,4,'Replicates',10,'Display','final');
+
+    [~,is]  = sort(sum(Fc,2),'ascend');
+    Ics = zeros(size(Ic));
+    for kc = 1:size(Fc,1)
+        Ics(Ic==is(kc),1) = kc;
+    end
+
+    set(0,'CurrentFigure',fig4); clf;
+    imagesc(log10(D0(1,:)),log10(d0(:,1)),reshape(Ics,length(D0(1,:)),length(d0(:,1)))); axis xy tight; box on; hold on; colormap(colmap);
+
+    line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','w','LineStyle','-','LineWidth',2);
+    line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','k','LineStyle',':','LineWidth',2);
+    line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','w','LineStyle','-','LineWidth',2);
+    line(log10([1e1,1e1]),log10([1e-4,1e-1]),'Color','k','LineStyle',':','LineWidth',2);
+    for iD=0:1:2
+        for id=-4:1:-2
+            plot(iD,id,'ko','LineWidth',2,'MarkerFaceColor','w','MarkerSize',10)
+        end
+    end
+    % plot(0.5,-1.5,'ko','LineWidth',1,'MarkerFaceColor','w')
+    plot([6 6 6],[-3 -2 -1],'ko','LineWidth',2,'MarkerFaceColor','w','MarkerSize',10)
+    plot(6,-2,'wo','LineWidth',2,'MarkerFaceColor','k','MarkerSize',10)
+    plot(log10(1e1),log10(1e-2),'wo','LineWidth',2,'MarkerFaceColor','k','MarkerSize',10)
+
+    set(gca,'TickLabelInterpreter','latex','FontSize',13)
+    xlabel('log$_{10}$ Layer depth $D_0$ [m]','Interpreter','latex','FontSize',15);
+    ylabel('log$_{10}$ Crystal size $d_0$ [m]','Interpreter','latex','FontSize',15);
+    title('Flow regimes','Interpreter','latex','FontSize',15);
+    drawnow;
+
+    name = ['./scaling/maps_eta',num2str(log10(eta0))];
+    print(fig3,name,'-dpng','-r300','-image');
+    name = ['./scaling/regimes_eta',num2str(log10(eta0))];
+    print(fig4,name,'-dpng','-r300','-image');
 
 end
 
@@ -595,11 +601,8 @@ ylabel('Noise amplitude [m/s]','Interpreter','latex','FontSize',13);
 text(0.02,0.91,'\textbf{(d)}','Interpreter','latex','FontSize',13,'Units','normalized')
 legend([p67,p68],{'$\kappa_{e,0}$, $\xi_{e,0}$','$\kappa_{x,0}$, $\xi_{x,0}$'},'Interpreter','latex','FontSize',11,'Location','southeast');
 
-name = './scaling_lines1';
+name = './scaling/lines1';
 print(fig1,name,'-dpng','-r300','-image');
-name = './scaling_lines2';
+name = './scaling/lines2';
 print(fig2,name,'-dpng','-r300','-image');
-name = './scaling_maps';
-print(fig3,name,'-dpng','-r300','-image');
-name = './scaling_regimes';
-print(fig3,name,'-dpng','-r300','-image');
+
