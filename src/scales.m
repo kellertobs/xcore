@@ -30,11 +30,11 @@ W0i  =  sqrt(D*Dchi0*Drho0*g0/rho0);              % inertially limited convectiv
 if open_cnv
     Ri0 = 1;
 else
-    Ri0 = W0t./W0i;
+    Ri0 = W0i./W0t;
 end
 
 % general convective speed
-W0  = double(D0.*(sqrt(2.*Dchi0.*Drho0.*g0.*rho0.*Ri0.^2.*fReL.*L0.^2.*D0  + eta0.^2) - eta0)./(Ri0.^2.*fReL.*L0.^2.*rho0));
+W0  = double(D0.*(sqrt(2.*Dchi0.*Drho0.*g0.*rho0.*Ri0.^-2.*fReL.*L0.^2.*D0  + eta0.^2) - eta0)./(Ri0.^-2.*fReL.*L0.^2.*rho0));
 
 % general settling speed
 w0  = double((sqrt(4.*Drho0.*g0.*rho0.*fRel.*l0.*d0.^2 + eta0.^2) - eta0)./(2.*fRel.*l0.*rho0));
