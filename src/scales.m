@@ -49,8 +49,8 @@ kx0     =  double(ks0 + fReL*ke0);
 tW0     =  D/W0;
 tw0     =  D/w0;
 tk0     =  D^2/kx0;
-tin0    =  rho0*W0/(Dchi0*Drho0*g0);
-t0      =  tin0/2 + min([tW0, tw0, tk0]);
+ti0     =  rho0*W0/(Dchi0*Drho0*g0);
+t0      =  ti0/2 + min([tW0, tw0, tk0]);
 dt0     =  min([(h0/2)^2/kx0 , (h0/2)/(W0+w0)]);
 
 % noise flux amplitudes
@@ -104,7 +104,7 @@ fprintf(1,'\n  Segr. noise rate    xix0  = %1.2e [m/s]\n',xix0);
 
 fprintf(1,'\n  Reaction rate       G0    = %1.2e [kg/m3/s]\n',G0);
 
-fprintf(1,'\n  Inertial    time    tin0  = %1.2e [s]',tin0);
+fprintf(1,'\n  Inertial    time    ti0   = %1.2e [s]',ti0);
 fprintf(1,'\n  Convection  time    tW0   = %1.2e [s]',tW0);
 fprintf(1,'\n  Segregation time    tw0   = %1.2e [s]',tw0);
 fprintf(1,'\n  Diffusion   time    tk0   = %1.2e [s]\n',tk0);
