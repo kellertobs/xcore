@@ -486,8 +486,8 @@ for eta0=10.^linspace(-1,5,4)
     text(0.84,0.91,'\textbf{(d)}','Interpreter','latex','FontSize',13,'Units','normalized','Color','w')
     drawnow;
 
+    % define regime diagram
 
-    % use clustering to identify regimes
     % X = log10([Rc0(:),Ra0(:),ReD0(:),Red0(:)]);
     % [PC_C, PC_A, PC_V] = pca(X,'Algorithm','svd','Centered','on','VariableWeights','variance');
     % [Ic,Fc]  = kmeans(PC_A,4,'Replicates',10,'Display','final');
@@ -499,28 +499,14 @@ for eta0=10.^linspace(-1,5,4)
     % end
 
     Ics = zeros(size(D0));
-    % Ics(Rc0<=1 & ReL0 <= 1) = 1;
-    % Ics(Rc0> 1 & ReL0 <= 1) = 2;
-    % Ics(Rc0<=1 & ReL0 >  1) = 3;
-    % Ics(Rc0> 1 & ReL0 >  1) = 4;
-    % 
-    % Ics(Rc0<=1 & ReL0 <= 1 & Ra0 <= 1) = 1;
-    % Ics(Rc0> 1 & ReL0 <= 1 & Ra0 <= 1) = 2;
-    % Ics(Rc0<=1 & ReL0 >  1 & Ra0 <= 1) = 3;
-    % Ics(Rc0> 1 & ReL0 >  1 & Ra0 <= 1) = 4;
-    % Ics(Rc0<=1 & ReL0 <= 1 & Ra0 >  1) = 5;
-    % Ics(Rc0> 1 & ReL0 <= 1 & Ra0 >  1) = 6;
-    % Ics(Rc0<=1 & ReL0 >  1 & Ra0 >  1) = 7;
-    % Ics(Rc0> 1 & ReL0 >  1 & Ra0 >  1) = 8;
-
-    Ics(Rc0<=1 & ReL0 <= 1 & Rel0 <= 1) = 1;
-    Ics(Rc0> 1 & ReL0 <= 1 & Rel0 <= 1) = 2;
-    Ics(Rc0<=1 & ReL0 >  1 & Rel0 <= 1) = 3;
-    Ics(Rc0> 1 & ReL0 >  1 & Rel0 <= 1) = 4;
-    Ics(Rc0<=1 & ReL0 <= 1 & Rel0 >  1) = 5;
-    Ics(Rc0> 1 & ReL0 <= 1 & Rel0 >  1) = 6;
-    Ics(Rc0<=1 & ReL0 >  1 & Rel0 >  1) = 7;
-    Ics(Rc0> 1 & ReL0 >  1 & Rel0 >  1) = 8;
+    Ics(Ra0<=1 & ReL0 <= 1 & Rel0 <= 1) = 1;
+    Ics(Ra0> 1 & ReL0 <= 1 & Rel0 <= 1) = 2;
+    Ics(Ra0<=1 & ReL0 >  1 & Rel0 <= 1) = 3;
+    Ics(Ra0> 1 & ReL0 >  1 & Rel0 <= 1) = 4;
+    Ics(Ra0<=1 & ReL0 <= 1 & Rel0 >  1) = 5;
+    Ics(Ra0> 1 & ReL0 <= 1 & Rel0 >  1) = 6;
+    Ics(Ra0<=1 & ReL0 >  1 & Rel0 >  1) = 7;
+    Ics(Ra0> 1 & ReL0 >  1 & Rel0 >  1) = 8;
 
     set(0,'CurrentFigure',fig4); clf;
     imagesc(log10(D0(1,:)),log10(d0(:,1)),Ics); axis xy tight; box on; hold on; colormap(colmap); clim([1 8])
