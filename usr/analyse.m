@@ -101,7 +101,7 @@ etae0 = 0 + fReL*ke0*rho0;
 
 % dimensionless numbers
 Ri0  = W0i/W0t;
-Rc0  = W0t/w0t;              % Convection number
+Rc0  = W0i/w0t;              % Convection number
 Ra0  = W0*Ds0/kx0;           % Rayleigh number
 ReD0 = W0*Ds0/(etae0/rho0);  % Domain Reynolds number
 Red0 = w0*d0/(etas0/rho0);   % Particle Reynolds number
@@ -488,18 +488,42 @@ for eta0=10.^linspace(-1,5,4)
 
 
     % use clustering to identify regimes
-    X = log10([Rc0(:),Ra0(:),ReD0(:),Red0(:)]);
-    [PC_C, PC_A, PC_V] = pca(X,'Algorithm','svd','Centered','on','VariableWeights','variance');
-    [Ic,Fc]  = kmeans(PC_A,4,'Replicates',10,'Display','final');
+    % X = log10([Rc0(:),Ra0(:),ReD0(:),Red0(:)]);
+    % [PC_C, PC_A, PC_V] = pca(X,'Algorithm','svd','Centered','on','VariableWeights','variance');
+    % [Ic,Fc]  = kmeans(PC_A,4,'Replicates',10,'Display','final');
+    % 
+    % [~,is]  = sort(sum(Fc,2),'ascend');
+    % Ics = zeros(size(Ic));
+    % for kc = 1:size(Fc,1)
+    %     Ics(Ic==is(kc),1) = kc;
+    % end
 
-    [~,is]  = sort(sum(Fc,2),'ascend');
-    Ics = zeros(size(Ic));
-    for kc = 1:size(Fc,1)
-        Ics(Ic==is(kc),1) = kc;
-    end
+    Ics = zeros(size(D0));
+    % Ics(Rc0<=1 & ReL0 <= 1) = 1;
+    % Ics(Rc0> 1 & ReL0 <= 1) = 2;
+    % Ics(Rc0<=1 & ReL0 >  1) = 3;
+    % Ics(Rc0> 1 & ReL0 >  1) = 4;
+    % 
+    % Ics(Rc0<=1 & ReL0 <= 1 & Ra0 <= 1) = 1;
+    % Ics(Rc0> 1 & ReL0 <= 1 & Ra0 <= 1) = 2;
+    % Ics(Rc0<=1 & ReL0 >  1 & Ra0 <= 1) = 3;
+    % Ics(Rc0> 1 & ReL0 >  1 & Ra0 <= 1) = 4;
+    % Ics(Rc0<=1 & ReL0 <= 1 & Ra0 >  1) = 5;
+    % Ics(Rc0> 1 & ReL0 <= 1 & Ra0 >  1) = 6;
+    % Ics(Rc0<=1 & ReL0 >  1 & Ra0 >  1) = 7;
+    % Ics(Rc0> 1 & ReL0 >  1 & Ra0 >  1) = 8;
+
+    Ics(Rc0<=1 & ReL0 <= 1 & Rel0 <= 1) = 1;
+    Ics(Rc0> 1 & ReL0 <= 1 & Rel0 <= 1) = 2;
+    Ics(Rc0<=1 & ReL0 >  1 & Rel0 <= 1) = 3;
+    Ics(Rc0> 1 & ReL0 >  1 & Rel0 <= 1) = 4;
+    Ics(Rc0<=1 & ReL0 <= 1 & Rel0 >  1) = 5;
+    Ics(Rc0> 1 & ReL0 <= 1 & Rel0 >  1) = 6;
+    Ics(Rc0<=1 & ReL0 >  1 & Rel0 >  1) = 7;
+    Ics(Rc0> 1 & ReL0 >  1 & Rel0 >  1) = 8;
 
     set(0,'CurrentFigure',fig4); clf;
-    imagesc(log10(D0(1,:)),log10(d0(:,1)),reshape(Ics,length(D0(1,:)),length(d0(:,1)))); axis xy tight; box on; hold on; colormap(colmap);
+    imagesc(log10(D0(1,:)),log10(d0(:,1)),Ics); axis xy tight; box on; hold on; colormap(colmap); clim([1 8])
 
     line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','w','LineStyle','-','LineWidth',2);
     line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','k','LineStyle',':','LineWidth',2);
