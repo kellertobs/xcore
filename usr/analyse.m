@@ -499,17 +499,26 @@ for eta0=10.^linspace(-1,5,4)
     % end
 
     Ics = zeros(size(D0));
-    Ics(Ra0<=1 & ReL0 <= 1 & Rel0 <= 1) = 1;
-    Ics(Ra0> 1 & ReL0 <= 1 & Rel0 <= 1) = 2;
-    Ics(Ra0<=1 & ReL0 >  1 & Rel0 <= 1) = 3;
-    Ics(Ra0> 1 & ReL0 >  1 & Rel0 <= 1) = 4;
-    Ics(Ra0<=1 & ReL0 <= 1 & Rel0 >  1) = 5;
-    Ics(Ra0> 1 & ReL0 <= 1 & Rel0 >  1) = 6;
-    Ics(Ra0<=1 & ReL0 >  1 & Rel0 >  1) = 7;
-    Ics(Ra0> 1 & ReL0 >  1 & Rel0 >  1) = 8;
+    Ics(Ra0<=1 & ReL0 <= 1) = 1;
+    Ics(Ra0> 1 & ReL0 <= 1) = 2;
+    Ics(Ra0<=1 & ReL0 >  1) = 3;
+    Ics(Ra0> 1 & ReL0 >  1) = 4;
+    % Ics(Ra0<=1 & ReL0 <= 1 & Rel0 >  1) = 5;
+    % Ics(Ra0> 1 & ReL0 <= 1 & Rel0 >  1) = 6;
+    % Ics(Ra0<=1 & ReL0 >  1 & Rel0 >  1) = 7;
+    % Ics(Ra0> 1 & ReL0 >  1 & Rel0 >  1) = 8;
+
+    % Ics(Ra0<=1 & ReL0 <= 1 & Rel0 <= 1) = 1;
+    % Ics(Ra0> 1 & ReL0 <= 1 & Rel0 <= 1) = 2;
+    % Ics(Ra0<=1 & ReL0 >  1 & Rel0 <= 1) = 3;
+    % Ics(Ra0> 1 & ReL0 >  1 & Rel0 <= 1) = 4;
+    % Ics(Ra0<=1 & ReL0 <= 1 & Rel0 >  1) = 5;
+    % Ics(Ra0> 1 & ReL0 <= 1 & Rel0 >  1) = 6;
+    % Ics(Ra0<=1 & ReL0 >  1 & Rel0 >  1) = 7;
+    % Ics(Ra0> 1 & ReL0 >  1 & Rel0 >  1) = 8;
 
     set(0,'CurrentFigure',fig4); clf;
-    imagesc(log10(D0(1,:)),log10(d0(:,1)),Ics); axis xy tight; box on; hold on; colormap(colmap); clim([1 8])
+    imagesc(log10(D0(1,:)),log10(d0(:,1)),Ics); axis xy tight; box on; hold on; colormap(colmap); clim([1 4])
 
     line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','w','LineStyle','-','LineWidth',2);
     line(log10([1e0,1e6]),log10([1e-2,1e-2]),'Color','k','LineStyle',':','LineWidth',2);
