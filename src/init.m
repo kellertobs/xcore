@@ -80,8 +80,8 @@ if ~exist('dt','var'); dt = dt0/10; end
     2*pi*ifftshift((0:Nz-1) - floor(Nz/2)) / (Nz*h), ...
     2*pi*ifftshift((0:Nx-1) - floor(Nx/2)) / (Nx*h)  );
 
-padL0 = 4*ceil(L0/h);
-padl0 = 4*ceil(l0/h);
+padL0 = 4*ceil(L0h/h);
+padl0 = 4*ceil(l0h/h);
 
 [kpx_padL0, kpz_padL0] = ndgrid( ...
     2*pi*ifftshift((0:Nz-1+padL0) - floor((Nz+padL0)/2)) / ((Nz+padL0)*h), ...
@@ -100,7 +100,7 @@ Gkps = exp(-0.5 * ((l0h*sqrt(2))^2) * kp2);
 Gkpe = exp(-0.5 * ((L0h*sqrt(2))^2) * kp2);
 Gkps_padl0 = exp(-0.5 * ((l0h*sqrt(2))^2) * kp2_padl0);
 Gkpe_padL0 = exp(-0.5 * ((L0h*sqrt(2))^2) * kp2_padL0);
-Gkrp = exp(-0.5 * ((L0h+l0h    )^2) * kp2);
+Gkrp = exp(-0.5 * ((L0h+l0h)^2) * kp2);
 
 % initialise smooth random noise generation
 rng(seed);
@@ -138,6 +138,9 @@ MapU = reshape(1:NU,Nz+2,Nx+1) + NW;
 % set up shape functions for initial and transient boundary layers
 initshape = exp((-ZZ+h/2)/(L0h+l0h)/2); % width of initial boundary layer [m]
 bndshape  = exp((-ZZ+h/2)/(L0h+l0h)/1); % width of crystal replenishing layer [m]
+bndtapere = (1 - (exp((-ZZ )/L0h) + exp(-(D-ZZ )/L0h)).*(1-open_cnv));
+bndtapers = (1 - (exp((-ZZ )/l0h) + exp(-(D-ZZ )/l0h)).*(1-open_sgr));
+bndtaperw = (1 - (exp((-ZZw)/l0h) + exp(-(D-ZZw)/l0h)).*(1-open_sgr));
 
 % set specified boundaries to no slip, else to free slip
 sds        = -1;
@@ -154,9 +157,9 @@ ifz = [2,1:Nz+1,Nz];
 % initialise crystallinity field
 gp  =  exp(-((XX-L/2)./(L/6)).^2) .* exp(-((ZZ-D/2)./(D/6)).^2);
 if open_sgr
-    xin =  initshape.*xeq + (1-initshape).*x0;
+    xin = initshape.*xeq + (1-initshape).*x0;
 else
-    xin = x0.*ones(Nz,Nx);
+    xin = xeq.*ones(Nz,Nx);
 end
 x   =  xin .* (1+dxr/x0.*rp+dxg/x0.*gp);
 m   =  1-x;
@@ -186,6 +189,8 @@ rhow   = (rho(icz(1:end-1),:)+rho(icz(2:end),:))/2;
 rhou   = (rho(:,icx(1:end-1))+rho(:,icx(2:end)))/2;
 rhoWo  = rhow.*W(:,2:end-1); advn_mz = 0.*rhoWo(2:end-1,:);
 rhoUo  = rhou.*U(2:end-1,:); advn_mx = 0.*rhoUo;
+fReL   = fReL0;
+fRel   = fRel0;
 
 % get volume fractions and bulk density
 step    = 0;
@@ -193,7 +198,7 @@ FMtime  = 0;
 XEtime  = 0;
 UDtime  = 0;
 dto     = dt;
-a1      = 1; a2 = 0; a3 = 0; b1 = 1; b2 = 0; b3 = 0;
+a1      = 1; a2 = 1; a3 = 0; b1 = 1; b2 = 0; b3 = 0;
 
 X = rho.*x;  Xo = X;  res_X = 0.*X;
 M = rho.*m;  Mo = M;  res_M = 0.*M;
@@ -262,6 +267,8 @@ if restart
 else
     % complete, plot, and save initial condition
     store;
+    fluidmech;
+    update;
     history;
     output;
     step = step+1;

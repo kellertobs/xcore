@@ -62,6 +62,11 @@ HST.xie(stp,2) = geomean(xie(:));
 HST.xie(stp,3) = max(xie(:));
 HST.xie(stp,4) = rms(xie(:));
 
+HST.xis(stp,1) = min(xis(:));
+HST.xis(stp,2) = geomean(xis(:));
+HST.xis(stp,3) = max(xis(:));
+HST.xis(stp,4) = rms(xis(:));
+
 HST.xix(stp,1) = min(xix(:));
 HST.xix(stp,2) = geomean(xix(:));
 HST.xix(stp,3) = max(xix(:));

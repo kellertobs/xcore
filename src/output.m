@@ -151,15 +151,15 @@ set(fh4,'CurrentAxes',ax(41));
 imagesc(Xsc,Zsc,log10(ks/kssc)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\kappa_s$ [',kun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[]); ylabel(['Depth [',sun,']'],TX{:},FS{:});
 set(fh4,'CurrentAxes',ax(42));
-imagesc(Xsc,Zsc,xix/xixsc); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_x$ [',Wun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
+imagesc(Xsc,Zsc,xis/xissc); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_s$ [',xisun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 text(-0.05,1.05+Nx/Nz/10,['time = ',num2str(time/tsc,3),' [',tun,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
 set(fh4,'CurrentAxes',ax(43));
 imagesc(Xsc,Zsc,log10(ke/kesc)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\kappa_e$ [',kun,']'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:}); xlabel(['Width [',sun,']'],TX{:},FS{:});
 set(fh4,'CurrentAxes',ax(44));
 imagesc(Xsc,Zsc,xie/xiesc); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_e$ [',Wun,']'],TX{:},FS{:}); xlabel(['Width [',sun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]);
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_e$ [',xieun,']'],TX{:},FS{:}); xlabel(['Width [',sun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]);
 
 % plot model history
 if ~exist('fh14','var'); fh14 = figure(VIS{:});
@@ -185,7 +185,8 @@ subplot(3,1,2)
 semilogy(HST.time/tsc,HST.V(:,2)/Wsc,'k-' ,LW{:}); hold on; axis tight; box on;
 semilogy(HST.time/tsc,HST.vx(:,2)/whsc,'k--',LW{:});
 semilogy(HST.time/tsc,HST.xie(:,2)/xiesc,'-',LW{:},'Color',[1 1 1]/2);
-semilogy(HST.time/tsc,HST.xix(:,2)/xixsc,'--',LW{:},'Color',[1 1 1]/2);
+semilogy(HST.time/tsc,HST.xis(:,2)/xissc,'--',LW{:},'Color',[1 1 1]/2);
+semilogy(HST.time/tsc,HST.xix(:,2)/xixsc,'-.',LW{:},'Color',[1 1 1]/2);
 
 % semilogy(HST.time/tsc,HST.V_tavg(:,2)/Wsc,'-' ,LW{1},1,'Color',[1 1 1]/2);
 % semilogy(HST.time/tsc,HST.vx_tavg(:,2)/whsc,'--',LW{1},1,'Color',[1 1 1]/2);
@@ -195,14 +196,15 @@ semilogy(HST.time/tsc,HST.xix(:,2)/xixsc,'--',LW{:},'Color',[1 1 1]/2);
 semilogy(HST.time(end)/tsc,W0/Wsc,'ko' ,LW{:},MS{:});
 semilogy(HST.time(end)/tsc,w0/whsc,'kv',LW{:},MS{:});
 semilogy(HST.time(end)/tsc,xie0/xiesc,'o',LW{:},'Color',[1 1 1]/2,MS{:});
-semilogy(HST.time(end)/tsc,xix0/xixsc,'v',LW{:},'Color',[1 1 1]/2,MS{:});
-markerlabels([W0/Wsc,w0/whsc,xie0/xiesc,xix0/xixsc],{'$W_0$','$w_{0}$','$\xi_{e,0}$','$\xi_{x,0}$'},FS,'right');
+semilogy(HST.time(end)/tsc,xis0/xissc,'v',LW{:},'Color',[1 1 1]/2,MS{:});
+semilogy(HST.time(end)/tsc,xix0/xixsc,'d',LW{:},'Color',[1 1 1]/2,MS{:});
+markerlabels([W0/Wsc,w0/whsc,xie0/xiesc,xis0/xissc,xix0/xixsc],{'$W_0$','$w_{0}$','$\xi_{e,0}$','$\xi_{s,0}$','$\xi_{x,0}$'},FS,'right');
 
 yticks = 10.^(-4:1:4);
 yticklabels = {'$10^{-4}$','$10^{-3}$','$10^{-2}$','$10^{-1}$','$10^{0}$','$10^{1}$','$10^{2}$','$10^{3}$','$10^{4}$'};
 set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
 set(gca,TL{:},FS{:},'Xticklabel',[]);
-legend('convection','settling','eddy noise','xtal noise',TX{:},FS{:},'Location','northwest')
+legend('convection','settling','eddy noise','xtal noise','xtal-eddy noise',TX{:},FS{:},'Location','northwest')
 title(['Flow speeds [',Wun,']'],TX{:},FS{1},15);
 
 subplot(3,1,3)

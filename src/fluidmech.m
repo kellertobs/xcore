@@ -4,7 +4,7 @@ tic;
 
 %% update mass flux divergence source term
 
-if ~bnchm && step>0 && ~restart
+if ~bnchm
 
 %***  update mixture mass density
 drhodt  = - advn_rho;
@@ -60,7 +60,7 @@ rho1 = rhow(end  ,:    );
 rho2 = rhow(end-1,:    );
 rho3 = rhou(end,2:end  );
 rho4 = rhou(end,1:end-1);
-IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL;+     rho1(:)/h];
+IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL;+         rho1(:)/h];
 IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL;-open_cnv*rho2(:)/h];
 IIL = [IIL; ii(:)]; JJL = [JJL; jj3(:)];   AAL = [AAL;+open_cnv*rho3(:)/h];
 IIL = [IIL; ii(:)]; JJL = [JJL; jj4(:)];   AAL = [AAL;-open_cnv*rho4(:)/h];
@@ -344,13 +344,12 @@ SOL = [W(:);U(:);P(:)];
 
 
 %% Update phase segregation speeds
-if ~bnchm && step>=1
+if ~bnchm
 
     % terminal xtal segregation speed
     wx(:,2:end-1) = d0^2./etasw.*Drhox.*g0;
 
     % taper towards boundaries if closed segregation top/bot boundaries
-    bndtaperw = (1 - (exp((-ZZw)/l0) + exp(-(D-ZZw)/l0)).*(1-open_sgr));
     wx = wx.*bndtaperw;
 
     % periodic side boundaries

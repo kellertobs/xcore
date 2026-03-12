@@ -22,8 +22,8 @@ ReL0    =  W0l*L0/(eta0/rho0);        % laminar convective Reynolds No at L0
 Rel0    =  w0l*l0/(eta0/rho0);        % laminar settling Reynolds No at L0
 
 digits  =  16;
-fReL    =  vpa(1-exp(-ReL0));         % Re-dependent ramp factor
-fRel    =  vpa(1-exp(-Rel0));         % Re-dependent ramp factor
+fReL0   =  vpa(1-exp(-ReL0));         % Re-dependent ramp factor
+fRel0   =  vpa(1-exp(-Rel0));         % Re-dependent ramp factor
 
 W0t  =  sqrt(2*Dchi0*Drho0*g0*D0^3/(L0^2*rho0));  % terminal turbulent convective speed
 W0i  =  sqrt(D*Dchi0*Drho0*g0/rho0);              % inertially limited convective speed
@@ -34,16 +34,16 @@ else
 end
 
 % general convective speed
-W0  = double(D0.*(sqrt(2.*Dchi0.*Drho0.*g0.*rho0.*Ri0.^-2.*fReL.*L0.^2.*D0  + eta0.^2) - eta0)./(Ri0.^-2.*fReL.*L0.^2.*rho0));
+W0  = double(D0.*(sqrt(2.*Dchi0.*Drho0.*g0.*rho0.*Ri0.^-2.*fReL0.*L0.^2.*D0  + eta0.^2) - eta0)./(Ri0.^-2.*fReL0.*L0.^2.*rho0));
 
 % general settling speed
-w0  = double((sqrt(4.*Drho0.*g0.*rho0.*fRel.*l0.*d0.^2 + eta0.^2) - eta0)./(2.*fRel.*l0.*rho0));
+w0  = double((sqrt(4.*Drho0.*g0.*rho0.*fRel0.*l0.*d0.^2 + eta0.^2) - eta0)./(2.*fRel0.*l0.*rho0));
 
 % diffusivities
 eII0    =  W0/D0/2;
 ke0     =  eII0*L0^2;
 ks0     =  w0*l0;
-kx0     =  double(ks0 + fReL*ke0);
+kx0     =  double(ks0 + fReL0*ke0);
 
 % times
 tW0     =  D/W0;
@@ -54,22 +54,21 @@ t0      =  ti0/2 + min([tW0, tw0, tk0]);
 dt0     =  min([(h0/2)^2/kx0 , (h0/2)/(W0+w0)]);
 
 % noise flux amplitudes
-xie0    =  double(Xi*sqrt(     fReL*ke0/(L0h/W0)*(L0h./(L0h+h0))^3));
-xiex0   =  double(Xi*sqrt(chi0*fReL*ke0/(L0h/W0)*(L0h./(L0h+h0))^3));
+xie0    =  double(Xi*sqrt(     fReL0*ke0/(L0h/W0)*(L0h./(L0h+h0))^3));
+xix0    =  double(Xi*sqrt(chi0*sqrt(fReL0*ke0*ks0)/(L0h/W0)*(L0h./(L0h+h0))^3));
 xis0    =  Xi*sqrt(chi0*     ks0/(l0h/w0)*(l0h./(l0h+h0))^3);
-xix0    =  xis0 + xiex0;
 
 % phase change rate
 tau0    =  h0./(W0 + w0) + dt0;
 G0      =  R*chi0*rho0/tau0;
 
 % viscosities, stress/pressure
-etae0   =  double(fReL*ke0*rho0);
-etas0   =  double(fRel*ks0*rho0);
+etae0   =  double(fReL0*ke0*rho0);
+etas0   =  double(fRel0*ks0*rho0);
 p0      =  (eta0+etae0)*eII0;
 
-fReL = double(fReL);
-fRel = double(fRel);
+fReL0 = double(fReL0);
+fRel0 = double(fRel0);
 
 % general dimensionless numbers
 Da0     =  G0/(rho0/t0);                % Dahmköhler number
@@ -131,6 +130,7 @@ if ndm_op
     kesc = ke0; 
     kxsc = kx0;
     xiesc = xie0;  xieun = '1';
+    xissc = xis0;  xisun = '1';
     xixsc = xix0;  xixun = '1';
     esc   = eta0;  eun   = '1';
     eesc  = etae0; 
@@ -217,6 +217,7 @@ else
     pun = 'GPa';
 end
 xiesc = Wsc;  xieun = Wun;
+xissc = wxsc;  xisun = wun;
 xixsc = Wsc;  xixun = Wun;
 whsc  = Wsc;  
 end

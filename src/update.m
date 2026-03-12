@@ -10,6 +10,10 @@ rho    = 1./(m./rhom0  + x./rhox0);
 
 rhow   = (rho(icz(1:end-1),:)+rho(icz(2:end),:))/2;
 rhou   = (rho(:,icx(1:end-1))+rho(:,icx(2:end)))/2;
+Xw     = (  X(icz(1:end-1),:)+  X(icz(2:end),:))/2;
+Xu     = (  X(:,icx(1:end-1))+  X(:,icx(2:end)))/2;
+Mw     = (  M(icz(1:end-1),:)+  M(icz(2:end),:))/2;
+Mu     = (  M(:,icx(1:end-1))+  M(:,icx(2:end)))/2;
 
 rhoref = mean(rhow,2);
 
@@ -17,8 +21,12 @@ Drhom  = rhom0 - rhow;
 Drhox  = rhox0 - rhow;
 Drho   = rhow  - rhoref;
 
-rhoW   = rhow.*W(:,2:end-1);
-rhoU   = rhou.*U(2:end-1,:);
+rhoW   = rhow.*W (:,2:end-1);
+rhoU   = rhou.*U (2:end-1,:);
+rhoWx  =   Xw.*Wx(:,2:end-1);
+rhoUx  =   Xu.*Ux(2:end-1,:);
+rhoWm  =   Mw.*Wm(:,2:end-1);
+rhoUm  =   Mu.*Um(2:end-1,:);
 
 % convert weight to volume fraction, update bulk density
 chi    = max(eps,min(1-eps, x.*rho./rhox0));
@@ -60,7 +68,15 @@ etax   = squeeze(etai(1,:,:));
 etamix = squeeze(sum(ff.*etai,1));
 
 % update velocity divergence
-Div_V = ddz(W(:,2:end-1),h) + ddx(U(2:end-1,:),h);                         % get velocity divergence
+Div_rhoV  = ddz(rhoW,h) + ddx(rhoU,h);                                      % get mass flux divergence
+Div_V     = ddz(W (:,2:end-1),h) + ddx(U (2:end-1,:),h);                    % get velocity divergence
+Div_rhoVx = ddz(rhoWx,h) + ddx(rhoUx,h);                    % get x-velocity divergence
+Div_rhoVm = ddz(rhoWm,h) + ddx(rhoUm,h);                    % get m-velocity divergence
+Div_Dvx   = ddz(wx(:,2:end-1),h);                                           % get x-segr velocity divergence
+Div_Dvm   = ddz(Wm(:,2:end-1),h);                                           % get m-segr velocity divergence
+Div_xie   = ddz(xiew(:,2:end-1),h) + ddx(xieu(2:end-1,:),h);
+Div_xix   = ddz(xixw(:,2:end-1),h) + ddx(xixu(2:end-1,:),h);
+Div_xis   = ddz(xisw(:,2:end-1),h) + ddx(xisu(2:end-1,:),h);
 
 % update strain rates
 exx = diff(U(2:end-1,:),1,2)./h - Div_V/3;                                 % x-normal strain rate
@@ -73,28 +89,25 @@ eII = (0.5.*(exx.^2 + ezz.^2 ...
 
 % update velocity magnitudes
 V    = sqrt(((W (1:end-1,2:end-1)+W (2:end,2:end-1))/2).^2 ...
-          + ((U (2:end-1,1:end-1)+U (2:end-1,2:end))/2).^2);                % convection speed magnitude
+          + ((U (2:end-1,1:end-1)+U (2:end-1,2:end))/2).^2);               % convection speed magnitude
 Vx   = sqrt(((Wx(1:end-1,2:end-1)+Wx(2:end,2:end-1))/2).^2 ...
-          + ((Ux(2:end-1,1:end-1)+Ux(2:end-1,2:end))/2).^2);                % convection speed magnitude
-bndtapers = (1 - (exp((-ZZ)/l0) + exp(-(D-ZZ)/l0)).*(1-open_sgr));
-vx   = d0^2./etas.*(rhox0-rhom0).*g0.*bndtapers;                            % xtal segregation speed magnitude
-vm   = vx.*x./(1-x);                                                        % melt segregation speed magnitude
+          + ((Ux(2:end-1,1:end-1)+Ux(2:end-1,2:end))/2).^2);               % convection speed magnitude
+vx   = sqrt(((wx(1:end-1,2:end-1)+wx(2:end,2:end-1))/2).^2) + eps;         % xtal segregation speed magnitude
+vm   = sqrt(((wm(1:end-1,2:end-1)+wm(2:end,2:end-1))/2).^2) + eps;         % melt segregation speed magnitude
 xis  = sqrt(((xisw(1:end-1,2:end-1)+xisw(2:end,2:end-1))/2).^2 ...
-          + ((xisu(2:end-1,1:end-1)+xisu(2:end-1,2:end))/2).^2);            % settling noise flux magnitude 
-xiex = sqrt(((xixw(1:end-1,2:end-1)+xixw(2:end,2:end-1))/2).^2 ...
-          + ((xixu(2:end-1,1:end-1)+xixu(2:end-1,2:end))/2).^2);            % xtal eddy noise flux magnitude
+          + ((xisu(2:end-1,1:end-1)+xisu(2:end-1,2:end))/2).^2);           % settling noise flux magnitude 
+xix  = sqrt(((xixw(1:end-1,2:end-1)+xixw(2:end,2:end-1))/2).^2 ...
+          + ((xixu(2:end-1,1:end-1)+xixu(2:end-1,2:end))/2).^2);           % xtal eddy noise flux magnitude
 xie  = sqrt(((xiew(1:end-1,2:end-1)+xiew(2:end,2:end-1))/2).^2 ...
-          + ((xieu(2:end-1,1:end-1)+xieu(2:end-1,2:end))/2).^2);            % eddy noise flux magnitude
-xix  = xis + xiex;
+          + ((xieu(2:end-1,1:end-1)+xieu(2:end-1,2:end))/2).^2);           % eddy noise flux magnitude
 
 % update diffusion parameters
-bndtapere = (1 - (exp((-ZZ)/L0) + exp(-(D-ZZ)/L0).*(1-open_cnv)));
-ke   = eII.*L0.^2 .* bndtapere;                                            % turbulent eddy diffusivity
+ke   = eII.*L0.^2;                                                         % turbulent eddy diffusivity
 ks   = vx .*l0;                                                            % segregation diffusivity
-kx   = (ks + fReL*ke);                                                     % regularised particle diffusivity 
+kx   = (ks + fReL.*ke);                                                    % regularised particle diffusivity 
 
 % update viscosities
-etae = fReL*ke.*rho;                                                       % eddy viscosity
+etae = fReL.*ke.*rho;                                                      % eddy viscosity
 eta  = (eta + etamix + etae)/2;                                            % effective viscosity
 
 etat = fRel.*ks.*rho;                                                      % turbulent drag viscosity
@@ -116,12 +129,18 @@ etaco  = (eta(icz(1:end-1),icx(1:end-1)).*eta(icz(2:end),icx(1:end-1)) ...
 etasw = (etas(icz(1:end-1),:).*etas(icz(2:end),:)).^0.5;
 
 % update dimensionless numbers
+ReL = V .*L0./(etamix./rho);
+Rel = vx.*l0./(etax  ./rho);
 ReD = V .*D0./(eta ./rho);                                                 % Reynolds number on scaled domain length
 Red = vx.*d0./(etas./rho);                                                 % particle Reynolds number
 Ra  = V .*D0./kx;                                                          % Rayleigh number on scale domain length 
 Rc  = V./vx;                                                               % particle settling number
 Ne  = xie./V;                                                              % eddy noise flux number
 Ns  = xix./vx;                                                             % settling noise flux number
+
+% update Re-dependent ramp factors
+fReL =  (1-exp(-ReL));         % Re-dependent ramp factor
+fRel =  (1-exp(-Rel));         % Re-dependent ramp factor
 
 % update stresses
 txx = eta   .* exx;                                                        % x-normal stress
