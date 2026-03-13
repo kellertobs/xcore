@@ -30,8 +30,7 @@ xend      =  1.00;                % stop run when mean crystallinity reaches thr
 tend      =  10*yr;               % end time for simulation [s]
 
 % set initial phase fraction parameters
-xeq       =  0.01;                % equilibrium crystallinity of boundary layer [wt]
-x0        =  xeq/10;              % initial background crystallinity [wt]
+x0        =  0.001;               % initial background crystallinity [wt]
 dxr       =  x0/10;               % initial random perturbation [wt]
 dxg       =  0;                   % initial gaussian perturbation [wt] (for benchmarking)
 seed      =  15;                  % random perturbation seed
@@ -61,7 +60,7 @@ R         =  1.0;                 % relative amplitude of crystallisation rate [
 Xi        =  1.0;                 % relative amplitude of random noise flux
 Ptop      =  1e5;                 % top boundary pressure [Pa]
 open_cnv  =  0;                   % switch for open bottom boundary for crystal-driven convection
-open_sgr  =  1;                   % switch for open bottom boundary for crystal segregation
+open_sgr  =  0;                   % switch for open bottom boundary for crystal segregation
 
 % set numerical model parameters
 TINT      =  'bd2im';             % time integration scheme ('be1im','bd2im','cn2si','bd2si')

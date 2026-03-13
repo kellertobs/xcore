@@ -25,9 +25,9 @@ taue = L0h./(V +eps);
 taus = l0h./(vx+eps);
 
 % noise flux amplitudes
-sge = Xi * sqrt(     fReL.*ke./taue .* (L0h./(L0h+h)).^3);    % eddy mixture noise speed
+sge = Xi * sqrt(          fReL.*ke     ./taue .* (L0h./(L0h+h)).^3);    % eddy mixture noise speed
 sgx = Xi * sqrt(chi.*sqrt(fReL.*ke.*ks)./taue .* (L0h./(L0h+h)).^3);    % eddy crystal noise speed
-sgs = Xi * sqrt(chi.*      ks./taus .* (l0h./(l0h+h)).^3);    % segregation noise speed
+sgs = Xi * sqrt(chi.*               ks ./taus .* (l0h./(l0h+h)).^3);    % settling noise speed
 
 
 % Ornstein–Uhlenbeck time update for evolving noise

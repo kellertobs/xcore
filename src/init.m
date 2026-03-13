@@ -156,11 +156,7 @@ ifz = [2,1:Nz+1,Nz];
 
 % initialise crystallinity field
 gp  =  exp(-((XX-L/2)./(L/6)).^2) .* exp(-((ZZ-D/2)./(D/6)).^2);
-if open_sgr
-    xin = initshape.*xeq + (1-initshape).*x0;
-else
-    xin = xeq.*ones(Nz,Nx);
-end
+xin =  x0.*ones(Nz,Nx);
 x   =  xin .* (1+dxr/x0.*rp+dxg/x0.*gp);
 m   =  1-x;
 

@@ -46,44 +46,46 @@ else; set(0, 'CurrentFigure', fh2); clf;
 end
 colormap(colmap);
 fh = axb + 2*axh + 1*avs + axt;
-fw = axl + 3*axw + 2*ahs + axr;
+fw = axl + 2*axw + 1*ahs + axr;
 set(fh2,UN{:},'Position',[3 3 fw fh]);
 set(fh2,'PaperUnits','Centimeters','PaperPosition',[0 0 fw fh],'PaperSize',[fw fh]);
 set(fh2,'Color','w','InvertHardcopy','off','Resize','off');
 ax(21) = axes(UN{:},'position',[axl+0*axw+0*ahs axb+1*axh+1*avs axw axh]);
 ax(22) = axes(UN{:},'position',[axl+1*axw+1*ahs axb+1*axh+1*avs axw axh]);
-ax(23) = axes(UN{:},'position',[axl+2*axw+2*ahs axb+1*axh+1*avs axw axh]);
-ax(24) = axes(UN{:},'position',[axl+0*axw+0*ahs axb+0*axh+0*avs axw axh]);
-ax(25) = axes(UN{:},'position',[axl+1*axw+1*ahs axb+0*axh+0*avs axw axh]);
-ax(26) = axes(UN{:},'position',[axl+2*axw+2*ahs axb+0*axh+0*avs axw axh]);
+ax(23) = axes(UN{:},'position',[axl+0*axw+0*ahs axb+0*axh+0*avs axw axh]);
+ax(24) = axes(UN{:},'position',[axl+1*axw+1*ahs axb+0*axh+0*avs axw axh]);
 
 if ~exist('fh3','var'); fh3 = figure(VIS{:});
 else; set(0, 'CurrentFigure', fh3); clf;
 end
 colormap(colmap);
 fh = axb + 2*axh + 1*avs + axt;
-fw = axl + 2*axw + 1*ahs + axr;
+fw = axl + 3*axw + 2*ahs + axr;
 set(fh3,UN{:},'Position',[5 5 fw fh]);
 set(fh3,'PaperUnits','Centimeters','PaperPosition',[0 0 fw fh],'PaperSize',[fw fh]);
 set(fh3,'Color','w','InvertHardcopy','off','Resize','off');
 ax(31) = axes(UN{:},'position',[axl+0*axw+0*ahs axb+1*axh+1*avs axw axh]);
 ax(32) = axes(UN{:},'position',[axl+1*axw+1*ahs axb+1*axh+1*avs axw axh]);
-ax(33) = axes(UN{:},'position',[axl+0*axw+0*ahs axb+0*axh+0*avs axw axh]);
-ax(34) = axes(UN{:},'position',[axl+1*axw+1*ahs axb+0*axh+0*avs axw axh]);
+ax(33) = axes(UN{:},'position',[axl+2*axw+2*ahs axb+1*axh+1*avs axw axh]);
+ax(34) = axes(UN{:},'position',[axl+0*axw+0*ahs axb+0*axh+0*avs axw axh]);
+ax(35) = axes(UN{:},'position',[axl+1*axw+1*ahs axb+0*axh+0*avs axw axh]);
+ax(36) = axes(UN{:},'position',[axl+2*axw+2*ahs axb+0*axh+0*avs axw axh]);
 
 if ~exist('fh4','var'); fh4 = figure(VIS{:});
 else; set(0, 'CurrentFigure', fh4); clf;
 end
 colormap(colmap);
 fh = axb + 2*axh + 1*avs + axt;
-fw = axl + 2*axw + 1*ahs + axr;
+fw = axl + 3*axw + 2*ahs + axr;
 set(fh4,UN{:},'Position',[7 7 fw fh]);
 set(fh4,'PaperUnits','Centimeters','PaperPosition',[0 0 fw fh],'PaperSize',[fw fh]);
 set(fh4,'Color','w','InvertHardcopy','off','Resize','off');
 ax(41) = axes(UN{:},'position',[axl+0*axw+0*ahs axb+1*axh+1*avs axw axh]);
 ax(42) = axes(UN{:},'position',[axl+1*axw+1*ahs axb+1*axh+1*avs axw axh]);
-ax(43) = axes(UN{:},'position',[axl+0*axw+0*ahs axb+0*axh+0*avs axw axh]);
-ax(44) = axes(UN{:},'position',[axl+1*axw+1*ahs axb+0*axh+0*avs axw axh]);
+ax(43) = axes(UN{:},'position',[axl+2*axw+2*ahs axb+1*axh+1*avs axw axh]);
+ax(44) = axes(UN{:},'position',[axl+0*axw+0*ahs axb+0*axh+0*avs axw axh]);
+ax(45) = axes(UN{:},'position',[axl+1*axw+1*ahs axb+0*axh+0*avs axw axh]);
+ax(46) = axes(UN{:},'position',[axl+2*axw+2*ahs axb+0*axh+0*avs axw axh]);
 
 % plot velocity-pressure solution in Fig. 1
 set(0,'CurrentFigure',fh1)
@@ -113,53 +115,60 @@ set(fh2,'CurrentAxes',ax(21));
 imagesc(Xsc,Zsc,x/xsc); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$x$ [',xun,']'],TX{:},FS{:});  ylabel(['Depth [',sun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[]);
 set(fh2,'CurrentAxes',ax(22));
-imagesc(Xsc,Zsc,Gx./Gsc); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Gamma_x$ [',Gun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
-text(0.5,1.05+Nx/Nz/10,['time = ',num2str(time/tsc,3),' [',tun,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
-set(fh2,'CurrentAxes',ax(23));
-imagesc(Xsc,Zsc,log10(kx/kxsc)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\kappa_x$ [',kun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
-set(fh2,'CurrentAxes',ax(24));
-imagesc(Xsc,Zsc,-wx(:,2:end-1)/wxsc); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta W_x$ [',wun,']'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:});  xlabel(['Width [',sun,']'],TX{:},FS{:});
-set(fh2,'CurrentAxes',ax(25));
-imagesc(Xsc,Zsc,-wm(:,2:end-1)/wmsc); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta W_m$ [',wun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:}); 
-set(fh2,'CurrentAxes',ax(26));
 imagesc(Xsc,Zsc,log10(etas/(esc+essc))); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\eta_s$ [',eun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:});
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\eta_s$ [',eun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
+text(-0.1,1.05+Nx/Nz/10,['time = ',num2str(time/tsc,3),' [',tun,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
+set(fh2,'CurrentAxes',ax(23));
+imagesc(Xsc,Zsc,-wx(2:end-1,2:end-1)/wxsc); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta W_x$ [',wun,']'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:});  xlabel(['Width [',sun,']'],TX{:},FS{:});
+set(fh2,'CurrentAxes',ax(24));
+imagesc(Xsc,Zsc,-wm(2:end-1,2:end-1)/wmsc); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta W_m$ [',wun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:}); 
 
 % plot phase and eddy diffusivities, Ra and Re numbers in Fig. 3
 set(0,'CurrentFigure',fh3)
 set(fh3,'CurrentAxes',ax(31));
-imagesc(Xsc,Zsc,log10(Ra/Rasc)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Ra [1]'],TX{:},FS{:}); set(gca,'XTickLabel',[]); ylabel(['Depth [',sun,']'],TX{:},FS{:});
+imagesc(Xsc,Zsc,log10(ks/kssc)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\kappa_s$ [',xun,']'],TX{:},FS{:});  ylabel(['Depth [',sun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[]);
 set(fh3,'CurrentAxes',ax(32));
-imagesc(Xsc,Zsc,log10(Rc/Rcsc)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Rc [1]'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
-text(-0.05,1.05+Nx/Nz/10,['time = ',num2str(time/tsc,3),' [',tun,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
+imagesc(Xsc,Zsc,log10(kx/kxsc)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\kappa_x$ [',Gun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
+text(0.5,1.05+Nx/Nz/10,['time = ',num2str(time/tsc,3),' [',tun,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
 set(fh3,'CurrentAxes',ax(33));
-imagesc(Xsc,Zsc,log10(ReD/ReDsc)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Re$_D$ [1]'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:}); xlabel(['Width [',sun,']'],TX{:},FS{:});
+imagesc(Xsc,Zsc,log10(ke/kesc)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\kappa_e$ [',kun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 set(fh3,'CurrentAxes',ax(34));
-imagesc(Xsc,Zsc,log10(Red/Redsc)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Re$_d$ [1]'],TX{:},FS{:}); xlabel(['Width [',sun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]);
+imagesc(Xsc,Zsc,xis/xissc); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_s$ [',xieun,']'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:});  xlabel(['Width [',sun,']'],TX{:},FS{:});
+set(fh3,'CurrentAxes',ax(35));
+imagesc(Xsc,Zsc,xix/xixsc); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_x$ [',xieun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:}); 
+set(fh3,'CurrentAxes',ax(36));
+imagesc(Xsc,Zsc,xie/xiesc); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_e$ [',xieun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:});
 
 % plot phase and eddy diffusivities, Ra and Re numbers in Fig. 3
 set(0,'CurrentFigure',fh4)
 set(fh4,'CurrentAxes',ax(41));
-imagesc(Xsc,Zsc,log10(ks/kssc)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\kappa_s$ [',kun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[]); ylabel(['Depth [',sun,']'],TX{:},FS{:});
+imagesc(Xsc,Zsc,log10(ReD/ReDsc)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Re$_D$ [1]'],TX{:},FS{:});  ylabel(['Depth [',sun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[]);
 set(fh4,'CurrentAxes',ax(42));
-imagesc(Xsc,Zsc,xis/xissc); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_s$ [',xisun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
-text(-0.05,1.05+Nx/Nz/10,['time = ',num2str(time/tsc,3),' [',tun,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
+imagesc(Xsc,Zsc,log10(Ra/Rasc)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Ra [1]'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
+text(0.5,1.05+Nx/Nz/10,['time = ',num2str(time/tsc,3),' [',tun,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
 set(fh4,'CurrentAxes',ax(43));
-imagesc(Xsc,Zsc,log10(ke/kesc)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\kappa_e$ [',kun,']'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:}); xlabel(['Width [',sun,']'],TX{:},FS{:});
+imagesc(Xsc,Zsc,log10(Rc/Rcsc)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Rc [1]'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 set(fh4,'CurrentAxes',ax(44));
-imagesc(Xsc,Zsc,xie/xiesc); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_e$ [',xieun,']'],TX{:},FS{:}); xlabel(['Width [',sun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]);
+imagesc(Xsc,Zsc,log10(Red/Redsc)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Re$_d$ [1]'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:});  xlabel(['Width [',sun,']'],TX{:},FS{:});
+set(fh4,'CurrentAxes',ax(45));
+imagesc(Xsc,Zsc,log10(Noe/Noesc)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ No$_e$ [1]'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:}); 
+set(fh4,'CurrentAxes',ax(46));
+imagesc(Xsc,Zsc,log10(Nox/Noxsc)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ No$_x$ [1]'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:});
+
 
 % plot model history
 if ~exist('fh14','var'); fh14 = figure(VIS{:});
@@ -173,9 +182,8 @@ plot(HST.time/tsc,HST.x(:,[1,3])/xsc,'k:',LW{:});
 % plot(HST.time/tsc,HST.x_tavg(:,2)/xsc,'k-',LW{1},1,'Color',[1 1 1]*0.5);
 % plot(HST.time/tsc,HST.x_tavg(:,[1,3])/xsc,'k:',LW{1},1,'Color',[1 1 1]*0.5);
 
-plot(HST.time(end)/tsc,x0/xsc,'ks' ,LW{:},MS{:});
-plot(HST.time(end)/tsc,xeq/xsc,'ko',LW{:},MS{:});
-markerlabels([xeq/xsc,x0/xsc],{'$x_\mathrm{eq}$','$x_0$'},FS,'right');
+plot(HST.time(end)/tsc,R/xsc,'ks' ,LW{:},MS{:});
+markerlabels([R/xsc],{'$x_0$'},FS,'right');
 
 set(gca,TL{:},FS{:},'Xticklabels',[])
 legend('mean','mean + std','min/max',TX{:},FS{:},'Location','northwest')
@@ -241,7 +249,7 @@ yyaxis left
 semilogy(HST.time/tsc,HST.ke(:,2)/kesc,'-' ,LW{:},'Color',lncls(1,:)); hold on; axis tight; box on;
 semilogy(HST.time/tsc,HST.ke(:,[1,3])/kesc,':',LW{:},'Color',lncls(1,:));
 
-semilogy(HST.time(end)/tsc,ke0/kesc,'ko' ,LW{:},MS{:});
+semilogy(HST.time(end)/tsc,ke0/kesc,'o',LW{:},MS{:},'Color',lncls(1,:));
 % markerlabels([ke0/kesc],{'k$_{e,0}$'},FS,'left');
 
 set(gca,TL{:},FS{:},'YColor',lncls(1,:),'YScale','log');
@@ -254,7 +262,7 @@ semilogy(HST.time/tsc,HST.etae(:,2)/eesc,'--' ,LW{:},'Color',lncls(2,:)); hold o
 semilogy(HST.time/tsc,HST.etae(:,[1,3])/eesc,':',LW{:},'Color',lncls(2,:));
 set(gca,TL{:},FS{:},'YColor',lncls(2,:),'YScale','log');
 
-semilogy(HST.time(end)/tsc,etae0/eesc,'ko' ,LW{:},MS{:});
+semilogy(HST.time(end)/tsc,etae0/eesc,'o' ,LW{:},MS{:},'Color',lncls(2,:));
 markerlabels([etae0/eesc,etae0/eesc],{'k$_{e,0}$','$\eta_{e,0}$'},FS,'left');
 
 yticks = 10.^(-8:2:8);
@@ -268,7 +276,7 @@ yyaxis left
 semilogy(HST.time/tsc,HST.ks(:,2)/kssc,'-' ,LW{:},'Color',lncls(1,:)); hold on; box on;
 semilogy(HST.time/tsc,HST.ks(:,[1,3])/kssc,':',LW{:},'Color',lncls(1,:));
 
-semilogy(HST.time(end)/tsc,ks0/kssc,'ko' ,LW{:},MS{:});
+semilogy(HST.time(end)/tsc,ks0/kssc,'o' ,LW{:},MS{:},'Color',lncls(1,:));
 % markerlabels([ks0/kssc],{'k$_{s,0}$'},FS,'left');
 
 set(gca,TL{:},FS{:},'YColor',lncls(1,:),'YScale','log');
@@ -277,7 +285,7 @@ yyaxis right
 semilogy(HST.time/tsc,HST.etat(:,2)/essc,'--' ,LW{:},'Color',lncls(2,:)); hold on; axis tight; box on;
 semilogy(HST.time/tsc,HST.etat(:,[1,3])/essc,':',LW{:},'Color',lncls(2,:));
 
-semilogy(HST.time(end)/tsc,etas0/essc,'ko' ,LW{:},MS{:});
+semilogy(HST.time(end)/tsc,etas0/essc,'o' ,LW{:},MS{:},'Color',lncls(2,:));
 markerlabels([etas0/essc,etas0/essc],{'k$_{s,0}$','$\eta_{s,0}$'},FS,'left');
 
 set(gca,TL{:},FS{:},'YColor',lncls(2,:),'YScale','log');

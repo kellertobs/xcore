@@ -135,8 +135,8 @@ ReD = V .*D0./(eta ./rho);                                                 % Rey
 Red = vx.*d0./(etas./rho);                                                 % particle Reynolds number
 Ra  = V .*D0./kx;                                                          % Rayleigh number on scale domain length 
 Rc  = V./vx;                                                               % particle settling number
-Ne  = xie./V;                                                              % eddy noise flux number
-Ns  = xix./vx;                                                             % settling noise flux number
+Noe = xie./V;                                                              % eddy noise flux number
+Nox = (xix+xis)./vx;                                                       % particle noise flux number
 
 % update Re-dependent ramp factors
 fReL =  (1-exp(-ReL));         % Re-dependent ramp factor
