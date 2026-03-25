@@ -13,7 +13,7 @@ drhodt  = - advn_rho;
 res_rho = (a1*rho-a2*rhoo-a3*rhooo)/dt - (b1*drhodt + b2*drhodto + b3*drhodtoo);
 
 % volume source and background velocity passed to fluid-mechanics solver
-upd_MFS = - alpha*res_rho./b1;
+upd_MFS = - alpha*res_rho;
 MFS     = MFS + upd_MFS;  % correct volume source term by scaled residual
 
 MFSmean = mean(MFS,'all');

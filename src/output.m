@@ -101,21 +101,21 @@ imagesc(Xsc,Zsc, P(2:end-1,2:end-1)/psc); axis ij equal tight; box on; cb = colo
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$P$ [',pun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 set(fh1,'CurrentAxes',ax(14));
 imagesc(Xsc,Zsc,rho/rsc); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\bar{\rho}$ [',dun,']'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:}); xlabel(['Width [',sun,']'],TX{:},FS{:});
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\rho$ [',dun,']'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:}); xlabel(['Width [',sun,']'],TX{:},FS{:});
 set(fh1,'CurrentAxes',ax(15));
 imagesc(Xsc,Zsc,log10(eta/(esc+eesc))); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\eta$ [',eun,']'],TX{:},FS{:}); xlabel(['Width [',sun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]);
 set(fh1,'CurrentAxes',ax(16));
 imagesc(Xsc,Zsc,MFS/MFSsc); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\nabla \cdot \bar{\rho} \mathbf{v}$ [',MFSun,']'],TX{:},FS{:}); xlabel(['Width [',sun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]);
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\nabla \cdot \rho \mathbf{v}$ [',MFSun,']'],TX{:},FS{:}); xlabel(['Width [',sun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]);
 
 % plot density, rheology, and segregation speeds in Fig. 2
 set(0,'CurrentFigure',fh2)
 set(fh2,'CurrentAxes',ax(21));
 imagesc(Xsc,Zsc,x/xsc); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$x$ [',xun,']'],TX{:},FS{:});  ylabel(['Depth [',sun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[]);
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $x$ [',xun,']'],TX{:},FS{:});  ylabel(['Depth [',sun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[]);
 set(fh2,'CurrentAxes',ax(22));
-imagesc(Xsc,Zsc,log10(etas/(esc+essc))); axis ij equal tight; box on; cb = colorbar;
+imagesc(Xsc,Zsc,log10(etas/(esc+etsc))); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\eta_s$ [',eun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 text(-0.1,1.05+Nx/Nz/10,['time = ',num2str(time/tsc,3),' [',tun,']'],TX{:},FS{:},'Color','k','HorizontalAlignment','center','Units','normalized');
 set(fh2,'CurrentAxes',ax(23));
@@ -138,14 +138,14 @@ set(fh3,'CurrentAxes',ax(33));
 imagesc(Xsc,Zsc,log10(ke/kesc)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ $\kappa_e$ [',kun,']'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 set(fh3,'CurrentAxes',ax(34));
-imagesc(Xsc,Zsc,xis/xissc); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_s$ [',xieun,']'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:});  xlabel(['Width [',sun,']'],TX{:},FS{:});
+imagesc(Xsc,Zsc,xie/xiesc); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_e$ [',xieun,']'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:});  xlabel(['Width [',sun,']'],TX{:},FS{:});
 set(fh3,'CurrentAxes',ax(35));
 imagesc(Xsc,Zsc,xix/xixsc); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_x$ [',xieun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:}); 
 set(fh3,'CurrentAxes',ax(36));
-imagesc(Xsc,Zsc,xie/xiesc); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_e$ [',xieun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:});
+imagesc(Xsc,Zsc,xis/xissc); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_s$ [',xisun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:});
 
 % plot phase and eddy diffusivities, Ra and Re numbers in Fig. 3
 set(0,'CurrentFigure',fh4)
@@ -160,15 +160,52 @@ set(fh4,'CurrentAxes',ax(43));
 imagesc(Xsc,Zsc,log10(Rc/Rcsc)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Rc [1]'],TX{:},FS{:}); set(gca,'XTickLabel',[],'YTickLabel',[]);
 set(fh4,'CurrentAxes',ax(44));
-imagesc(Xsc,Zsc,log10(Red/Redsc)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ Re$_d$ [1]'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:});  xlabel(['Width [',sun,']'],TX{:},FS{:});
-set(fh4,'CurrentAxes',ax(45));
 imagesc(Xsc,Zsc,log10(Noe/Noesc)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ No$_e$ [1]'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:}); 
-set(fh4,'CurrentAxes',ax(46));
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ No$_e$ [1]'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:});  xlabel(['Width [',sun,']'],TX{:},FS{:});
+set(fh4,'CurrentAxes',ax(45));
 imagesc(Xsc,Zsc,log10(Nox/Noxsc)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ No$_x$ [1]'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:});
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ No$_x$ [1]'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:}); 
+set(fh4,'CurrentAxes',ax(46));
+imagesc(Xsc,Zsc,log10(Nos/Nossc)); axis ij equal tight; box on; cb = colorbar;
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ No$_s$ [1]'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:});
 
+% plot 1D horizontal average profiles
+if ~exist('fh13','var'); fh13 = figure(VIS{:});
+else; set(0, 'CurrentFigure', fh13); clf;
+end
+
+subplot(1,4,1)
+plot(mean(x./xsc,2),Zc./ssc,'LineWidth',1.5); axis ij tight; box on
+
+set(gca,TL{:},FS{:})
+ylabel(['Depth [',sun,']'],TX{:},FS{:});
+title(['Crystallinity [',xun,']'],TX{:},FS{1},15);
+
+subplot(1,4,2)
+plot(rms(V./Wsc,2),Zc./ssc,'LineWidth',1.5); axis ij tight; box on; hold on
+plot(rms(vx./wxsc,2),Zc./ssc,'LineWidth',1.5);
+
+set(gca,TL{:},FS{:})
+legend('$|\mathbf{v}|$','$|\Delta \mathbf{v}_x|$',TX{:},FS{:},'Location','southeast')
+title(['Velocity [',wun,']'],TX{:},FS{1},15);
+
+subplot(1,4,3)
+semilogx(geomean(ke./kesc,2),Zc./ssc,'LineWidth',1.5); axis ij tight; box on; hold on
+semilogx(geomean(ks./kssc,2),Zc./ssc,'LineWidth',1.5);
+semilogx(geomean(kx./kxsc,2),Zc./ssc,'LineWidth',1.5);
+
+set(gca,TL{:},FS{:})
+legend('$\kappa_e$','$\kappa_s$','$\kappa_x$',TX{:},FS{:},'Location','southeast')
+title(['Diffusivity [',kun,']'],TX{:},FS{1},15);
+
+subplot(1,4,4)
+semilogx(geomean(eta./esc,2),Zc./ssc,'LineWidth',1.5); axis ij tight; box on; hold on
+semilogx(geomean(etas./esc,2),Zc./ssc,'LineWidth',1.5);
+semilogx(geomean(etamix./esc,2),Zc./ssc,'LineWidth',1.5);
+
+set(gca,TL{:},FS{:})
+legend('$\eta$','$\eta_s$','$\sum_i \eta_i$',TX{:},FS{:},'Location','southeast')
+title(['Viscosity [',eun,']'],TX{:},FS{1},15);
 
 % plot model history
 if ~exist('fh14','var'); fh14 = figure(VIS{:});
@@ -182,8 +219,8 @@ plot(HST.time/tsc,HST.x(:,[1,3])/xsc,'k:',LW{:});
 % plot(HST.time/tsc,HST.x_tavg(:,2)/xsc,'k-',LW{1},1,'Color',[1 1 1]*0.5);
 % plot(HST.time/tsc,HST.x_tavg(:,[1,3])/xsc,'k:',LW{1},1,'Color',[1 1 1]*0.5);
 
-plot(HST.time(end)/tsc,R/xsc,'ks' ,LW{:},MS{:});
-markerlabels([R/xsc],{'$x_0$'},FS,'right');
+plot(HST.time(end)/tsc,Da/xsc,'ks' ,LW{:},MS{:});
+markerlabels([Da/xsc],{'Da, $\chi_0$'},FS,'right');
 
 set(gca,TL{:},FS{:},'Xticklabels',[])
 legend('mean','mean + std','min/max',TX{:},FS{:},'Location','northwest')
@@ -263,7 +300,7 @@ semilogy(HST.time/tsc,HST.etae(:,[1,3])/eesc,':',LW{:},'Color',lncls(2,:));
 set(gca,TL{:},FS{:},'YColor',lncls(2,:),'YScale','log');
 
 semilogy(HST.time(end)/tsc,etae0/eesc,'o' ,LW{:},MS{:},'Color',lncls(2,:));
-markerlabels([etae0/eesc,etae0/eesc],{'k$_{e,0}$','$\eta_{e,0}$'},FS,'left');
+markerlabels([etae0/eesc,etae0/eesc],{'',''},FS,'left');
 
 yticks = 10.^(-8:2:8);
 yticklabels = {'$10^{-8}$','$10^{-6}$','$10^{-4}$','$10^{-2}$','$10^{0}$','$10^{2}$','$10^{4}$','$10^{6}$','$10^{8}$'};
@@ -282,11 +319,11 @@ semilogy(HST.time(end)/tsc,ks0/kssc,'o' ,LW{:},MS{:},'Color',lncls(1,:));
 set(gca,TL{:},FS{:},'YColor',lncls(1,:),'YScale','log');
 
 yyaxis right
-semilogy(HST.time/tsc,HST.etat(:,2)/essc,'--' ,LW{:},'Color',lncls(2,:)); hold on; axis tight; box on;
-semilogy(HST.time/tsc,HST.etat(:,[1,3])/essc,':',LW{:},'Color',lncls(2,:));
+semilogy(HST.time/tsc,HST.etat(:,2)/etsc,'--' ,LW{:},'Color',lncls(2,:)); hold on; axis tight; box on;
+semilogy(HST.time/tsc,HST.etat(:,[1,3])/etsc,':',LW{:},'Color',lncls(2,:));
 
-semilogy(HST.time(end)/tsc,etas0/essc,'o' ,LW{:},MS{:},'Color',lncls(2,:));
-markerlabels([etas0/essc,etas0/essc],{'k$_{s,0}$','$\eta_{s,0}$'},FS,'left');
+semilogy(HST.time(end)/tsc,etat0/etsc,'o' ,LW{:},MS{:},'Color',lncls(2,:));
+markerlabels([etat0/etsc,etat0/etsc],{'',''},FS,'left');
 
 set(gca,TL{:},FS{:},'YColor',lncls(2,:),'YScale','log');
 legend('mean','min/max',TX{:},FS{:},'Location','southeast')
@@ -319,6 +356,8 @@ if save_op && ~restart
     print(fh3,name,'-dpng','-r300','-image');
     name = [outdir,'/',runID,'/',runID,'_dfn_',num2str(floor(step/nop))];
     print(fh4,name,'-dpng','-r300','-image');
+    name = [outdir,'/',runID,'/',runID,'_prf_',num2str(floor(step/nop))];
+    print(fh13,name,'-dpng','-r300','-image');
     name = [outdir,'/',runID,'/',runID,'_hnd'];
     print(fh14,name,'-dpng','-r300','-image');
     name = [outdir,'/',runID,'/',runID,'_hdf'];

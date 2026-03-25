@@ -14,7 +14,7 @@ end
 
 fprintf('\n\n')
 fprintf('*************************************************************\n');
-fprintf('*****  RUN REGC MODEL | %s  ***************\n',datetime('now'));
+fprintf('*****  RUN XCORE MODEL | %s  ***************\n',datetime('now'));
 fprintf('*************************************************************\n');
 fprintf('\n   run ID: %s \n\n',runID);
 end
@@ -82,6 +82,7 @@ if ~exist('dt','var'); dt = dt0/10; end
 
 padL0 = 4*ceil(L0h/h);
 padl0 = 4*ceil(l0h/h);
+padLl = 4*ceil(Llh/h);
 
 [kpx_padL0, kpz_padL0] = ndgrid( ...
     2*pi*ifftshift((0:Nz-1+padL0) - floor((Nz+padL0)/2)) / ((Nz+padL0)*h), ...
@@ -91,33 +92,46 @@ padl0 = 4*ceil(l0h/h);
     2*pi*ifftshift((0:Nz-1+padl0) - floor((Nz+padl0)/2)) / ((Nz+padl0)*h), ...
     2*pi*ifftshift((0:Nx-1      ) - floor( Nx       /2)) / ( Nx       *h)  );
 
+[kpx_padLl, kpz_padLl] = ndgrid( ...
+    2*pi*ifftshift((0:Nz-1+padLl) - floor((Nz+padLl)/2)) / ((Nz+padLl)*h), ...
+    2*pi*ifftshift((0:Nx-1      ) - floor( Nx       /2)) / ( Nx       *h)  );
+
 kp2 = kpx.^2 + kpz.^2;
 kp2_padL0 = kpx_padL0.^2 + kpz_padL0.^2;
 kp2_padl0 = kpx_padl0.^2 + kpz_padl0.^2;
+kp2_padLl = kpx_padLl.^2 + kpz_padLl.^2;
 
 % Gaussian spatial filter kernels in Fourier space
-Gkps = exp(-0.5 * ((l0h*sqrt(2))^2) * kp2);
-Gkpe = exp(-0.5 * ((L0h*sqrt(2))^2) * kp2);
-Gkps_padl0 = exp(-0.5 * ((l0h*sqrt(2))^2) * kp2_padl0);
-Gkpe_padL0 = exp(-0.5 * ((L0h*sqrt(2))^2) * kp2_padL0);
-Gkrp = exp(-0.5 * ((L0h+l0h)^2) * kp2);
+Gkps       = exp(- l0h^2/2 * kp2);
+Gkpx       = exp(- Llh^2/2 * kp2);
+Gkps_padl0 = exp(- l0h^2 * kp2_padl0);
+Gkpe_padL0 = exp(- L0h^2 * kp2_padL0);
+Gkpx_padLl = exp(- Llh^2 * kp2_padLl);
+Gkrp       = exp(- ((L0h+l0h)^2)/2 * kp2);
 
 % initialise smooth random noise generation
 rng(seed);
 
 % Generate new white noise
 rp  = randn(Nz, Nx);
+re  = randn(Nz, Nx);
+rs  = randn(Nz, Nx);
+rx  = randn(Nz, Nx);
 
 % Filter white noise spatially
 rp  = real(ifft2(Gkrp .* fft2(rp)));
+rg  = xix0.*real(ifft2(Gkpx .* fft2(rx))) ...
+    + xis0.*real(ifft2(Gkps .* fft2(rs)));
 
 % Rescale to unit standard deviation
 rp  = (rp - mean(rp(:))) ./ std(rp(:));
+rg  = (rg - mean(rg(:))) ./ std(rg(:));
 
 % initialise noise flux potentials
 psie = zeros(Nz+0, Nx+0);
 psix = zeros(Nz+0, Nx+0);
 psis = zeros(Nz+0, Nx+0);
+psig = rg;
 
 % initialise noise flux components
 xisw = zeros(Nz+1, Nx+2);
@@ -136,10 +150,11 @@ MapW = reshape(1:NW,Nz+1,Nx+2);
 MapU = reshape(1:NU,Nz+2,Nx+1) + NW;
 
 % set up shape functions for initial and transient boundary layers
-initshape = exp((-ZZ+h/2)/(L0h+l0h)/2); % width of initial boundary layer [m]
-bndshape  = exp((-ZZ+h/2)/(L0h+l0h)/1); % width of crystal replenishing layer [m]
-bndtapere = (1 - (exp((-ZZ )/L0h) + exp(-(D-ZZ )/L0h)).*(1-open_cnv));
-bndtapers = (1 - (exp((-ZZ )/l0h) + exp(-(D-ZZ )/l0h)).*(1-open_sgr));
+bnd_w     = Llh + l0h;%L0 + l0 + h;%(L0/2+l0/2+D/100);
+% initshape = (1+erf((-ZZ+1.5.*bnd_w.*(1+rp/10))./bnd_w))/2;
+% bndshape  = (1+erf((-ZZ+1.5.*bnd_w)./bnd_w))/2;
+initshape = exp((-ZZ+h/2)/bnd_w);%(1+erf((-ZZ+1.5.*bnd_w.*(1+rp/10))./bnd_w))/2;
+bndshape  = exp((-ZZ+h/2)/bnd_w);
 bndtaperw = (1 - (exp((-ZZw)/l0h) + exp(-(D-ZZw)/l0h)).*(1-open_sgr));
 
 % set specified boundaries to no slip, else to free slip
@@ -156,7 +171,7 @@ ifz = [2,1:Nz+1,Nz];
 
 % initialise crystallinity field
 gp  =  exp(-((XX-L/2)./(L/6)).^2) .* exp(-((ZZ-D/2)./(D/6)).^2);
-xin =  x0.*ones(Nz,Nx);
+xin =  x0.*ones(Nz,Nx);% + (R-x0).*initshape;
 x   =  xin .* (1+dxr/x0.*rp+dxg/x0.*gp);
 m   =  1-x;
 

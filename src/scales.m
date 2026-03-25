@@ -1,30 +1,24 @@
 %*****  calculate and print characteristic scales  ************************
 
 % length scales
+h0      =  h;
 D0      =  D/10;
 d0      =  d0;
-L0      =  L0;  L0h = (L0+h)/2;
-l0      =  l0;  l0h = (l0+h)/2;
-h0      =  h;
+L0      =  L0;  L0h = (L0+h0)/2;
+l0      =  l0;  l0h = (l0+h0)/2;
+Ll      =  sqrt(L0.*l0); Llh = (Ll+h0)/2;
 
 % material parameter scales
 rho0    =  rhom0;
 Drho0   =  rhox0-rhom0;
-Dchi0   =  R/20;
-chi0    =  R;
+Dchi0   =  Da/10;
+chi0    =  Da;
 eta0    =  etam0;
 
-% speed scales
 W0l     =  Dchi0*Drho0*g0*D0^2/eta0;  % laminar convection speed
 w0l     =        Drho0*g0*d0^2/eta0;  % laminar settling speed
 
-ReL0    =  W0l*L0/(eta0/rho0);        % laminar convective Reynolds No at L0
-Rel0    =  w0l*l0/(eta0/rho0);        % laminar settling Reynolds No at L0
-
-digits  =  16;
-fReL0   =  vpa(1-exp(-ReL0));         % Re-dependent ramp factor
-fRel0   =  vpa(1-exp(-Rel0));         % Re-dependent ramp factor
-
+w0t  =  sqrt(2      *Drho0*g0*d0  /(l0  *rho0));  % terminal turbulent settling speed
 W0t  =  sqrt(2*Dchi0*Drho0*g0*D0^3/(L0^2*rho0));  % terminal turbulent convective speed
 W0i  =  sqrt(D*Dchi0*Drho0*g0/rho0);              % inertially limited convective speed
 if open_cnv
@@ -33,11 +27,21 @@ else
     Ri0 = W0i./W0t;
 end
 
-% general convective speed
-W0  = double(D0.*(sqrt(4.*Dchi0.*Drho0.*g0.*rho0.*Ri0.^-2.*fReL0.*L0.^2.*D0 + eta0.^2) - eta0)./(2.*Ri0.^-2.*fReL0.*L0.^2.*rho0));
+W0 = W0l;
+w0 = w0l;
+for i=1:10
+    ReL0    =  W0*L0/(eta0/rho0);        % convective Reynolds No at L0, eta0
+    Rel0    =  w0*l0/(eta0/rho0);        % settling Reynolds No at l0, eta0
 
-% general settling speed
-w0  = double((sqrt(4.*Drho0.*g0.*rho0.*fRel0.*l0.*d0.^2 + eta0.^2) - eta0)./(2.*fRel0.*l0.*rho0));
+    fReL0   =  vpa(1-exp(-ReL0));         % Re-dependent ramp factor
+    fRel0   =  vpa(1-exp(-Rel0));         % Re-dependent ramp factor
+
+    % general convective speed
+    W0  = double(D0.*(sqrt(4.*Ri0.^-2.*Dchi0.*Drho0.*g0.*rho0.*fReL0.*L0.^2.*D0 + eta0.^2) - eta0)./(2.*Ri0.^-2.*fReL0.*L0.^2.*rho0));
+
+    % general settling speed
+    w0  = double((sqrt(4.*Drho0.*g0.*rho0.*fRel0.*l0.*d0.^2 + eta0.^2) - eta0)./(2.*fRel0.*l0.*rho0));
+end
 
 % diffusivities
 eII0    =  W0/D0;
@@ -46,38 +50,40 @@ ks0     =  w0*l0;
 kx0     =  double(ks0 + fReL0*ke0);
 
 % times
-tW0     =  D/W0;
-tw0     =  D/w0;
-tk0     =  D^2/kx0;
-ti0     =  rho0*W0/(Dchi0*Drho0*g0);
-t0      =  ti0/2 + min([tW0, tw0, tk0]);
+tW0     =  D0/W0;
+tw0     =  D0/w0;
+tk0     =  D0^2/kx0;
+ti0     =  D0/W0i;
+t0      =  (1/(ti0+tW0) + 1/tw0 + 1/tk0).^-1;%D0/W0i + D0/(W0+w0+kx0/D0);
 dt0     =  min([(h0/2)^2/kx0 , (h0/2)/(W0+w0)]);
 
 % noise flux amplitudes
-xie0    =  double(Xi*sqrt(          fReL0*ke0     /(L0h/W0)*(L0h./(L0h+h0))^3));
-xix0    =  double(Xi*sqrt(chi0*sqrt(fReL0*ke0*ks0)/(L0h/W0)*(L0h./(L0h+h0))^3));
-xis0    =         Xi*sqrt(chi0*           ks0     /(l0h/w0)*(l0h./(l0h+h0))^3) ;
+taue0   =  L0/2/W0;
+taus0   =  l0/2/w0;
+taux0   =  sqrt(taue0.*taus0);
+xie0    =  double(Xi*sqrt(          fReL0*ke0/taue0));
+xix0    =  double(Xi*sqrt(chi0*sqrt(fReL0*ke0/taue0*ks0/taus0)));
+xis0    =         Xi*sqrt(chi0*           ks0/taus0);
 
 % phase change rate
-tau0    =  4*h0./(W0 + w0);% + dt0;
-G0      =  R*rho0/tau0;
+G0      =  Da*rho0/t0;
 
 % viscosities, stress/pressure
 etae0   =  double(fReL0*ke0*rho0);
-etas0   =  double(fRel0*ks0*rho0);
+etat0   =  double(fRel0*ks0*rho0);
 p0      =  (eta0+etae0)*eII0;
 
 fReL0 = double(fReL0);
 fRel0 = double(fRel0);
 
 % general dimensionless numbers
-Da0     =  G0/(rho0/t0);                % Dahmköhler number
-Noe0    =  xie0/W0;                     % Eddy noise number
-Nox0    =  (xix0+xis0)/w0;              % Particle noise number
+Noe0    =  xie0/W0;                     % Mixture-Eddy Noise number
+Nox0    =  xix0/w0;                     % Particle-Eddy Noise number
+Nos0    =  xis0/w0;                     % Particle-Settling Noise number
 Rc0     =  W0/w0;                       % Convection number
 Ra0     =  W0*D0/kx0;                   % Rayleigh number
 ReD0    =  W0*D0/((eta0+etae0)/rho0);   % Convection Reynolds number
-Red0    =  w0*d0/((eta0+etas0)/rho0);   % Particle Reynolds number
+Red0    =  w0*d0/((eta0+etat0)/rho0);   % Particle Reynolds number
 
 % print scaling analysis to standard output
 fprintf(1,'\n  Scaled domain depth D0    = %1.0e [m]',D0);
@@ -96,10 +102,11 @@ fprintf(1,'\n  Segregation speed   w0    = %1.2e [m/s]\n',w0);
 fprintf(1,'\n  Eddy  diffusivity   ke0   = %1.1e [m2/s]',ke0);
 fprintf(1,'\n  Segr. diffusivity   ks0   = %1.1e [m2/s]',ks0);
 fprintf(1,'\n  Eddy  viscosity     etae  = %1.1e [Pas]',etae0);
-fprintf(1,'\n  Segr. viscosity     etas0 = %1.1e [Pas]\n',etas0);
+fprintf(1,'\n  Segr. viscosity     etas0 = %1.1e [Pas]\n',etat0);
 
-fprintf(1,'\n  Eddy noise rate     xie0  = %1.2e [m/s]',xie0);
-fprintf(1,'\n  Segr. noise rate    xix0  = %1.2e [m/s]\n',xix0);
+fprintf(1,'\n  Mixture-Eddy noise  xie0  = %1.2e [m/s]',xie0);
+fprintf(1,'\n  Particle-Eddy noise xix0  = %1.2e [m/s]',xix0);
+fprintf(1,'\n  Settling noise      xis0  = %1.2e [m/s]\n',xis0);
 
 fprintf(1,'\n  Reaction rate       G0    = %1.2e [kg/m3/s]\n',G0);
 
@@ -108,9 +115,10 @@ fprintf(1,'\n  Convection  time    tW0   = %1.2e [s]',tW0);
 fprintf(1,'\n  Segregation time    tw0   = %1.2e [s]',tw0);
 fprintf(1,'\n  Diffusion   time    tk0   = %1.2e [s]\n',tk0);
 
-fprintf(1,'\n  Dahmköhler No       Da0   = %1.2e [1]',Da0);
-fprintf(1,'\n  Eddy Noise No       Noe0  = %1.2e [1]',Noe0);
-fprintf(1,'\n  Part Noise No       Nox0  = %1.2e [1]\n',Nox0);
+fprintf(1,'\n  Dahmköhler No       Da0   = %1.2e [1]',Da);
+fprintf(1,'\n  Mixt.-Eddy Noise No Noe0  = %1.2e [1]',Noe0);
+fprintf(1,'\n  Part.-Eddy Noise No Nox0  = %1.2e [1]',Nox0);
+fprintf(1,'\n  Settling Noise No   Nos0  = %1.2e [1]\n',Nos0);
 
 fprintf(1,'\n  Convection No       Rc0   = %1.2e [1]',Rc0);
 fprintf(1,'\n  Rayleigh No         Ra0   = %1.2e [1]',Ra0);
@@ -134,18 +142,19 @@ if ndm_op
     xixsc = xix0;  xixun = '1';
     esc   = eta0;  eun   = '1';
     eesc  = etae0; 
-    essc  = etas0;
+    etsc  = etat0;
     rsc   = rho0;  dun   = '1';
     MFSsc = rho0/t0; MFSun = '1';
     xsc   = chi0;  xun = '1';
     Gsc   = G0;  Gun = '1';
-    ssc   = D;  sun = '1';
+    ssc   = D0;  sun = '1';
     Rasc  = Ra0;
     ReDsc = ReD0;
     Redsc = Red0;
     Rcsc  = Rc0;
     Noesc = Noe0;
     Noxsc = Nox0;
+    Nossc = Nos0;
 else
     kssc = 1;  kun = 'm$^2$/s';
     kesc = 1;  
@@ -163,6 +172,7 @@ else
     Rcsc  = 1;
     Noesc = 1;
     Noxsc = 1;
+    Nossc = 1;
 if t0 < 1e3
     tsc = 1;
     tun = 's';
@@ -176,10 +186,10 @@ elseif t0 >= 1e2*yr
     tsc = 1e3*yr;
     tun = 'kyr';
 end
-if D < 1e3
+if D0 < 1e3
     ssc = 1;
     sun = 'm';
-elseif D >= 1e3 && D < 1e6
+elseif D0 >= 1e3 && D0 < 1e6
     ssc = 1e3;
     sun = 'km';
 else

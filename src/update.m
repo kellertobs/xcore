@@ -29,8 +29,8 @@ rhoWm  =   Mw.*Wm(:,2:end-1);
 rhoUm  =   Mu.*Um(2:end-1,:);
 
 % convert weight to volume fraction, update bulk density
-chi    = max(eps,min(1-eps, x.*rho./rhox0));
-mu     = max(eps,min(1-eps, m.*rho./rhom0));
+chi    = max(eps,min(1-eps, x.*rho./rhox0 ));
+mu     = max(eps,min(1-eps, m.*rho./rhom0 ));
 
 chiw   = (chi(icz(1:end-1),:)+chi(icz(2:end),:))./2;
  muw   = ( mu(icz(1:end-1),:)+ mu(icz(2:end),:))./2;
@@ -102,25 +102,27 @@ xie  = sqrt(((xiew(1:end-1,2:end-1)+xiew(2:end,2:end-1))/2).^2 ...
           + ((xieu(2:end-1,1:end-1)+xieu(2:end-1,2:end))/2).^2);           % eddy noise flux magnitude
 
 % update diffusion parameters
-ke   = eII.*L0.^2;                                                         % turbulent eddy diffusivity
-ks   = vx .*l0;                                                            % segregation diffusivity
-kx   = (ks + fReL.*ke);                                                    % regularised particle diffusivity 
+ke    = eII.*L0.^2;                                                        % turbulent eddy diffusivity
+ks    = vx .*l0;                                                           % segregation diffusivity
+kx    = (ks + fReL.*ke);                                                   % regularised particle diffusivity 
 
 % update viscosities
-etae = fReL.*ke.*rho;                                                      % eddy viscosity
-eta  = (eta + etamix + etae)/2;                                            % effective viscosity
+etae  = fReL.*ke.*rho;                                                     % eddy viscosity
+etai  = etamix + etae;                                                     % effective viscosity
 
-etat = fRel.*ks.*rho;                                                      % turbulent drag viscosity
-etas = (etas + etax + etat)/2;                                             % effective drag viscosity   
+etat  = fRel.*ks.*rho;                                                     % turbulent drag viscosity
+etasi = etax + etat;                                                       % effective drag viscosity   
 
 % limit total viscosity contrast
-etamax = geomean(eta(:)).*(etacntr/2);
-etamin = geomean(eta(:))./(etacntr/2);
-eta    = 1./(1./etamax + 1./eta) + etamin;
+etamax = min(etai(:)).*etacntr;
+etai   = 1./(1./etamax + 1./etai);
 
-etamax = geomean(etas(:)).*(etacntr/2);
-etamin = geomean(etas(:))./(etacntr/2);
-etas   = 1./(1./etamax + 1./etas) + etamin;
+etamax = min(etasi(:)).*etacntr;
+etasi  = 1./(1./etamax + 1./etasi);
+
+% iteratively relax viscosity update
+eta  = (etai  + eta )/2;
+etas = (etasi + etas)/2;
 
 % interpolate to staggered nodes
 etaco  = (eta(icz(1:end-1),icx(1:end-1)).*eta(icz(2:end),icx(1:end-1)) ...
@@ -135,8 +137,9 @@ ReD = V .*D0./(eta ./rho);                                                 % Rey
 Red = vx.*d0./(etas./rho);                                                 % particle Reynolds number
 Ra  = V .*D0./kx;                                                          % Rayleigh number on scale domain length 
 Rc  = V./vx;                                                               % particle settling number
-Noe = xie./V;                                                              % eddy noise flux number
-Nox = (xix+xis)./vx;                                                       % particle noise flux number
+Noe = xie./V;                                                              % mixture-eddy noise flux number
+Nox = xix./vx;                                                             % particle-eddy noise flux number
+Nos = xis./vx;                                                             % particle-settling noise flux number
 
 % update Re-dependent ramp factors
 fReL =  (1-exp(-ReL));         % Re-dependent ramp factor

@@ -10,5 +10,6 @@
 psieo = psie;
 psixo = psix;
 psiso = psis;
+psigo = psig;
 
 dto = dt;

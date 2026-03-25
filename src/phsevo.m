@@ -13,17 +13,16 @@ advn_rho = advn_X+advn_M;
 [dffn_X,qz_dffn_X,qx_dffn_X] = diffus(chi,X.*kx,h,[1,2],BCD);
 
 % boundary phase change rate
-tau_x = 4*h./(W0 + w0);
-Gx    = R.*max(0,1-x).*rho./tau_x.*bndshape;
+Gx    = G0.*(1-x).*(1+psig/10).*bndshape;
 
 % total rates of change
 dXdt  = - advn_X + dffn_X + Gx;
 
 % residual of phase density evolution
-res_X = (a1*X-a2*Xo-a3*Xoo)/dt - (b1*dXdt + b2*dXdto + b3*dXdtoo);
+res_X = (a1*X-a2*Xo-a3*Xoo) - (b1*dXdt + b2*dXdto + b3*dXdtoo)*dt;
 
 % semi-implicit update of phase fraction densities
-upd_X = - alpha*res_X*dt/a1;
+upd_X = - alpha*res_X/a1;
 X     = X + upd_X;
 X     = max(rho.*eps,min(rho.*(1-eps), X ));
 M     = rho - X;
