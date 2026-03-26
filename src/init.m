@@ -253,7 +253,7 @@ if restart
     end
     if exist(name,'file')
         fprintf('\n  restart from %s \n\n',name);
-        load(name,'U','W','P','x','m','chi','mu','X','M','dXdt','drhodt','Gx','rho','eta','etas','ke','ks','kx','Ra','ReD','Red','Rc','dt','time','step','MFS','wx','wm','psie','psix','psis','xisw','xisu','xiew','xieu','xixw','xixu');
+        load(name,'U','W','P','x','m','chi','mu','X','M','dXdt','drhodt','Gx','rho','eta','etas','ke','ks','kx','Ra','ReD','Red','Rc','dt','time','step','MFS','wx','wm','psie','psix','psis','psig','xisw','xisu','xiew','xieu','xixw','xixu');
         name = [outdir,'/',runID,'/',runID,'_HST'];
         load(name,'HST');
 
