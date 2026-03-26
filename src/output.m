@@ -123,7 +123,7 @@ imagesc(Xsc,Zsc,-wx(2:end-1,2:end-1)/wxsc); axis ij equal tight; box on; cb = co
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta W_x$ [',wun,']'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:});  xlabel(['Width [',sun,']'],TX{:},FS{:});
 set(fh2,'CurrentAxes',ax(24));
 imagesc(Xsc,Zsc,-wm(2:end-1,2:end-1)/wmsc); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta W_m$ [',wun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:}); 
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\Delta W_m$ [',wun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:});
 
 % plot phase and eddy diffusivities, Ra and Re numbers in Fig. 3
 set(0,'CurrentFigure',fh3)
@@ -142,7 +142,7 @@ imagesc(Xsc,Zsc,xie/xiesc); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_e$ [',xieun,']'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:});  xlabel(['Width [',sun,']'],TX{:},FS{:});
 set(fh3,'CurrentAxes',ax(35));
 imagesc(Xsc,Zsc,xix/xixsc); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_x$ [',xieun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:}); 
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_x$ [',xieun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:});
 set(fh3,'CurrentAxes',ax(36));
 imagesc(Xsc,Zsc,xis/xissc); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['$\xi_s$ [',xisun,']'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:});
@@ -164,9 +164,11 @@ imagesc(Xsc,Zsc,log10(Noe/Noesc)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ No$_e$ [1]'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:});  xlabel(['Width [',sun,']'],TX{:},FS{:});
 set(fh4,'CurrentAxes',ax(45));
 imagesc(Xsc,Zsc,log10(Nox/Noxsc)); axis ij equal tight; box on; cb = colorbar;
-set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ No$_x$ [1]'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:}); 
+clim([log10(1e-12), max(log10(Nox(:)/Noxsc))])
+set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ No$_x$ [1]'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:});
 set(fh4,'CurrentAxes',ax(46));
 imagesc(Xsc,Zsc,log10(Nos/Nossc)); axis ij equal tight; box on; cb = colorbar;
+clim([log10(1e-12), max(log10(Nos(:)/Nossc))])
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ No$_s$ [1]'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:});
 
 % plot 1D horizontal average profiles

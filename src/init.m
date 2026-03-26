@@ -150,7 +150,7 @@ MapW = reshape(1:NW,Nz+1,Nx+2);
 MapU = reshape(1:NU,Nz+2,Nx+1) + NW;
 
 % set up shape functions for initial and transient boundary layers
-bnd_w     = Ll0/2 + l0/2 + D/100;
+bnd_w     = Ll/2 + l0/2 + D/100;
 bndshape  = exp((-ZZ+h/2)/bnd_w);
 bndtaperw = (1 - (exp((-ZZw)/l0h) + exp(-(D-ZZw)/l0h)).*(1-open_sgr));
 

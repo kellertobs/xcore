@@ -11,38 +11,38 @@ nop       =  50;                  % output frame plotted/saved every 'nop' time 
 nrh       =  5;                   % record metrics history every 'nrh' time steps
 plot_op   =  1;                   % switch on to live plot results
 save_op   =  1;                   % switch on to save output to file
-ndm_op    =  0;                   % plot nondimensionalised output 
+ndm_op    =  1;                   % plot nondimensionalised output
 
 % set model domain parameters
 D         =  10;                  % chamber depth [m]
 N         =  100;                 % number of grid points in z-direction
 h         =  D/N;                 % grid spacing (equal in both dimensions, do not set) [m]
-L         =  D;                   % chamber width (equal to h for 1-D mode) [m]
+L         =  D*1.5;               % chamber width (equal to h for 1-D mode) [m]
 
 % set model timing parameters
-t0end     =  1.5;                 % stop when dimensionless time is reached
+t0end     =  200.0;                % stop when dimensionless time is reached
 
 % set crystallinity initial condition
-xeq       =  0.01;                % equilibrium crystallinity of boundary layer [wt]
-x0        =  xeq/10;              % initial background crystallinity [wt]
+x0        =  eps;              % initial background crystallinity [wt]
+dxr       =  0.0;              % initial random perturbation [wt]
 
 % set physical control parameters
-d0        =  0.01;                % xtal size constant [m]
-etam0     =  100;                 % melt viscosity constant [kg/m3]
-L0        =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)
+d0        =  1e-2;                % xtal size constant [m]
+etam0     =  1e+1;                % melt viscosity constant [kg/m3]
+L0        =  D/100;               % correlation length for eddy diffusivity (multiple of h, 0.5-1)
 l0        =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
-R         =  0.5;                 % relative amplitude of crystallisation rate [s]
+Da        =  0.01;                % relative amplitude of crystallisation rate [s]
 Xi        =  0.5;                 % relative amplitude of random noise flux
 
 % set numerical model parameters
-CFL       =  0.90;                % (physical) time stepping courant number (multiplies stable step) [0,1]
-rtol      =  1e-5;                % outer its relative tolerance
-atol      =  1e-8;                % outer its absolute tolerance
-maxit     =  10;                  % maximum outer its
+CFL       =  0.75;                % (physical) time stepping courant number (multiplies stable step) [0,1]
+rtol      =  1e-4;                % outer its relative tolerance
+atol      =  1e-9;                % outer its absolute tolerance
+maxit     =  15;                  % maximum outer its
 alpha     =  0.9;                 % iterative step size parameter
+gamma     =  1e-3;                % artificial horizontal inertia parameter (only applies if periodic)
 
 
 %*****  RUN XCORE MODEL  **************************************************
 run('../src/main')
 %**************************************************************************
-
