@@ -164,11 +164,11 @@ imagesc(Xsc,Zsc,log10(Noe/Noesc)); axis ij equal tight; box on; cb = colorbar;
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ No$_e$ [1]'],TX{:},FS{:}); ylabel(['Depth [',sun,']'],TX{:},FS{:});  xlabel(['Width [',sun,']'],TX{:},FS{:});
 set(fh4,'CurrentAxes',ax(45));
 imagesc(Xsc,Zsc,log10(Nox/Noxsc)); axis ij equal tight; box on; cb = colorbar;
-clim([log10(1e-12), max(log10(Nox(:)/Noxsc))])
+clim([-12, max(-11, max(log10(Nox(:)/Noxsc)))])
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ No$_x$ [1]'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:});
 set(fh4,'CurrentAxes',ax(46));
 imagesc(Xsc,Zsc,log10(Nos/Nossc)); axis ij equal tight; box on; cb = colorbar;
-clim([log10(1e-12), max(log10(Nos(:)/Nossc))])
+clim([-12,max(-11, max(log10(Nos(:)/Nossc)))])
 set(cb,TL{:},TS{:}); set(gca,TL{:},TS{:}); title(['log$_{10}$ No$_s$ [1]'],TX{:},FS{:}); set(gca,'YTickLabel',[]); xlabel(['Width [',sun,']'],TX{:},FS{:});
 
 % plot 1D horizontal average profiles
