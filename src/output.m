@@ -176,6 +176,7 @@ if ~exist('fh13','var'); fh13 = figure(VIS{:});
 else; set(0, 'CurrentFigure', fh13); clf;
 end
 
+sgtitle(['time = ',num2str(time/tsc,3),' [',tun,']'],TX{:},FS{:},'Color','k');
 subplot(1,4,1)
 plot(mean(x./xsc,2),Zc./ssc,'LineWidth',1.5); axis ij tight; box on
 
