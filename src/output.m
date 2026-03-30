@@ -176,38 +176,57 @@ if ~exist('fh13','var'); fh13 = figure(VIS{:});
 else; set(0, 'CurrentFigure', fh13); clf;
 end
 
-sgtitle(['time = ',num2str(time/tsc,3),' [',tun,']'],TX{:},FS{:},'Color','k');
+sgtitle(['time = ',num2str(time/tsc,3),' [',tun,']'],TX{:},'FontSize',14,'Color','k');
 subplot(1,4,1)
-plot(mean(x./xsc,2),Zc./ssc,'LineWidth',1.5); axis ij tight; box on
+plot(mean(x./xsc,2),Zc./ssc,'LineWidth',1.5); axis ij tight; box on; hold on
+plot(min(x./xsc,[],2),Zc./ssc,'k:','LineWidth',0.75);
+plot(max(x./xsc,[],2),Zc./ssc,'k:','LineWidth',0.75);
 
 set(gca,TL{:},FS{:})
 ylabel(['Depth [',sun,']'],TX{:},FS{:});
+legend('mean','min','max',TX{:},FS{:},'Location','southeast')
 title(['Crystallinity [',xun,']'],TX{:},FS{1},15);
 
 subplot(1,4,2)
 plot(rms(V./Wsc,2),Zc./ssc,'LineWidth',1.5); axis ij tight; box on; hold on
 plot(rms(vx./wxsc,2),Zc./ssc,'LineWidth',1.5);
+plot(min(V./Wsc,[],2),Zc./ssc,'k:','LineWidth',0.75);
+plot(max(V./Wsc,[],2),Zc./ssc,'k:','LineWidth',0.75);
+plot(min(vx./wxsc,[], 2),Zc./ssc,'k:','LineWidth',0.75);
+plot(max(vx./wxsc,[], 2),Zc./ssc,'k:','LineWidth',0.75);
 
 set(gca,TL{:},FS{:})
-legend('$|\mathbf{v}|$','$|\Delta \mathbf{v}_x|$',TX{:},FS{:},'Location','southeast')
+legend('$|\mathbf{v}|$','$|\Delta \mathbf{v}_x|$','min','max', TX{:},FS{:},'Location','southeast')
 title(['Velocity [',wun,']'],TX{:},FS{1},15);
 
 subplot(1,4,3)
 semilogx(geomean(ke./kesc,2),Zc./ssc,'LineWidth',1.5); axis ij tight; box on; hold on
 semilogx(geomean(ks./kssc,2),Zc./ssc,'LineWidth',1.5);
 semilogx(geomean(kx./kxsc,2),Zc./ssc,'LineWidth',1.5);
+semilogx(min(ke./kesc,[],2),Zc./ssc,'k:','LineWidth',0.75);
+semilogx(max(ke./kesc,[],2),Zc./ssc,'k:','LineWidth',0.75);
+semilogx(min(ks./kssc,[],2),Zc./ssc,'k:','LineWidth',0.75);
+semilogx(max(ks./kssc,[],2),Zc./ssc,'k:','LineWidth',0.75);
+semilogx(min(kx./kxsc,[],2),Zc./ssc,'k:','LineWidth',0.75);
+semilogx(max(kx./kxsc,[],2),Zc./ssc,'k:','LineWidth',0.75);
 
 set(gca,TL{:},FS{:})
-legend('$\kappa_e$','$\kappa_s$','$\kappa_x$',TX{:},FS{:},'Location','southeast')
+legend('$\kappa_e$','$\kappa_s$','$\kappa_x$','min','max',TX{:},FS{:},'Location','southeast')
 title(['Diffusivity [',kun,']'],TX{:},FS{1},15);
 
 subplot(1,4,4)
 semilogx(geomean(eta./esc,2),Zc./ssc,'LineWidth',1.5); axis ij tight; box on; hold on
 semilogx(geomean(etas./esc,2),Zc./ssc,'LineWidth',1.5);
 semilogx(geomean(etamix./esc,2),Zc./ssc,'LineWidth',1.5);
+semilogx(min(eta./esc,[],2),Zc./ssc,'k:','LineWidth',0.75);
+semilogx(max(eta./esc,[],2),Zc./ssc,'k:','LineWidth',0.75);
+semilogx(min(etas./esc,[],2),Zc./ssc,'k:','LineWidth',0.75);
+semilogx(max(etas./esc,[],2),Zc./ssc,'k:','LineWidth',0.75);
+semilogx(min(etamix./esc,[],2),Zc./ssc,'k:','LineWidth',0.75);
+semilogx(max(etamix./esc,[],2),Zc./ssc,'k:','LineWidth',0.75);
 
 set(gca,TL{:},FS{:})
-legend('$\eta$','$\eta_s$','$\sum_i \eta_i$',TX{:},FS{:},'Location','southeast')
+legend('$\eta$','$\eta_s$','$\sum_i \eta_i$','min','max',TX{:},FS{:},'Location','southeast')
 title(['Viscosity [',eun,']'],TX{:},FS{1},15);
 
 % plot model history
