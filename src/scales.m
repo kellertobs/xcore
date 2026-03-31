@@ -161,7 +161,7 @@ else
     kxsc = 1;  
     esc   = 0;  eun   = 'Pas';
     eesc  = 1;
-    essc  = 1;
+    etsc  = 1;
     rsc   = 1;  dun   = 'kg/m$^3$';
     MFSsc = 1; MFSun = 'kg/m$^3$/s';
     xsc   = 1/100;  xun = 'wt \%';
