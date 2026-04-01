@@ -164,7 +164,7 @@ else
     kssc = 1;  kun = 'm$^2$/s';
     kesc = 1;  
     kxsc = 1;  
-    esc   = 0;  eun   = 'Pas';
+    esc   = 1;  eun   = 'Pas';
     eesc  = 1;
     etsc  = 1;
     rsc   = 1;  dun   = 'kg/m$^3$';
