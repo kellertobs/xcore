@@ -11,11 +11,11 @@ nop       =  50;                  % output frame plotted/saved every 'nop' time 
 nrh       =  1;                   % record metrics history every 'nrh' time steps
 plot_op   =  1;                   % switch on to live plot results
 save_op   =  1;                   % switch on to save output to file
-ndm_op    =  1;                   % plot nondimensionalised output 
+ndm_op    =  0;                   % plot nondimensionalised output 
 
 % set model domain parameters
 D         =  1e1;                 % chamber depth [m]
-N         =  100;                 % number of grid points in z-direction
+N         =  200;                 % number of grid points in z-direction
 h         =  D/N;                 % grid spacing (equal in both dimensions, do not set) [m]
 L         =  D*1.5;               % chamber width (equal to h for 1-D mode) [m]
 
