@@ -167,7 +167,7 @@ ifx = [Nx,1:Nx+1,2];
 ifz = [2,1:Nz+1,Nz];
 
 % initialise crystallinity field
-gp  =  exp(-((XX-L/2)./(L/6)).^2) .* exp(-((ZZ-D/2)./(D/6)).^2);
+gp  =  exp(-((XX-L/2)./(L/8)).^2) .* exp(-((ZZ-D/2)./(D/8)).^2);
 xin =  x0.*ones(Nz,Nx);% + (R-x0).*initshape;
 x   =  xin .* (1+dxr/x0.*rp+dxg/x0.*gp);
 m   =  1-x;
@@ -275,8 +275,6 @@ if restart
 else
     % complete, plot, and save initial condition
     store;
-    fluidmech;
-    update;
     history;
     output;
     step = step+1;

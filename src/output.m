@@ -4,7 +4,7 @@
 TX = {'Interpreter','Latex'}; FS = {'FontSize',12};
 TL = {'TickLabelInterpreter','Latex'}; TS = {'FontSize',10};
 UN = {'Units','Centimeters'};
-CL = {'Color',[0.0 0.0 0.0],[0.80 0.15 0.10],[0.10 0.15 0.65],[0.45 0.60 0.95]};
+CL = colororder;
 LW = {'LineWidth',1.5};
 XR = {'XDir','reverse'};
 MS = {'MarkerSize',8};
@@ -178,9 +178,9 @@ end
 
 sgtitle(['time = ',num2str(time/tsc,3),' [',tun,']'],TX{:},'FontSize',14,'Color','k');
 subplot(1,4,1)
-plot(mean(x./xsc,2),Zc./ssc,'LineWidth',1.5); axis ij tight; box on; hold on
-plot(min(x./xsc,[],2),Zc./ssc,'k:','LineWidth',0.75);
-plot(max(x./xsc,[],2),Zc./ssc,'k:','LineWidth',0.75);
+plot(mean(x./xsc,2),Zc./ssc,'LineWidth',1.5,'Color',CL(1,:)); axis ij tight; box on; hold on
+plot(min(x./xsc,[],2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(1,:));
+plot(max(x./xsc,[],2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(1,:));
 
 set(gca,TL{:},FS{:})
 ylabel(['Depth [',sun,']'],TX{:},FS{:});
@@ -188,45 +188,45 @@ legend('mean','min','max',TX{:},FS{:},'Location','southeast')
 title(['Crystallinity [',xun,']'],TX{:},FS{1},15);
 
 subplot(1,4,2)
-plot(rms(V./Wsc,2),Zc./ssc,'LineWidth',1.5); axis ij tight; box on; hold on
-plot(rms(vx./wxsc,2),Zc./ssc,'LineWidth',1.5);
-plot(min(V./Wsc,[],2),Zc./ssc,'k:','LineWidth',0.75);
-plot(max(V./Wsc,[],2),Zc./ssc,'k:','LineWidth',0.75);
-plot(min(vx./wxsc,[], 2),Zc./ssc,'k:','LineWidth',0.75);
-plot(max(vx./wxsc,[], 2),Zc./ssc,'k:','LineWidth',0.75);
+plot(rms(V./Wsc,2),Zc./ssc,'LineWidth',1.5,'Color',CL(1,:)); axis ij tight; box on; hold on
+plot(rms(vx./wxsc,2),Zc./ssc,'LineWidth',1.5,'Color',CL(2,:));
+plot(min(V./Wsc,[],2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(1,:));
+plot(max(V./Wsc,[],2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(1,:));
+plot(min(vx./wxsc,[], 2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(2,:));
+plot(max(vx./wxsc,[], 2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(2,:));
 
 set(gca,TL{:},FS{:})
-legend('$|\mathbf{v}|$','$|\Delta \mathbf{v}_x|$','min','max', TX{:},FS{:},'Location','southeast')
+legend('$|\mathbf{v}|$','$|\Delta \mathbf{v}_x|$', TX{:},FS{:},'Location','southeast')
 title(['Velocity [',wun,']'],TX{:},FS{1},15);
 
 subplot(1,4,3)
-semilogx(geomean(ke./kesc,2),Zc./ssc,'LineWidth',1.5); axis ij tight; box on; hold on
-semilogx(geomean(ks./kssc,2),Zc./ssc,'LineWidth',1.5);
-semilogx(geomean(kx./kxsc,2),Zc./ssc,'LineWidth',1.5);
-semilogx(min(ke./kesc,[],2),Zc./ssc,'k:','LineWidth',0.75);
-semilogx(max(ke./kesc,[],2),Zc./ssc,'k:','LineWidth',0.75);
-semilogx(min(ks./kssc,[],2),Zc./ssc,'k:','LineWidth',0.75);
-semilogx(max(ks./kssc,[],2),Zc./ssc,'k:','LineWidth',0.75);
-semilogx(min(kx./kxsc,[],2),Zc./ssc,'k:','LineWidth',0.75);
-semilogx(max(kx./kxsc,[],2),Zc./ssc,'k:','LineWidth',0.75);
+semilogx(geomean(ke./kesc,2),Zc./ssc,'LineWidth',1.5,'Color',CL(1,:)); axis ij tight; box on; hold on
+semilogx(geomean(ks./kssc,2),Zc./ssc,'LineWidth',1.5,'Color',CL(2,:));
+semilogx(geomean(kx./kxsc,2),Zc./ssc,'LineWidth',1.5,'Color',CL(3,:));
+semilogx(min(ke./kesc,[],2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(1,:));
+semilogx(max(ke./kesc,[],2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(1,:));
+semilogx(min(ks./kssc,[],2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(2,:));
+semilogx(max(ks./kssc,[],2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(2,:));
+semilogx(min(kx./kxsc,[],2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(3,:));
+semilogx(max(kx./kxsc,[],2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(3,:));
 
 set(gca,TL{:},FS{:})
-legend('$\kappa_e$','$\kappa_s$','$\kappa_x$','min','max',TX{:},FS{:},'Location','southeast')
+legend('$\kappa_e$','$\kappa_s$','$\kappa_x$',TX{:},FS{:},'Location','southeast')
 title(['Diffusivity [',kun,']'],TX{:},FS{1},15);
 
 subplot(1,4,4)
-semilogx(geomean(eta./esc,2),Zc./ssc,'LineWidth',1.5); axis ij tight; box on; hold on
-semilogx(geomean(etas./esc,2),Zc./ssc,'LineWidth',1.5);
-semilogx(geomean(etamix./esc,2),Zc./ssc,'LineWidth',1.5);
-semilogx(min(eta./esc,[],2),Zc./ssc,'k:','LineWidth',0.75);
-semilogx(max(eta./esc,[],2),Zc./ssc,'k:','LineWidth',0.75);
-semilogx(min(etas./esc,[],2),Zc./ssc,'k:','LineWidth',0.75);
-semilogx(max(etas./esc,[],2),Zc./ssc,'k:','LineWidth',0.75);
-semilogx(min(etamix./esc,[],2),Zc./ssc,'k:','LineWidth',0.75);
-semilogx(max(etamix./esc,[],2),Zc./ssc,'k:','LineWidth',0.75);
+semilogx(geomean(eta./esc,2),Zc./ssc,'LineWidth',1.5,'Color',CL(1,:)); axis ij tight; box on; hold on
+semilogx(geomean(etas./esc,2),Zc./ssc,'LineWidth',1.5,'Color',CL(2,:));
+semilogx(geomean(etamix./esc,2),Zc./ssc,'LineWidth',1.5,'Color',CL(3,:));
+semilogx(min(eta./esc,[],2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(1,:));
+semilogx(max(eta./esc,[],2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(1,:));
+semilogx(min(etas./esc,[],2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(2,:));
+semilogx(max(etas./esc,[],2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(2,:));
+semilogx(min(etamix./esc,[],2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(3,:));
+semilogx(max(etamix./esc,[],2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(3,:));
 
 set(gca,TL{:},FS{:})
-legend('$\eta$','$\eta_s$','$\sum_i \eta_i$','min','max',TX{:},FS{:},'Location','southeast')
+legend('$\eta$','$\eta_s$','$\sum_i \eta_i$',TX{:},FS{:},'Location','southeast')
 title(['Viscosity [',eun,']'],TX{:},FS{1},15);
 
 % plot model history
@@ -298,59 +298,59 @@ legend('Ra','Re$_D$','Re$_d$','Rc',TX{:},FS{:},'Location','northwest')
 title(['Dimensionless numbers'],TX{:},FS{1},15);
 xlabel(['Time [',tun,']'],TX{:},FS{1},15);
 
-% plot model history
-if ~exist('fh15','var'); fh15 = figure(VIS{:});
-else; set(0, 'CurrentFigure', fh15); clf;
-end
-
-subplot(2,1,1)
-yyaxis left
-semilogy(HST.time/tsc,HST.ke(:,2)/kesc,'-' ,LW{:},'Color',lncls(1,:)); hold on; axis tight; box on;
-semilogy(HST.time/tsc,HST.ke(:,[1,3])/kesc,':',LW{:},'Color',lncls(1,:));
-
-semilogy(HST.time(end)/tsc,ke0/kesc,'o',LW{:},MS{:},'Color',lncls(1,:));
-% markerlabels([ke0/kesc],{'k$_{e,0}$'},FS,'left');
-
-set(gca,TL{:},FS{:},'YColor',lncls(1,:),'YScale','log');
-yticks = 10.^(-8:2:8);
-yticklabels = {'$10^{-8}$','$10^{-6}$','$10^{-4}$','$10^{-2}$','$10^{0}$','$10^{2}$','$10^{4}$','$10^{6}$','$10^{8}$'};
-set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
-
-yyaxis right
-semilogy(HST.time/tsc,HST.etae(:,2)/eesc,'--' ,LW{:},'Color',lncls(2,:)); hold on; axis tight; box on;
-semilogy(HST.time/tsc,HST.etae(:,[1,3])/eesc,':',LW{:},'Color',lncls(2,:));
-set(gca,TL{:},FS{:},'YColor',lncls(2,:),'YScale','log');
-
-semilogy(HST.time(end)/tsc,etae0/eesc,'o' ,LW{:},MS{:},'Color',lncls(2,:));
-markerlabels([etae0/eesc,etae0/eesc],{'',''},FS,'left');
-
-yticks = 10.^(-8:2:8);
-yticklabels = {'$10^{-8}$','$10^{-6}$','$10^{-4}$','$10^{-2}$','$10^{0}$','$10^{2}$','$10^{4}$','$10^{6}$','$10^{8}$'};
-set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
-legend('mean','min/max',TX{:},FS{:},'Location','southeast')
-title(['Eddy diffusivity [',kun,']  $|$  Eddy viscosity [',eun,']'],TX{:},FS{1},15);
-
-subplot(2,1,2)
-yyaxis left
-semilogy(HST.time/tsc,HST.ks(:,2)/kssc,'-' ,LW{:},'Color',lncls(1,:)); hold on; box on;
-semilogy(HST.time/tsc,HST.ks(:,[1,3])/kssc,':',LW{:},'Color',lncls(1,:));
-
-semilogy(HST.time(end)/tsc,ks0/kssc,'o' ,LW{:},MS{:},'Color',lncls(1,:));
-% markerlabels([ks0/kssc],{'k$_{s,0}$'},FS,'left');
-
-set(gca,TL{:},FS{:},'YColor',lncls(1,:),'YScale','log');
-
-yyaxis right
-semilogy(HST.time/tsc,HST.etat(:,2)/etsc,'--' ,LW{:},'Color',lncls(2,:)); hold on; axis tight; box on;
-semilogy(HST.time/tsc,HST.etat(:,[1,3])/etsc,':',LW{:},'Color',lncls(2,:));
-
-semilogy(HST.time(end)/tsc,etat0/etsc,'o' ,LW{:},MS{:},'Color',lncls(2,:));
-markerlabels([etat0/etsc,etat0/etsc],{'',''},FS,'left');
-
-set(gca,TL{:},FS{:},'YColor',lncls(2,:),'YScale','log');
-legend('mean','min/max',TX{:},FS{:},'Location','southeast')
-title(['Settling diffusivity [',kun,']  $|$  Settling viscosity [',eun,']'],TX{:},FS{1},15);
-xlabel(['Time [',tun,']'],TX{:},FS{1},15);
+% % plot model history
+% if ~exist('fh15','var'); fh15 = figure(VIS{:});
+% else; set(0, 'CurrentFigure', fh15); clf;
+% end
+% 
+% subplot(2,1,1)
+% yyaxis left
+% semilogy(HST.time/tsc,HST.ke(:,2)/kesc,'-' ,LW{:},'Color',lncls(1,:)); hold on; axis tight; box on;
+% semilogy(HST.time/tsc,HST.ke(:,[1,3])/kesc,':',LW{:},'Color',lncls(1,:));
+% 
+% semilogy(HST.time(end)/tsc,ke0/kesc,'o',LW{:},MS{:},'Color',lncls(1,:));
+% % markerlabels([ke0/kesc],{'k$_{e,0}$'},FS,'left');
+% 
+% set(gca,TL{:},FS{:},'YColor',lncls(1,:),'YScale','log');
+% yticks = 10.^(-8:2:8);
+% yticklabels = {'$10^{-8}$','$10^{-6}$','$10^{-4}$','$10^{-2}$','$10^{0}$','$10^{2}$','$10^{4}$','$10^{6}$','$10^{8}$'};
+% set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
+% 
+% yyaxis right
+% semilogy(HST.time/tsc,HST.etae(:,2)/eesc,'--' ,LW{:},'Color',lncls(2,:)); hold on; axis tight; box on;
+% semilogy(HST.time/tsc,HST.etae(:,[1,3])/eesc,':',LW{:},'Color',lncls(2,:));
+% set(gca,TL{:},FS{:},'YColor',lncls(2,:),'YScale','log');
+% 
+% semilogy(HST.time(end)/tsc,etae0/eesc,'o' ,LW{:},MS{:},'Color',lncls(2,:));
+% markerlabels([etae0/eesc,etae0/eesc],{'',''},FS,'left');
+% 
+% yticks = 10.^(-8:2:8);
+% yticklabels = {'$10^{-8}$','$10^{-6}$','$10^{-4}$','$10^{-2}$','$10^{0}$','$10^{2}$','$10^{4}$','$10^{6}$','$10^{8}$'};
+% set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
+% legend('mean','min/max',TX{:},FS{:},'Location','southeast')
+% title(['Eddy diffusivity [',kun,']  $|$  Eddy viscosity [',eun,']'],TX{:},FS{1},15);
+% 
+% subplot(2,1,2)
+% yyaxis left
+% semilogy(HST.time/tsc,HST.ks(:,2)/kssc,'-' ,LW{:},'Color',lncls(1,:)); hold on; box on;
+% semilogy(HST.time/tsc,HST.ks(:,[1,3])/kssc,':',LW{:},'Color',lncls(1,:));
+% 
+% semilogy(HST.time(end)/tsc,ks0/kssc,'o' ,LW{:},MS{:},'Color',lncls(1,:));
+% % markerlabels([ks0/kssc],{'k$_{s,0}$'},FS,'left');
+% 
+% set(gca,TL{:},FS{:},'YColor',lncls(1,:),'YScale','log');
+% 
+% yyaxis right
+% semilogy(HST.time/tsc,HST.etat(:,2)/etsc,'--' ,LW{:},'Color',lncls(2,:)); hold on; axis tight; box on;
+% semilogy(HST.time/tsc,HST.etat(:,[1,3])/etsc,':',LW{:},'Color',lncls(2,:));
+% 
+% semilogy(HST.time(end)/tsc,etat0/etsc,'o' ,LW{:},MS{:},'Color',lncls(2,:));
+% markerlabels([etat0/etsc,etat0/etsc],{'',''},FS,'left');
+% 
+% set(gca,TL{:},FS{:},'YColor',lncls(2,:),'YScale','log');
+% legend('mean','min/max',TX{:},FS{:},'Location','southeast')
+% title(['Settling diffusivity [',kun,']  $|$  Settling viscosity [',eun,']'],TX{:},FS{1},15);
+% xlabel(['Time [',tun,']'],TX{:},FS{1},15);
 
 if plot_cv
 if ~exist('fh16','var'); fh16 = figure(VIS{:});
@@ -382,8 +382,8 @@ if save_op && ~restart
     print(fh13,name,'-dpng','-r300','-image');
     name = [outdir,'/',runID,'/',runID,'_hnd'];
     print(fh14,name,'-dpng','-r300','-image');
-    name = [outdir,'/',runID,'/',runID,'_hdf'];
-    print(fh15,name,'-dpng','-r300','-image');
+    % name = [outdir,'/',runID,'/',runID,'_hdf'];
+    % print(fh15,name,'-dpng','-r300','-image');
 
     name = [outdir,'/',runID,'/',runID,'_',num2str(floor(step/nop))];
     save(name,'U','W','P','x','m','chi','mu','X','M','dXdt','drhodt','Gx','rho','eta','etas','ke','ks','kx','Ra','ReD','Red','Rc','dt','time','step','MFS','wx','wm','psie','psix','psis','psig','xisw','xisu','xiew','xieu','xixw','xixu');

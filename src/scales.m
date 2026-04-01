@@ -11,8 +11,13 @@ Ll      =  sqrt(L0.*l0); Llh = (Ll+h0)/2;
 % material parameter scales
 rho0    =  rhom0;
 Drho0   =  rhox0-rhom0;
-Dchi0   =  Da/10;
-chi0    =  Da;
+if Da
+     chi0   =  Da;
+    Dchi0   =  Da/10;
+else
+     chi0 = x0;
+    Dchi0 = x0/10;
+end
 eta0    =  etam0;
 
 W0l     =  Dchi0*Drho0*g0*D0^2/eta0;  % laminar convection speed

@@ -22,7 +22,7 @@ xeq      =  0.01;                % equilibrium crystallinity of boundary layer [
 x0       =  xeq;                 % initial background crystallinity [wt]
 dxr      =  0;                   % initial random perturbation [wt]
 dxg      =  0.01;                % initial gaussian perturbation [wt]
-R        =  0;                   % relative amplitude of crystallisation rate [s]
+Da       =  0;                   % relative amplitude of crystallisation rate [s]
 
 % set numerical model parameters
 TINT     =  'bd2im';             % time integration scheme ('be1im','bd2im','cn2si','bd2si')
@@ -41,11 +41,11 @@ end
 
 cd ../src
 
-NN    = 25*[1,2,4];
+NN    = 30*[1,2,4];
 nshft = 1;
 
-dt     =  D/NN(3)/500;
-dtmax  =  D/NN(3)/500;
+dt     =  D/NN(3)/300;
+dtmax  =  D/NN(3)/300;
 
 Nt     =  nshft*D/NN(1)/dt;           % number of time steps to take
 
@@ -60,9 +60,9 @@ for Ni = NN
     init;
 
     % set velocities to constant values for lateral translation with no segregation
-    W(:) = 0;  Wm(:) = 0;  Wx(:) = 0;  wx(:) = 0;  wm(:) = 0;
-    U(:) = 0;  Um(:) = 1;  Ux(:) = 1;  upd_MFS(:) = 0;
-    P(:) = 0;
+    W(:) = 0;  Wm(:) = 0;  Wx(:) = 0;  wx(:) = 0;  wm(:) = 0;  upd_W(:) = 0;
+    U(:) = 0;  Um(:) = 1;  Ux(:) = 1;  upd_U(:) = 0;   
+    P(:) = 0;  upd_P(:) = 0; upd_MFS(:) = 0;
 
     % set diffusion parameters to zero to isolate advection
     ks(:) = 0;  kx(:) = 0;  ke(:) = 0;
@@ -151,11 +151,10 @@ for Ni = NN
     title('Numerical convergence in space','Interpreter','latex','FontSize',18)
 
     if Ni == NN(1)
-        loglog(D./NN,geomean([EB,EM,EX]).*(NN./NN(1)).^-4,'k--','LineWidth',2);  % plot trend for comparison
         loglog(D./NN,geomean([EB,EM,EX]).*(NN./NN(1)).^-5,'k-','LineWidth',2);  % plot trend for comparison
     end
     if Ni == NN(end)
-        legend({'error $\bar{\rho}$','error $M$','error $X$','quartic','quintic'},'Interpreter','latex','box','on','location','southeast')
+        legend({'error $\bar{\rho}$','error $M$','error $X$','quintic'},'Interpreter','latex','box','on','location','southeast')
     end
     drawnow;
 

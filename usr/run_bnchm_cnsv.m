@@ -13,6 +13,7 @@ for atol = ATOL
     runID    =  'bnchm_cnsv';        % run identifier
     restart  =  0;                   % restart from file (0: new run; <1: restart from last; >1: restart from specified frame)
     nop      =  10;                  % output frame plotted/saved every 'nop' time steps
+    nrh      =  1;
     plot_op  =  1;                   % switch on to live plot of results
     plot_cv  =  1;                   % switch on to live plot iterative convergence
 
@@ -24,6 +25,7 @@ for atol = ATOL
 
     % set model timing parameters
     Nt        =  5*nop;               % stop when dimensionless time is reached
+    t0end     =  10;
 
     % set crystallinity initial condition
     xeq       =  0.01;                % equilibrium crystallinity of boundary layer [wt]
@@ -36,9 +38,9 @@ for atol = ATOL
     etam0     =  1e+1;                % melt viscosity constant [kg/m3]
     L0        =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)
     l0        =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
-    R         =  1.0;                 % relative amplitude of crystallisation rate [s]
-    Xi        =  1.0;                 % relative amplitude of random noise flux
-    open_sgr  =  1;
+    Da        =  0.01;                % relative amplitude of crystallisation rate [s]
+    Xi        =  0.5;                 % relative amplitude of random noise flux
+    open_sgr  =  0;
     open_cnv  =  0;
 
     % set numerical model parameters

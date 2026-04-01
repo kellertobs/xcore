@@ -25,7 +25,7 @@ xeq      =  0.01;                % equilibrium crystallinity of boundary layer [
 x0       =  xeq;                 % initial background crystallinity [wt]
 dxr      =  0;                   % initial random perturbation [wt]
 dxg      =  0.01;                % initial gaussian perturbation [wt]
-R        =  0;                   % relative amplitude of crystallisation rate [s]
+Da       =  0;                   % relative amplitude of crystallisation rate [s]
 
 % set numerical model parameters
 TINT     =  'bd2im';             % time integration scheme ('be1im','bd2im','cn2si','bd2si')
@@ -58,9 +58,9 @@ for dti = DT
     init;
 
     % set velocities to constant values for lateral translation with no segregation
-    W(:) = 0;  Wm(:) = 0;  Wx(:) = 0;  wx(:) = 0;  wm(:) = 0;
-    U(:) = 0;  Um(:) = 1;  Ux(:) = 1;  upd_MFS(:) = 0;
-    P(:) = 0;
+    W(:) = 0;  Wm(:) = 0;  Wx(:) = 0;  wx(:) = 0;  wm(:) = 0;  upd_W(:) = 0;
+    U(:) = 0;  Um(:) = 1;  Ux(:) = 1;  upd_U(:) = 0;   
+    P(:) = 0;  upd_P(:) = 0; upd_MFS(:) = 0;
 
     % set diffusion parameters to zero to isolate advection
     ks(:) = 0;  kx(:) = 0;  ke(:) = 0;
