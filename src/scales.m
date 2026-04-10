@@ -1,16 +1,16 @@
 %*****  calculate and print characteristic scales  ************************
 
 % length scales
-h0      =  h;
-D0      =  D/10;
-d0      =  d0;
-L0      =  L0;  L0h = (L0+h0)/2;
-l0      =  l0;  l0h = (l0+h0)/2;
-bnd_w   =  l0/2 + D/100;
+h0    =  h;
+D0    =  D/10;
+d0    =  d0;
+L0    =  L0;  L0h = (L0+h0)/2;
+l0    =  l0;  l0h = (l0+h0)/2;
+bnd_w =  l0/2 + D/100;
 
 % material parameter scales
-rho0    =  rhom0;
-Drho0   =  rhox0-rhom0;
+rho0  =  rhom0;
+Drho0 =  rhox0-rhom0;
 if Da
      chi0 = Da;
     Dchi0 = Da/10;
@@ -18,41 +18,47 @@ else
      chi0 = x0;
     Dchi0 = x0/10;
 end
-eta0    =  etam0;
+eta0 =  etam0;
 
-W0l     =  Dchi0*Drho0*g0*D0^2/eta0;  % laminar convection speed
-w0l     =        Drho0*g0*d0^2/eta0;  % laminar settling speed
+W0l  =  Dchi0*Drho0*g0*D0^2/eta0;  % laminar convection speed
+w0l  =        Drho0*g0*d0^2/eta0;  % laminar settling speed
 
-w0t  =  sqrt(2      *Drho0*g0*d0  /(l0  *rho0));  % terminal turbulent settling speed
-W0t  =  sqrt(2*Dchi0*Drho0*g0*D0^3/(L0^2*rho0));  % terminal turbulent convective speed
-W0i  =  sqrt(D*Dchi0*Drho0*g0/rho0);              % inertially limited convective speed
-if open_cnv
-    Ri0 = 1;
-else
-    Ri0 = W0i./W0t;
-end
+w0t  =  sqrt(      Drho0*g0*d0^2/(l0  *rho0));  % terminal turbulent settling speed
+W0t  =  sqrt(Dchi0*Drho0*g0*D0^3/(L0^2*rho0));  % terminal turbulent convective speed
+W0i  =  sqrt(Dchi0*Drho0*g0*D   /(     rho0));  % inertially limited convective speed
+Ri0  =  W0i/W0t;
 
 W0 = W0l;
 w0 = w0l;
-for i=1:10
-    ReL0    =  W0*L0/(eta0/rho0);        % convective Reynolds No at L0, eta0
-    Rel0    =  w0*l0/(eta0/rho0);        % settling Reynolds No at l0, eta0
+digits(24);
+tol    = 1e-9;
+res    = 1;
+while res>tol
+    W0prv = W0;
+    w0prv = w0;
 
-    fReL0   =  vpa(1-exp(-ReL0));         % Re-dependent ramp factor
-    fRel0   =  vpa(1-exp(-Rel0));         % Re-dependent ramp factor
+    ReL0  = W0*L0/(eta0/rho0);        % convective Reynolds No at L0, eta0
+    Rel0  = w0*l0/(eta0/rho0);        % settling Reynolds No at l0, eta0
+
+    fReL0 = vpa(1-exp(-ReL0));        % Re-dependent ramp factor
+    fRel0 = vpa(1-exp(-Rel0));        % Re-dependent ramp factor
 
     % general convective speed
-    W0  = double(D0.*(sqrt(4.*Ri0.^-2.*Dchi0.*Drho0.*g0.*rho0.*fReL0.*L0.^2.*D0 + eta0.^2) - eta0)./(2.*Ri0.^-2.*fReL0.*L0.^2.*rho0));
+    W0    = double((sqrt(4./Ri0.^2.*Dchi0.*Drho0.*g0.*rho0.*fReL0.*L0.^2.*D0 + eta0.^2) - eta0).*D0./(2.*fReL0.*L0.^2.*rho0./Ri0.^2));
 
     % general settling speed
-    w0  = double((sqrt(4.*Drho0.*g0.*rho0.*fRel0.*l0.*d0.^2 + eta0.^2) - eta0)./(2.*fRel0.*l0.*rho0));
+    w0    = double((sqrt(4               .*Drho0.*g0.*rho0.*fRel0.*l0.*d0.^2 + eta0.^2) - eta0)    ./(2.*fRel0.*l0   .*rho0        ));
+
+    res   = abs(W0-W0prv)./W0 + abs(w0-w0prv)./w0;  % residual
 end
+fRel0 = double(fRel0);
+fReL0 = double(fReL0);
 
 % diffusivities
 eII0    =  W0/D0;
 ke0     =  eII0*L0^2;
 ks0     =  w0*l0;
-kx0     =  double(ks0 + fReL0*ke0);
+kx0     =  ks0 + fReL0*ke0;
 
 % times
 tW0     =  D/W0;
@@ -67,20 +73,17 @@ dt0     =  min([(h0/2)^2/kx0 , (h0/2)/(W0+w0)]);
 taue0   =  L0/2/W0;
 taus0   =  l0/2/w0;
 St0     =  txi0/taue0;
-xie0    =  double(Xi*sqrt(     fReL0*ke0/taue0));
-xix0    =  double(Xi*sqrt(chi0*fReL0*ke0/taue0*St0/(1+St0^2)));
-xis0    =         Xi*sqrt(chi0*      ks0/taus0);
+xie0    =  Xi*sqrt(     fReL0*ke0/taue0);
+xix0    =  Xi*sqrt(chi0*fReL0*ke0/taue0*St0/(1+St0^2));
+xis0    =  Xi*sqrt(chi0*      ks0/taus0);
 
 % phase change rate
 G0      =  Da*rho0/t0*D/D0;
 
 % viscosities, stress/pressure
-etae0   =  double(fReL0*ke0*rho0);
-etat0   =  double(fRel0*ks0*rho0);
+etae0   =  fReL0*ke0*rho0;
+etat0   =  fRel0*ks0*rho0;
 p0      =  (eta0+etae0)*eII0;
-
-fReL0   = double(fReL0);
-fRel0   = double(fRel0);
 
 % general dimensionless numbers
 Noe0    =  xie0/W0;                     % Mixture-Eddy Noise number
