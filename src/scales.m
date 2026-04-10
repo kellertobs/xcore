@@ -6,14 +6,14 @@ D0      =  D/10;
 d0      =  d0;
 L0      =  L0;  L0h = (L0+h0)/2;
 l0      =  l0;  l0h = (l0+h0)/2;
-Ll      =  sqrt(L0.*l0); Llh = (Ll+h0)/2;
+bnd_w   =  l0/2 + D/100;
 
 % material parameter scales
 rho0    =  rhom0;
 Drho0   =  rhox0-rhom0;
 if Da
-     chi0   =  Da;
-    Dchi0   =  Da/10;
+     chi0 = Da;
+    Dchi0 = Da/10;
 else
      chi0 = x0;
     Dchi0 = x0/10;
@@ -55,31 +55,32 @@ ks0     =  w0*l0;
 kx0     =  double(ks0 + fReL0*ke0);
 
 % times
-tW0     =  D0/W0;
-tw0     =  D0/w0;
-tk0     =  D0^2/kx0;
-ti0     =  D0/W0i;
-t0      =  (1/(ti0+tW0) + 1/tw0 + 1/tk0).^-1;%D0/W0i + D0/(W0+w0+kx0/D0);
+tW0     =  D/W0;
+tw0     =  D/w0;
+tk0     =  D^2/kx0;
+ti0     =  D/W0i;
+txi0    =  rhox0*d0^2/18/eta0;
+t0      =  (1/(ti0+tW0) + 1/tw0 + 1/tk0).^-1;
 dt0     =  min([(h0/2)^2/kx0 , (h0/2)/(W0+w0)]);
 
 % noise flux amplitudes
 taue0   =  L0/2/W0;
 taus0   =  l0/2/w0;
-taux0   =  sqrt(taue0.*taus0);
-xie0    =  double(Xi*sqrt(          fReL0*ke0/taue0));
-xix0    =  double(Xi*sqrt(chi0*sqrt(fReL0*ke0/taue0*ks0/taus0)));
-xis0    =         Xi*sqrt(chi0*           ks0/taus0);
+St0     =  txi0/taue0;
+xie0    =  double(Xi*sqrt(     fReL0*ke0/taue0));
+xix0    =  double(Xi*sqrt(chi0*fReL0*ke0/taue0*St0/(1+St0^2)));
+xis0    =         Xi*sqrt(chi0*      ks0/taus0);
 
 % phase change rate
-G0      =  Da*rho0/t0;
+G0      =  Da*rho0/t0*D/D0;
 
 % viscosities, stress/pressure
 etae0   =  double(fReL0*ke0*rho0);
 etat0   =  double(fRel0*ks0*rho0);
 p0      =  (eta0+etae0)*eII0;
 
-fReL0 = double(fReL0);
-fRel0 = double(fRel0);
+fReL0   = double(fReL0);
+fRel0   = double(fRel0);
 
 % general dimensionless numbers
 Noe0    =  xie0/W0;                     % Mixture-Eddy Noise number
@@ -133,10 +134,9 @@ fprintf(1,'\n  Crystal Reynolds No Red0  = %1.2e [1]\n\n\n',Red0);
 
 % adjust scales and units for visualisation
 if ndm_op
-    tsc = t0;  tun = '1';
-    Wsc = W0;  Wun = '1';
-    wxsc = w0;  wun = '1';
-    wmsc = w0*(chi0/(1-chi0));
+    Wsc = W0;  Wpsc = Wsc;  Wun = '1';
+    wxsc = w0;  wxpsc = wxsc; wun = '1'; wpun = '1';
+    wmsc = w0*(chi0/(1-chi0)); wmpsc = wmsc;
     whsc = w0; 
     psc = p0;  pun = '1';
     kssc = ks0;  kun = '1';
@@ -152,7 +152,7 @@ if ndm_op
     MFSsc = rho0/t0; MFSun = '1';
     xsc   = chi0;  xun = '1';
     Gsc   = G0;  Gun = '1';
-    ssc   = D0;  sun = '1';
+    ssc   = D;  sun = '1';
     Rasc  = Ra0;
     ReDsc = ReD0;
     Redsc = Red0;
@@ -178,23 +178,11 @@ else
     Noesc = 1;
     Noxsc = 1;
     Nossc = 1;
-if t0 < 1e3
-    tsc = 1;
-    tun = 's';
-elseif t0>= 1e3 && t0 < 1e3*hr
-    tsc = hr;
-    tun = 'hr';
-elseif t0 >= 1e3*hr && t0 < 1e2*yr
-    tsc = yr;
-    tun = 'yr';
-elseif t0 >= 1e2*yr
-    tsc = 1e3*yr;
-    tun = 'kyr';
-end
-if D0 < 1e3
+
+if D < 1e3
     ssc = 1;
     sun = 'm';
-elseif D0 >= 1e3 && D0 < 1e6
+elseif D >= 1e3 && D < 1e6
     ssc = 1e3;
     sun = 'km';
 else
@@ -222,6 +210,18 @@ elseif w0 >= 1000/hr
     wun  = 'm/s';
 end
 wmsc = wxsc;
+
+if max([W0,w0]) < 1000/yr
+    Wpsc = 1/yr; wxpsc = Wpsc; wmpsc = Wpsc;
+    wpun = 'm/yr';
+elseif max([W0,w0]) >= 1000/yr && max([W0,w0]) < 1000/hr
+    Wpsc = 1/hr; wxpsc = Wpsc; wmpsc = Wpsc;
+    wpun = 'm/hr';
+elseif max([W0,w0]) >= 1000/hr
+    Wpsc = 1; wxpsc = Wpsc; wmpsc = Wpsc;
+    wpun = 'm/s';
+end
+
 if p0 < 1e2
     psc = 1;
     pun = 'Pa';

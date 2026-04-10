@@ -24,7 +24,7 @@ Nt       =  nop;                 % number of time steps to take
 xeq      =  0.01;                % equilibrium crystallinity of boundary layer [wt]
 x0       =  xeq;                 % initial background crystallinity [wt]
 dxr      =  0;                   % initial random perturbation [wt]
-dxg      =  0.01;                % initial gaussian perturbation [wt]
+dxg      =  1;                   % initial gaussian perturbation [rel. fraction]
 Da       =  0;                   % relative amplitude of crystallisation rate [s]
 
 % set numerical model parameters

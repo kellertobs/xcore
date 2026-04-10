@@ -13,7 +13,7 @@ advn_rho = advn_X+advn_M;
 [dffn_X,qz_dffn_X,qx_dffn_X] = diffus(chi,X.*kx,h,[1,2],BCD);
 
 % boundary phase change rate
-Gx    = G0.*(1-x).*(1+psig/10).*bndshape;
+Gx    = G0.*(1-x).*bndshape;
 
 % total rates of change
 dXdt  = - advn_X + dffn_X + Gx;

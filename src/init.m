@@ -82,7 +82,6 @@ if ~exist('dt','var'); dt = dt0/10; end
 
 padL0 = 4*ceil(L0h/h);
 padl0 = 4*ceil(l0h/h);
-padLl = 4*ceil(Llh/h);
 
 [kpx_padL0, kpz_padL0] = ndgrid( ...
     2*pi*ifftshift((0:Nz-1+padL0) - floor((Nz+padL0)/2)) / ((Nz+padL0)*h), ...
@@ -92,22 +91,16 @@ padLl = 4*ceil(Llh/h);
     2*pi*ifftshift((0:Nz-1+padl0) - floor((Nz+padl0)/2)) / ((Nz+padl0)*h), ...
     2*pi*ifftshift((0:Nx-1      ) - floor( Nx       /2)) / ( Nx       *h)  );
 
-[kpx_padLl, kpz_padLl] = ndgrid( ...
-    2*pi*ifftshift((0:Nz-1+padLl) - floor((Nz+padLl)/2)) / ((Nz+padLl)*h), ...
-    2*pi*ifftshift((0:Nx-1      ) - floor( Nx       /2)) / ( Nx       *h)  );
-
 kp2 = kpx.^2 + kpz.^2;
 kp2_padL0 = kpx_padL0.^2 + kpz_padL0.^2;
 kp2_padl0 = kpx_padl0.^2 + kpz_padl0.^2;
-kp2_padLl = kpx_padLl.^2 + kpz_padLl.^2;
 
 % Gaussian spatial filter kernels in Fourier space
 Gkps       = exp(- l0h^2/2 * kp2);
-Gkpx       = exp(- Llh^2/2 * kp2);
+Gkpe       = exp(- L0h^2/2 * kp2);
 Gkps_padl0 = exp(- l0h^2 * kp2_padl0);
 Gkpe_padL0 = exp(- L0h^2 * kp2_padL0);
-Gkpx_padLl = exp(- Llh^2 * kp2_padLl);
-Gkrp       = exp(- ((L0h+l0h)^2)/2 * kp2);
+Gkrp       = exp(- bnd_w^2/2 * kp2);
 
 % initialise smooth random noise generation
 rng(seed);
@@ -116,22 +109,17 @@ rng(seed);
 rp  = randn(Nz, Nx);
 re  = randn(Nz, Nx);
 rs  = randn(Nz, Nx);
-rx  = randn(Nz, Nx);
 
 % Filter white noise spatially
 rp  = real(ifft2(Gkrp .* fft2(rp)));
-rg  = xix0.*real(ifft2(Gkpx .* fft2(rx))) ...
-    + xis0.*real(ifft2(Gkps .* fft2(rs)));
 
 % Rescale to unit standard deviation
 rp  = (rp - mean(rp(:))) ./ std(rp(:));
-rg  = (rg - mean(rg(:))) ./ std(rg(:));
 
 % initialise noise flux potentials
 psie = zeros(Nz+0, Nx+0);
 psix = zeros(Nz+0, Nx+0);
 psis = zeros(Nz+0, Nx+0);
-psig = rg;
 
 % initialise noise flux components
 xisw = zeros(Nz+1, Nx+2);
@@ -150,7 +138,6 @@ MapW = reshape(1:NW,Nz+1,Nx+2);
 MapU = reshape(1:NU,Nz+2,Nx+1) + NW;
 
 % set up shape functions for initial and transient boundary layers
-bnd_w     = Ll/2 + l0/2 + D/100;
 bndshape  = exp((-ZZ+h/2)/bnd_w);
 bndtaperw = (1 - (exp((-ZZw)/l0h) + exp(-(D-ZZw)/l0h)).*(1-open_sgr));
 
@@ -168,8 +155,8 @@ ifz = [2,1:Nz+1,Nz];
 
 % initialise crystallinity field
 gp  =  exp(-((XX-L/2)./(L/8)).^2) .* exp(-((ZZ-D/2)./(D/8)).^2);
-xin =  x0.*ones(Nz,Nx);% + (R-x0).*initshape;
-x   =  xin .* (1+dxr/x0.*rp+dxg/x0.*gp);
+xin =  x0.*ones(Nz,Nx) + (Da-x0).*bndshape;
+x   =  xin .* (1+dxr.*rp+dxg.*gp);
 m   =  1-x;
 
 U   =  zeros(Nz+2,Nx+1);  UBG = U; upd_U = 0*U; 
@@ -250,7 +237,7 @@ if restart
     end
     if exist(name,'file')
         fprintf('\n  restart from %s \n\n',name);
-        load(name,'U','W','P','x','m','chi','mu','X','M','dXdt','drhodt','Gx','rho','eta','etas','ke','ks','kx','Ra','ReD','Red','Rc','dt','time','step','MFS','wx','wm','psie','psix','psis','psig','xisw','xisu','xiew','xieu','xixw','xixu');
+        load(name,'U','W','P','x','m','chi','mu','X','M','dXdt','drhodt','Gx','rho','eta','etas','ke','ks','kx','Ra','ReD','Red','Rc','Noe','Nos','Nox','dt','time','step','MFS','wx','wm','psie','psix','psis','xisw','xisu','xiew','xieu','xixw','xixu');
         name = [outdir,'/',runID,'/',runID,'_HST'];
         load(name,'HST');
 

@@ -15,11 +15,11 @@ for atol = ATOL
     nop      =  10;                  % output frame plotted/saved every 'nop' time steps
     nrh      =  1;
     plot_op  =  1;                   % switch on to live plot of results
-    plot_cv  =  1;                   % switch on to live plot iterative convergence
+    plot_cv  =  0;                   % switch on to live plot iterative convergence
 
     % set model domain parameters
     D         =  1e1;                 % chamber depth [m]
-    N         =  100;                  % number of grid points in z-direction
+    N         =  100;                 % number of grid points in z-direction
     h         =  D/N;                 % grid spacing (equal in both dimensions, do not set) [m]
     L         =  D;                   % chamber width (equal to h for 1-D mode) [m]
 
@@ -30,8 +30,7 @@ for atol = ATOL
     % set crystallinity initial condition
     xeq       =  0.01;                % equilibrium crystallinity of boundary layer [wt]
     x0        =  xeq/10;              % initial background crystallinity [wt]
-    dxr       =  x0/10;                   % initial random perturbation [wt]
-    dxg       =  0;                % initial gaussian perturbation [wt]
+    dxr       =  0.1;                 % initial random perturbation [rel. fraction]
 
     % set physical control parameters
     d0        =  1e-2;                % xtal size constant [m]
@@ -40,11 +39,11 @@ for atol = ATOL
     l0        =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
     Da        =  0.01;                % relative amplitude of crystallisation rate [s]
     Xi        =  0.5;                 % relative amplitude of random noise flux
-    open_sgr  =  0;
-    open_cnv  =  0;
 
     % set numerical model parameters
     CFL       =  0.50;                % (physical) time stepping courant number (multiplies stable step) [0,1]
+    maxit     =  100;                 % maximum outer its
+    alpha     =  0.9;                 % iterative step size parameter
     rtol      =  atol/1e6;            % outer its relative tolerance
 
     % create output directory

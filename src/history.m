@@ -102,10 +102,6 @@ HST.eta0(stp,1) = min(etamix(:));
 HST.eta0(stp,2) = geomean(etamix(:));
 HST.eta0(stp,3) = max(etamix(:));
 
-HST.etax(stp,1) = min(etax(:));
-HST.etax(stp,2) = geomean(etax(:));
-HST.etax(stp,3) = max(etax(:));
-
 HST.eta(stp,1) = min(eta(:));
 HST.eta(stp,2) = geomean(eta(:));
 HST.eta(stp,3) = max(eta(:));

@@ -5,9 +5,9 @@ clear; close all;
 run('./par_default')
 
 % set run parameters
-runID     =  'D1_d2_e1';          % run identifier  (D = 1e2; d0 = 1e-2; etam0 = 1e1)
+runID     =  'D1_dm2_e1_N100';    % run identifier  (D = 1e2; d0 = 1e-2; etam0 = 1e1)
 restart   =  0;                   % restart from file (0: new run; <0: restart from last; >0: restart from specified frame)
-nop       =  50;                  % output frame plotted/saved every 'nop' time steps
+nop       =  100;                 % output frame plotted/saved every 'nop' time steps
 nrh       =  1;                   % record metrics history every 'nrh' time steps
 plot_op   =  1;                   % switch on to live plot results
 save_op   =  1;                   % switch on to save output to file
@@ -20,11 +20,7 @@ h         =  D/N;                 % grid spacing (equal in both dimensions, do n
 L         =  D*1.5;               % chamber width (equal to h for 1-D mode) [m]
 
 % set model timing parameters
-t0end     =  200.0;                % stop when dimensionless time is reached
-
-% set crystallinity initial condition
-x0        =  eps;              % initial background crystallinity [wt]
-dxr       =  0.0;              % initial random perturbation [wt]
+t0end     =  2.0;                 % stop when dimensionless time is reached
 
 % set physical control parameters
 d0        =  1e-2;                % xtal size constant [m]
@@ -35,7 +31,7 @@ Da        =  0.01;                % relative amplitude of crystallisation rate [
 Xi        =  0.5;                 % relative amplitude of random noise flux
 
 % set numerical model parameters
-CFL       =  0.75;                % (physical) time stepping courant number (multiplies stable step) [0,1]
+CFL       =  0.5;                 % (physical) time stepping courant number (multiplies stable step) [0,1]
 rtol      =  1e-4;                % outer its relative tolerance
 atol      =  1e-9;                % outer its absolute tolerance
 maxit     =  15;                  % maximum outer its

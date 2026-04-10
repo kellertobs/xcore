@@ -30,9 +30,9 @@ xend      =  1.00;                % stop run when mean crystallinity reaches thr
 tend      =  10*yr;               % end time for simulation [s]
 
 % set initial phase fraction parameters
-x0        =  0.001;               % initial background crystallinity [wt]
-dxr       =  x0/10;               % initial random perturbation [wt]
-dxg       =  0;                   % initial gaussian perturbation [wt] (for benchmarking)
+x0        =  eps;                 % initial background crystallinity [wt]
+dxr       =  0.1;                 % initial random perturbation [rel. fraction]
+dxg       =  0;                   % initial gaussian perturbation [rel. fraction] (for benchmarking)
 seed      =  15;                  % random perturbation seed
 
 % set buoyancy parameters
@@ -44,20 +44,20 @@ g0        =  10.;                 % gravity constant [m/s2]
 % set rheological parameters
 etam0     =  1e1;                 % melt viscosity constant [kg/m3]
 etax0     =  1e18;                % xtal viscosity constant [kg/m3]
-AA        = [ 0.5989, 0.1772; ...    % permission slopes
-              0.0397, 0.1182 ];      % increases permission slopes away from step function 
+AA        = [ 0.72, 0.19; ...     % permission slopes
+              0.81, 0.20 ];       % increases permission slopes away from step function 
 
-BB        = [ 0.6870, 0.3130; ...    % permission step locations
-              0.9998, 0.0002;];      % sets midpoint of step functions
+BB        = [ 0.63 , 0.37 ; ...   % permission step locations
+              0.999, 0.001;];     % sets midpoint of step functions
 
-CC        = [[0.9826, 0.0174]*9.1697; ... % permission step widths
-             [0.1695, 0.8305]*4.2773;];   % factor increases width of step functions
+CC        = [ 2.09, 0.09; ...    % permission step widths
+              0.37, 1.45;];      % factor increases width of step functions
 
 % set physical control parameters
-L0        =  h/2;                 % correlation length for eddy diffusivity (multiple of h, 0.5-1)
+L0        =  D/100;               % correlation length for eddy diffusivity (multiple of h, 0.5-1)
 l0        =  d0*10;               % correlation length for phase fluctuation diffusivity (multiple of d0, 10-20)
-R         =  1.0;                 % relative amplitude of crystallisation rate [s]
-Xi        =  1.0;                 % relative amplitude of random noise flux
+Da        =  0.01;                % relative amplitude of crystallisation rate [s]
+Xi        =  0.5;                 % relative amplitude of random noise flux
 Ptop      =  1e5;                 % top boundary pressure [Pa]
 open_cnv  =  0;                   % switch for open bottom boundary for crystal-driven convection
 open_sgr  =  0;                   % switch for open bottom boundary for crystal segregation
@@ -66,15 +66,15 @@ open_sgr  =  0;                   % switch for open bottom boundary for crystal 
 TINT      =  'bd2im';             % time integration scheme ('be1im','bd2im','cn2si','bd2si')
 ADVN      =  'weno5';             % advection scheme ('centr','upw1','quick','fromm','weno3','weno5','tvdim')
 CFL       =  0.50;                % (physical) time stepping courant number (multiplies stable step) [0,1]
-rtol      =  1e-5;                % outer its relative tolerance
+rtol      =  1e-4;                % outer its relative tolerance
 atol      =  1e-9;                % outer its absolute tolerance
-maxit     =  20;                  % maximum outer its
-alpha     =  0.75;                % iterative step size parameter
-gamma     =  0e-3;                % artificial horizontal inertia parameter (only applies if periodic)
+maxit     =  15;                  % maximum outer its
+alpha     =  0.9;                 % iterative step size parameter
+gamma     =  1e-3;                % artificial horizontal inertia parameter (only applies if periodic)
 kmin      =  1e-16;               % minimum diffusivity
 kmax      =  1e+16;               % maximum diffusivity
 dtmax     =  1e32;                % maximum time step [s]
-etacntr   =  1e+6;                % maximum viscosity contrast
+etacntr   =  1e+8;                % maximum viscosity contrast
 
 % set other options
 bnchm     =  0;                   % not a benchmark run

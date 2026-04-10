@@ -32,14 +32,17 @@ rhoUm  =   Mu.*Um(2:end-1,:);
 chi    = max(eps,min(1-eps, x.*rho./rhox0 ));
 mu     = max(eps,min(1-eps, m.*rho./rhom0 ));
 
-chiw   = (chi(icz(1:end-1),:)+chi(icz(2:end),:))./2;
- muw   = ( mu(icz(1:end-1),:)+ mu(icz(2:end),:))./2;
+chiw   = (chi(icz(1:end-1),icx)+chi(icz(2:end),icx))./2;
+ muw   = ( mu(icz(1:end-1),icx)+ mu(icz(2:end),icx))./2;
 
-xw     = (x(icz(1:end-1),:)+x(icz(2:end),:))./2;
-mw     = (m(icz(1:end-1),:)+m(icz(2:end),:))./2;
+chiu   = (chi(icz,icx(1:end-1))+chi(icz,icx(2:end)))./2;
+ muu   = ( mu(icz,icx(1:end-1))+ mu(icz,icx(2:end)))./2;
 
-xu     = (x(:,icx(1:end-1))+x(:,icx(2:end)))./2;
-muu    = (m(:,icx(1:end-1))+m(:,icx(2:end)))./2;
+x_w    = (x(icz(1:end-1),:)+x(icz(2:end),:))./2;
+m_w    = (m(icz(1:end-1),:)+m(icz(2:end),:))./2;
+
+x_u    = (x(:,icx(1:end-1))+x(:,icx(2:end)))./2;
+m_u    = (m(:,icx(1:end-1))+m(:,icx(2:end)))./2;
 
 Xw     = (X(icz(1:end-1),:)+X(icz(2:end),:))/2;
 Mw     = (M(icz(1:end-1),:)+M(icz(2:end),:))/2;
@@ -61,11 +64,10 @@ Xf = sum(AA.*Sf,2).*FF + (1-sum(AA.*Sf,2)).*Sf;
 
 % get momentum flux and transfer coefficients
 thtv = squeeze(prod(Mv.^Xf,2));
-etai = kv.*thtv;
+etaf = kv.*thtv;
 
 % get effective viscosity
-etax   = squeeze(etai(1,:,:));
-etamix = squeeze(sum(ff.*etai,1));
+etamix = squeeze(sum(ff.*etaf,1));
 
 % update velocity divergence
 Div_rhoV  = ddz(rhoW,h) + ddx(rhoU,h);                                      % get mass flux divergence
@@ -111,7 +113,7 @@ etae  = fReL.*ke.*rho;                                                     % edd
 etai  = etamix + etae;                                                     % effective viscosity
 
 etat  = fRel.*ks.*rho;                                                     % turbulent drag viscosity
-etasi = etax + etat;                                                       % effective drag viscosity   
+etasi = etamix + etat;                                                     % effective drag viscosity   
 
 % limit total viscosity contrast
 etamax = min(etai(:)).*etacntr;
@@ -132,7 +134,7 @@ etasw = (etas(icz(1:end-1),:).*etas(icz(2:end),:)).^0.5;
 
 % update dimensionless numbers
 ReL = V .*L0./(etamix./rho);
-Rel = vx.*l0./(etax  ./rho);
+Rel = vx.*l0./(etamix  ./rho);
 ReD = V .*D0./(eta ./rho);                                                 % Reynolds number on scaled domain length
 Red = vx.*d0./(etas./rho);                                                 % particle Reynolds number
 Ra  = V .*D0./kx;                                                          % Rayleigh number on scale domain length 
