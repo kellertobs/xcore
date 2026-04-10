@@ -356,7 +356,7 @@ if ~bnchm
     wx(:,[1 end]) = wx(:,[end-1 2]);
 
     % melt segregation speed
-    wm  = -xw(:,icx)./mw(:,icx).*wx;
+    wm  = -x_w(:,icx)./m_w(:,icx).*wx;
 
     % update stochastic noise speeds
     noise;
