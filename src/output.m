@@ -7,7 +7,7 @@ UN = {'Units','Centimeters'};
 CL = colororder;
 LW = {'LineWidth',1.5};
 XR = {'XDir','reverse'};
-MS = {'MarkerSize',8};
+MS = {'MarkerSize',6};
 if plot_op
     VIS = {'Visible','on'};
 else
@@ -208,7 +208,7 @@ plot(max(x./xsc,[],2),Zc./ssc,'k:','LineWidth',0.75,'Color',CL(1,:));
 
 set(gca,TL{:},FS{:})
 ylabel(['Depth [',sun,']'],TX{:},FS{:});
-legend('mean','min','max',TX{:},FS{:},'Location','east')
+legend('mean','min','max',TX{:},TS{:},'Location','east')
 title(['Crystallinity [',xun,']'],TX{:},FS{1},14);
 
 subplot(1,4,2)
@@ -223,7 +223,7 @@ plot(min(V ./Wpsc ,[],2),Zc./ssc,':','LineWidth',0.75,'Color',CL(3,:));
 plot(max(V ./Wpsc ,[],2),Zc./ssc,':','LineWidth',0.75,'Color',CL(3,:));
 
 set(gca,TL{:},FS{:})
-legend('$|\Delta \mathbf{v}_x|$','$|\Delta \mathbf{v}_m|$','$|\mathbf{v}|$', TX{:},FS{:},'Location','east')
+legend('$|\Delta \mathbf{v}_x|$','$|\Delta \mathbf{v}_m|$','$|\mathbf{v}|$', TX{:},TS{:},'Location','east')
 title(['Velocity [',wpun,']'],TX{:},FS{1},14);
 
 subplot(1,4,3)
@@ -238,7 +238,7 @@ semilogx(min(kx./kxsc,[],2),Zc./ssc,':','LineWidth',0.75,'Color',CL(3,:));
 semilogx(max(kx./kxsc,[],2),Zc./ssc,':','LineWidth',0.75,'Color',CL(3,:));
 
 set(gca,TL{:},FS{:})
-legend('$\kappa_e$','$\kappa_s$','$\kappa_x$',TX{:},FS{:},'Location','east')
+legend('$\kappa_e$','$\kappa_s$','$\kappa_x$',TX{:},TS{:},'Location','east')
 title(['Diffusivity [',kun,']'],TX{:},FS{1},14);
 
 subplot(1,4,4)
@@ -253,7 +253,7 @@ semilogx(min(etamix./ esc      ,[],2),Zc./ssc,':','LineWidth',0.75,'Color',CL(3,
 semilogx(max(etamix./ esc      ,[],2),Zc./ssc,':','LineWidth',0.75,'Color',CL(3,:));
 
 set(gca,TL{:},FS{:})
-legend('$\eta$','$\eta_s$','$\sum_i \eta_i$',TX{:},FS{:},'Location','east')
+legend('$\eta$','$\eta_s$','$\bar{\eta}$',TX{:},TS{:},'Location','east')
 title(['Viscosity [',eun,']'],TX{:},FS{1},14);
 
 % plot model history
@@ -267,10 +267,10 @@ plot(HST.time/tsc,(HST.x(:,2)+HST.x(:,4))/xsc,'k--',LW{1},1);
 plot(HST.time/tsc,HST.x(:,[1,3])/xsc,'k:',LW{:});
 
 plot(HST.time(end)/tsc,Da/xsc,'ks' ,LW{:},MS{:});
-markerlabels([Da/xsc],{'Da, $\chi_0$'},FS,'right');
+markerlabels([Da/xsc],{'$x_0$'},FS,'right');
 
 set(gca,TL{:},FS{:},'Xticklabels',[])
-legend('mean','mean + std','min/max',TX{:},FS{:},'Location','northwest')
+legend('mean','mean + std','min/max',TX{:},TS{:},'Location','northwest')
 title(['Crystallinity [',xun,']'],TX{:},FS{1},14);
 
 subplot(3,1,2)
@@ -291,7 +291,7 @@ yticks = 10.^(-8:2:4);
 yticklabels = {'$10^{-8}$','$10^{-6}$','$10^{-4}$','$10^{-2}$','$10^{0}$','$10^{2}$','$10^{4}$'};
 set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
 set(gca,TL{:},FS{:},'Xticklabel',[]);
-legend('convection','settling','eddy noise','xtal noise','xtal-eddy noise',TX{:},FS{:},'Location','northwest')
+legend('convection','settling','eddy noise','xtal noise','xtal-eddy noise',TX{:},TS{:},'Location','northwest')
 title(['Flow speeds [',Wun,']'],TX{:},FS{1},14);
 
 subplot(3,1,3)
@@ -309,7 +309,7 @@ markerlabels([Ra0/Rasc,ReD0/ReDsc,Red0/Redsc,Rc0/Rcsc],{'Ra$_0$','Re$_{D,0}$','R
 yticks = 10.^(-4:1:2);
 yticklabels = {'$10^{-4}$','$10^{-3}$','$10^{-2}$','$10^{-1}$','$10^{0}$','$10^{1}$','$10^{2}$'};
 set(gca,TL{:},FS{:},'Ytick',yticks,'Yticklabels',yticklabels,'YMinorTick','off');
-legend('Ra','Re$_D$','Re$_d$','Rc',TX{:},FS{:},'Location','northwest')
+legend('Ra','Re$_D$','Re$_d$','Rc',TX{:},TS{:},'Location','northwest')
 title(['Dimensionless numbers'],TX{:},FS{1},14);
 xlabel(['Time [',tun,']'],TX{:},FS{1},14);
 
@@ -322,7 +322,7 @@ plot(HST.time/tsc,HST.EB,'k-' ,LW{:}); hold on; axis tight; box on;
 plot(HST.time/tsc,HST.EM,'k-.',LW{:});
 plot(HST.time/tsc,HST.EX,'k--',LW{:});
 set(gca,TL{:},FS{:})
-legend('xtal','melt','mixt',TX{:},FS{:},'Location','northwest')
+legend('xtal','melt','mixt',TX{:},TS{:},'Location','northwest')
 ylabel('Rel. error [1]',TX{:},FS{1},14);
 xlabel(['Time [',tun,']'],TX{:},FS{1},14);
 title('Global Conservation Error',TX{:},FS{1},14)

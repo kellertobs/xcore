@@ -144,7 +144,7 @@ W0i  = solve(eq2W,W0);
 W0i  = W0i(1);
 
 % Speed scale for crystal-driven convection
-eq2W = W0 - Dchi0*Drho0*g0*Ds0^2/etae0 == 0;
+eq2W = W0 - Dchi0*Drho0*g0*D0^2/etae0 == 0;
 W0g  = solve(eq2W,W0);
 W0g  = W0g(2);
 
