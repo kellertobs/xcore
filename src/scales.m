@@ -137,14 +137,14 @@ fprintf(1,'\n  Crystal Reynolds No Red0  = %1.2e [1]\n\n\n',Red0);
 
 % adjust scales and units for visualisation
 if ndm_op
-    Wsc = W0;  Wpsc = Wsc;  Wun = '1';
-    wxsc = w0;  wxpsc = wxsc; wun = '1'; wpun = '1';
-    wmsc = w0*(chi0/(1-chi0)); wmpsc = wmsc;
-    whsc = w0; 
-    psc = p0;  pun = '1';
-    kssc = ks0;  kun = '1';
-    kesc = ke0; 
-    kxsc = kx0;
+    Wsc   = W0;  Wpsc = Wsc;  Wun = '1';
+    wxsc  = w0;  wxpsc = wxsc; wun = '1'; wpun = '1';
+    wmsc  = w0*(chi0/(1-chi0)); wmpsc = wmsc;
+    whsc  = w0; 
+    psc   = p0;  pun = '1';
+    kssc  = ks0;  kun = '1';
+    kesc  = ke0; 
+    kxsc  = kx0;
     xiesc = xie0;  xieun = '1';
     xissc = xis0;  xisun = '1';
     xixsc = xix0;  xixun = '1';
@@ -164,12 +164,12 @@ if ndm_op
     Noxsc = Nox0;
     Nossc = Nos0;
 else
-    kssc = 1;  kun = 'm$^2$/s';
-    kesc = 1;  
-    kxsc = 1;  
+    kssc  = 1;  kun = 'm$^2$/s';
+    kesc  = 1;  
+    kxsc  = 1;  
     esc   = 1;  eun   = 'Pas';
-    eesc  = 1;
-    etsc  = 1;
+    eesc  = 0;
+    etsc  = 0;
     rsc   = 1;  dun   = 'kg/m$^3$';
     MFSsc = 1; MFSun = 'kg/m$^3$/s';
     xsc   = 1/100;  xun = 'wt \%';
