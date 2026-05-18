@@ -13,8 +13,8 @@ Xi    = 0.5;    % [1,0.1,0]
 rtol  = 1e-4;   % [1e-3,1e-5]
 
 % additional run inertial settling regime (1 simulation, TK)
-D     = 10;
-d0    = 0.1;
+D     = 1;
+d0    = 0.01;
 etam0 = 0.1;
 
 % additional runs for cumulate stack to t0end = 200 (5 simulations, TK)
@@ -24,17 +24,17 @@ D = 1e+1; d0 = 1e-1; etam0 = 1e-1;  % inertial settling regime
 D = 1e+1; d0 = 1e-4; etam0 = 1e+3;  % laminar convection regime
 D = 1e+6; d0 = 1e-1; etam0 = 1e-1;  % inertial convection regime
 
-% magma ocean parameter variations  (9 simulations, TK)
+% magma ocean parameter variations  (4 simulations, TK)
 D     =  1e6;          % [m]
-d0    = [1e-3; 1e-2; 1e-1 (ref)];  % [m]
-etam0 = [1e-1 (ref); 1e+0; 1e+1];  % [Pas]
+d0    = [1e-2; 1e-1 (ref)];  % [m]
+etam0 = [1e-1 (ref); 1e+1];  % [Pas]
 
 % additional parameter variations on magma ocean ref run (7 simulations, TK)
 gamma = 1e-3;   % [0,1e-2];
 L0    = D/100;  % [D/200,D/50,D/10];
 Xi    = 0.5;    % [1,0.1]
 
-% total # simulations: 27+14+1+5+9+7 = 63
+% total # simulations: 27+14+1+5+4+7 = 58
 
 % naming convention for RunIDs
 D = 1e1; d0 = 1e-2; etam0 = 1e+1;  % => D1_dm2_e1 reference run

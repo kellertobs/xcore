@@ -442,10 +442,10 @@ for eta0=10.^linspace(-1,5,4)
     plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w')
     plot(6,-1,'wo','LineWidth',1,'MarkerFaceColor','k')
     plot(1,-2,'wo','LineWidth',1,'MarkerFaceColor','k')
-    plot(1,-1,'ko','LineWidth',1,'MarkerFaceColor','w')
+    % plot(1,-1,'ko','LineWidth',1,'MarkerFaceColor','w')
 
     set(gca,'TickLabelInterpreter','latex','FontSize',11)
-    % xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
+    xlabel('Layer depth $D$ [m]','Interpreter','latex','FontSize',13);
     ylabel('log$_{10}$ Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
     title('log$_{10}$ Convection No. Rc','Interpreter','latex','FontSize',13);
     text(0.84,0.91,'\textbf{(a)}','Interpreter','latex','FontSize',13,'Units','normalized')
@@ -463,11 +463,11 @@ for eta0=10.^linspace(-1,5,4)
     plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w')
     plot(6,-1,'wo','LineWidth',1,'MarkerFaceColor','k')
     plot(1,-2,'wo','LineWidth',1,'MarkerFaceColor','k')
-    plot(1,-1,'ko','LineWidth',1,'MarkerFaceColor','w')
+    % plot(1,-1,'ko','LineWidth',1,'MarkerFaceColor','w')
 
     set(gca,'TickLabelInterpreter','latex','FontSize',11)
-    % xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
-    % ylabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
+    xlabel('Layer depth $D$ [m]','Interpreter','latex','FontSize',13);
+    ylabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
     title('log$_{10}$ Settling Reynolds No. Re$_d$','Interpreter','latex','FontSize',13);
     text(0.84,0.91,'\textbf{(b)}','Interpreter','latex','FontSize',13,'Units','normalized')
 
@@ -484,10 +484,10 @@ for eta0=10.^linspace(-1,5,4)
     plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w')
     plot(6,-1,'wo','LineWidth',1,'MarkerFaceColor','k')
     plot(1,-2,'wo','LineWidth',1,'MarkerFaceColor','k')
-    plot(1,-1,'ko','LineWidth',1,'MarkerFaceColor','w')
+    % plot(1,-1,'ko','LineWidth',1,'MarkerFaceColor','w')
 
     set(gca,'TickLabelInterpreter','latex','FontSize',11)
-    xlabel('log$_{10}$ Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
+    xlabel('log$_{10}$ Layer depth $D$ [m]','Interpreter','latex','FontSize',13);
     ylabel('log$_{10}$ Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
     title('log$_{10}$ Convect. Rayleigh No. Ra','Interpreter','latex','FontSize',13);
     text(0.84,0.91,'\textbf{(c)}','Interpreter','latex','FontSize',13,'Units','normalized')
@@ -505,11 +505,11 @@ for eta0=10.^linspace(-1,5,4)
     plot([6 6 6],[-3 -2 -1],'ko','LineWidth',1,'MarkerFaceColor','w')
     plot(6,-1,'wo','LineWidth',1,'MarkerFaceColor','k')
     plot(1,-2,'wo','LineWidth',1,'MarkerFaceColor','k')
-    plot(1,-1,'ko','LineWidth',1,'MarkerFaceColor','w')
+    % plot(1,-1,'ko','LineWidth',1,'MarkerFaceColor','w')
 
     set(gca,'TickLabelInterpreter','latex','FontSize',11)
-    xlabel('log$_{10}$ Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
-    % ylabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
+    xlabel('log$_{10}$ Layer depth $D$ [m]','Interpreter','latex','FontSize',13);
+    ylabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
     title('log$_{10}$ Convect. Reynolds No. Re$_D$','Interpreter','latex','FontSize',13);
     text(0.84,0.91,'\textbf{(d)}','Interpreter','latex','FontSize',13,'Units','normalized','Color','w')
     drawnow;
@@ -533,15 +533,15 @@ for eta0=10.^linspace(-1,5,4)
             plot(iD,id,'ko','LineWidth',2,'MarkerFaceColor','w','MarkerSize',10)
         end
     end
-    plot(1,-1,'ko','LineWidth',2,'MarkerFaceColor','w','MarkerSize',10)
+    % plot(1,-1,'ko','LineWidth',2,'MarkerFaceColor','w','MarkerSize',10)
     plot([6 6 6],[-3 -2 -1],'ko','LineWidth',2,'MarkerFaceColor','w','MarkerSize',10)
     plot(6,-1,'wo','LineWidth',2,'MarkerFaceColor','k','MarkerSize',10)
     plot(1,-2,'wo','LineWidth',2,'MarkerFaceColor','k','MarkerSize',10)
 
-    set(gca,'TickLabelInterpreter','latex','FontSize',13)
-    xlabel('log$_{10}$ Layer depth $D_0$ [m]','Interpreter','latex','FontSize',15);
-    ylabel('log$_{10}$ Crystal size $d_0$ [m]','Interpreter','latex','FontSize',15);
-    title('Flow regimes','Interpreter','latex','FontSize',15);
+    set(gca,'TickLabelInterpreter','latex','FontSize',14)
+    xlabel('log$_{10}$ Layer depth $D$ [m]','Interpreter','latex','FontSize',16);
+    ylabel('log$_{10}$ Crystal size $d_0$ [m]','Interpreter','latex','FontSize',16);
+    title('Flow regimes','Interpreter','latex','FontSize',16);
     drawnow;
 
     name = ['../out/scaling/maps_eta',num2str(log10(eta0))];
@@ -565,7 +565,7 @@ subplot(2,2,2)
 line([1e1,1e1],[1e-8,1e2],'Color','k','LineStyle',':','LineWidth',1);
 xlim([1e0,1e6]); ylim([1e-8,1e2]); yticks([1e-8,1e-6,1e-4,1e-2,1e0,1e2]);
 set(gca,'TickLabelInterpreter','latex','FontSize',11)
-xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
+xlabel('Layer depth $D$ [m]','Interpreter','latex','FontSize',13);
 ylabel('Convective speed $W_0$ [m/s]','Interpreter','latex','FontSize',13);
 text(0.02,0.91,'\textbf{(b)}','Interpreter','latex','FontSize',13,'Units','normalized')
 legend([p1(1),p1(2),p1(3),p1(4)],{'$\eta_0=10^{-1}$ Pas','$\eta_0=10^{1}$ Pas','$\eta_0=10^{3}$ Pas','$\eta_0=10^{5}$ Pas'},'Interpreter','latex','FontSize',11,'Location','southeast');
@@ -583,7 +583,7 @@ subplot(2,2,4)
 line([1e1,1e1],[1e-2,1e8],'Color','k','LineStyle',':','LineWidth',1);
 xlim([1e0,1e6]); ylim([1e-2,1e8]); yticks([1e-4 1e-2 1e0 1e2 1e4 1e6 1e8])
 set(gca,'TickLabelInterpreter','latex','FontSize',11)
-xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
+xlabel('Layer depth $D$ [m]','Interpreter','latex','FontSize',13);
 ylabel('Dimensionless numbers [1]','Interpreter','latex','FontSize',13);
 text(0.02,0.91,'\textbf{(d)}','Interpreter','latex','FontSize',13,'Units','normalized')
 legend([p55,p56],{'Ra','Re$_D$'},'Interpreter','latex','FontSize',11,'Location','southeast');
@@ -603,7 +603,7 @@ subplot(2,2,2)
 line([1e1,1e1],[1e-12,1e4],'Color','k','LineStyle',':','LineWidth',1);
 xlim([1e0,1e6]); ylim([1e-12,1e4]); yticks([1e-12 1e-8 1e-4 1e0 1e4])
 set(gca,'TickLabelInterpreter','latex','FontSize',11)
-xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
+xlabel('Layer depth $D$ [m]','Interpreter','latex','FontSize',13);
 ylabel('Diffusivity [m$^2$/s]','Interpreter','latex','FontSize',13);
 text(0.02,0.91,'\textbf{(b)}','Interpreter','latex','FontSize',13,'Units','normalized')
 legend([p2(1),p2(2),p2(3),p2(4)],{'$\eta_0=10^{-1}$ Pas','$\eta_0=10^{1}$ Pas','$\eta_0=10^{3}$ Pas','$\eta_0=10^{5}$ Pas'},'Interpreter','latex','FontSize',11,'Location','southeast');
@@ -613,7 +613,7 @@ line([1e-2,1e-2],[1e-12,1e0],'Color','k','LineStyle',':','LineWidth',1);
 xlim([1e-4,1e-1]); ylim([1e-12,1e0]); yticks([1e-12 1e-10 1e-8 1e-6 1e-4 1e-2 1e0])
 set(gca,'TickLabelInterpreter','latex','FontSize',11)
 xlabel('Crystal size $d_0$ [m]','Interpreter','latex','FontSize',13);
-ylabel('Noise amplitude $\xi_{s,0}$ [m$^2$/s]','Interpreter','latex','FontSize',13);
+ylabel('Noise amplitude [m/s]','Interpreter','latex','FontSize',13);
 text(0.02,0.91,'\textbf{(c)}','Interpreter','latex','FontSize',13,'Units','normalized')
 legend([p65,p66],{'$\kappa_{s,0}$, $\xi_{s,0}$','$\kappa_{x,0}$, $\xi_{x,0}$'},'Interpreter','latex','FontSize',11,'Location','southeast');
 
@@ -621,7 +621,7 @@ subplot(2,2,4)
 line([1e1,1e1],[1e-10,1e2],'Color','k','LineStyle',':','LineWidth',1);
 xlim([1e0,1e6]); ylim([1e-10,1e2]); yticks([1e-10 1e-8 1e-6 1e-4 1e-2 1e0 1e2])
 set(gca,'TickLabelInterpreter','latex','FontSize',11)
-xlabel('Layer depth $D_0$ [m]','Interpreter','latex','FontSize',13);
+xlabel('Layer depth $D$ [m]','Interpreter','latex','FontSize',13);
 ylabel('Noise amplitude [m/s]','Interpreter','latex','FontSize',13);
 text(0.02,0.91,'\textbf{(d)}','Interpreter','latex','FontSize',13,'Units','normalized')
 legend([p67,p68],{'$\kappa_{e,0}$, $\xi_{e,0}$','$\kappa_{x,0}$, $\xi_{x,0}$'},'Interpreter','latex','FontSize',11,'Location','southeast');
