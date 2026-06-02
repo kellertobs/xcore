@@ -32,7 +32,7 @@ IIR = [];       % equation indeces into R
 AAR = [];       % forcing entries for R
 
 % assemble coefficients of z-stress divergence
-    
+
 % left boundary
 ii  = MapW(:,1); jj1 = ii; jj2 = MapW(:,end-1);
 aa  = zeros(size(ii));
@@ -181,26 +181,26 @@ if ~exist('GG','var') || bnchm
     IIL = [];       % equation indeces into A
     JJL = [];       % variable indeces into A
     AAL = [];       % coefficients for A
-    
+
     % coefficients for z-gradient
     ii  = MapW(2:end-1,2:end-1);
-    
+
     %         top              ||          bottom
     jj1 = MapP(2:end-2,2:end-1); jj2 = MapP(3:end-1,2:end-1);
-    
+
     aa  = zeros(size(ii));
     IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL; aa(:)-1/h];     % one to the top
     IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL; aa(:)+1/h];     % one to the bottom
-    
+
     % coefficients for x-gradient
     ii  = MapU(2:end-1,:);
-    
+
     %         left             ||           right
     jj1 = MapP(2:end-1,1:end-1); jj2 = MapP(2:end-1,2:end);
     aa  = zeros(size(ii));
     IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL; aa(:)-1/h];     % one to the left
     IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL; aa(:)+1/h];     % one to the right
-    
+
     % assemble coefficient matrix
     GG  = sparse(IIL,JJL,AAL,NW+NU,NP);
 end
@@ -239,27 +239,27 @@ if ~exist('KP','var') || bnchm
     IIL = [];       % equation indeces into A
     JJL = [];       % variable indeces into A
     AAL = [];       % coefficients for A
-    
+
     % boundary points
     ii  = [MapP(1,:).'; MapP(end  ,:).']; % top & bottom
     jj1 = ii;
     jj2 = [MapP(2,:).'; MapP(end-1,:).'];
-    
+
     aa  = zeros(size(ii));
     IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL; aa(:)+1];
     IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL; aa(:)-1];
-    
+
     ii  = [MapP(2:end-1,1    ); MapP(2:end-1,end)]; % left & right
     jj1 = ii;
     jj2 = [MapP(2:end-1,end-1); MapP(2:end-1,2  )];
-    
+
     aa  = zeros(size(ii));
     IIL = [IIL; ii(:)]; JJL = [JJL; jj1(:)];   AAL = [AAL; aa(:)+1];
     IIL = [IIL; ii(:)]; JJL = [JJL; jj2(:)];   AAL = [AAL; aa(:)-1];
 
     % assemble coefficient matrix
     KP  = sparse(IIL,JJL,AAL,NP,NP);
-    
+
 end
 
 % RHS
@@ -283,9 +283,9 @@ if bnchm
     np0 = MapP(nzp,nxp);
     KP(np0,:  ) = 0;
     KP(np0,np0) = 1;
-    DD(np0,:  ) = 0;
+    DM(np0,:  ) = 0;
     RP(np0    ) = P_mms(nzp,nxp);
-    
+
     % fix U = U_mms in middle of domain
     nzu = round((Nz+2)/2);
     nxu = round((Nx+2)/2);
