@@ -60,6 +60,7 @@ psis_flt = (psis_flt-mean(psis_flt(:))).*std(psis(:))./(std(psis_flt(:)) + eps) 
 % eddy noise components
 psiec = (psie_flt(icz(1:end-1),icx(1:end-1))+psie_flt(icz(1:end-1),icx(2:end)) ...
       +  psie_flt(icz(2:end  ),icx(1:end-1))+psie_flt(icz(2:end  ),icx(2:end)))/4;
+psiec([1 end],:) = 0;  % closed top/bottom walls: no eddy noise flux through them
 xieu  =  ddz(psiec,1); xieu = xieu(icz,:);
 xiew  = -ddx(psiec,1); xiew = xiew(:,icx);
 
